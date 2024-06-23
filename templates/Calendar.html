@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="top-nav-bar">
+        <a href="/index">
+            <button class="nav-button" id="back-button">
+                <img src="{{ url_for('static', filename='home.jpg') }}" alt="返回">
+            </button>
+        </a>
+
+        <h1 class="page-title">Calendar</h1>
+
+        <button class="nav-button" id="search-button">
+            <img src="{{ url_for('static', filename='search.jpg') }}" alt="user">
+        </button>
+        <div id="search-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+
+                <h2>search</h2>
+
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Enter search content">
+                    <button type="submit">search</button>
+                </form>
+            </div>
+        </div>
+
+        <a href="/userinfo">
+            <button class="nav-button" id="user-info-button">
+                <img src="{{ url_for('static', filename='user-info.jpg') }}" alt="user">
+            </button>
+        </a>
+    </div>
+
+</body>
+</html>

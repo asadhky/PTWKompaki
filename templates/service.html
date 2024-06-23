@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>二级页面</title>
+    <style>
+        .question-button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .fixed-bottom-bar {
+            position: fixed; /* 固定位置 */
+            bottom: 0; /* 在底部 */
+            left: 0; /* 从左边开始 */
+            width: 60%; /* 宽度占满整个屏幕 */
+            background-color: #fff; /* 背景颜色，可以根据需要更改 */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* 可选的阴影效果 */
+            display: flex;
+            justify-content: space-around; /* 图标平均分布 */
+            padding: 10px 0; /* 上下填充 */
+        }
+        /* CSS */
+        .icon-button {
+            position: relative; /* 设置相对定位，为伪元素的绝对定位提供参照 */
+            flex: 1;  /* 让每个按钮都有相等的空间 */
+            display: flex; /* 启用flex布局 */
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            outline: none;
+            padding: 20px 0; /* 上下填充 */
+            transition: background-color 0.3s; /* 背景颜色变化平滑过渡 */
+        }
+
+        /* 为激活状态的按钮添加颜色条 */
+        .icon-button.active-icon::after {
+            content: ''; /* 伪元素需要content属性 */
+            display: block; /* 将伪元素设置为块级元素 */
+            position: absolute; /* 绝对定位 */
+            bottom: 0; /* 定位到按钮底部 */
+            left: 0; /* 从左边开始 */
+            width: 100%; /* 宽度与按钮一致 */
+            height: 15px; /* 颜色条的高度，可以根据需要调整 */
+            background-color: #4CAF50; /* 激活状态下的背景颜色 */
+        }
+
+        .icon-button img {
+            width: 80px; /* 图标大小，根据需要调整 */
+            height: auto;
+        }
+        .question-button img {
+            width: 50px; /* 或者任何适合您设计的大小 */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <a href="/"><button class="question-button"><img src="{{ url_for('static', filename='back.jpg') }}" alt="问号图标"/></button></a>
+    <h1>consumer_service</h1>
+
+    <div class="fixed-bottom-bar">
+        <!-- 问号按钮用于跳转到帮助页面 -->
+        <a href="/subpage">
+            <button class="icon-button">
+                <img src="{{ url_for('static', filename='ph_question.jpg') }}" alt="问号"/>
+            </button>
+        </a>
+        <!-- 耳机图标按钮用于跳转到服务页面 -->
+        <a href="/service">
+            <button class="icon-button">
+                <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="服务"/>
+            </button>
+        </a>
+        <!-- 根据需要添加更多按钮 -->
+        <a href="/aichat">
+            <button class="icon-button">
+                <img src="{{ url_for('static', filename='AIchat.jpg') }}" alt="问号"/>
+            </button>
+        </a>
+        <!-- 根据需要添加更多按钮 -->
+        <a href="/setting">
+            <button class="icon-button">
+                <img src="{{ url_for('static', filename='setting.jpg') }}" alt="问号"/>
+            </button>
+        </a>
+        <!-- 根据需要添加更多按钮 -->
+        <a href="/monitoring">
+            <button class="icon-button">
+                <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="问号"/>
+            </button>
+        </a>
+    </div>
+    <!-- HTML bottom -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有按钮
+            var buttons = document.querySelectorAll('.icon-button');
+
+            // 获取当前页面的路径
+            var currentPath = window.location.pathname;
+
+            // 遍历所有按钮
+            buttons.forEach(function(button) {
+                // 获取按钮的href属性
+                var path = button.parentElement.getAttribute('href');
+
+                // 检查按钮的href是否与当前页面的路径匹配
+                if (path === currentPath) {
+                    // 激活匹配的按钮
+                    button.classList.add('active-icon');
+                } else {
+                    // 确保其他按钮不是激活状态
+                    button.classList.remove('active-icon');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

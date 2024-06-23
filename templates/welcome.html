@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f7f7f7;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type=text], input[type=password], select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+        img {
+            height: 100px; /* 调整图片大小 */
+            border-radius: 50%; /* 使图片变圆 */
+            margin-top: 10px;
+        }
+        .profile-choice {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .profile-choice div {
+            margin: 10px;
+        }
+        label {
+            cursor: pointer;
+        }
+        /* 需要更多的样式可以在这里添加 */
+    </style>
+
+</head>
+<body>
+    <h1>Welcome to the Website</h1>
+    <div>
+        <a href="{{ url_for('login') }}">Login</a> |
+        <a href="{{ url_for('register') }}">Register</a>
+    </div>
+</body>
+</html>

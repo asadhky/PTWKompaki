@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kompaki</title>
+    <style>
+        /* 这是一个单独的CSS文件，包含了页面的所有样式定义 */
+        .top-nav-bar {
+            display: flex; /* 使用弹性盒子布局 */
+            justify-content: space-between; /* 子元素之间平均分布空间 */
+            align-items: center; /* 子元素垂直居中 */
+            padding: 30px 20px; /* 上下30px，左右20px的内边距 */
+        }
+
+        .nav-button {
+            background: none; /* 按钮无背景色 */
+            border: none; /* 按钮无边框 */
+            padding: 10px 10px; /* 按钮内边距 */
+            cursor: pointer; /* 鼠标悬停时显示指针形状 */
+            margin-right: 20px; /* 右边距20px */
+        }
+
+        .nav-button:first-child{
+            margin-right: 40px;
+        }
+
+        .page-title {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        .fixed-bottom-bar {
+            position: fixed; /* 固定位置 */
+            bottom: 0; /* 在底部 */
+            left: 0; /* 从左边开始 */
+            width: 100%; /* 宽度占满整个屏幕 */
+            background-color: #fff; /* 背景颜色，可以根据需要更改 */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* 可选的阴影效果 */
+            display: flex;
+            justify-content: space-around; /* 图标平均分布 */
+            padding: 10px 0; /* 上下填充 */
+        }
+
+        .icon-button.active-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background-color: #4CAF50;
+        }
+
+        .icon-button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .icon-button img {
+            width: 80px; /* 图标大小，根据需要调整 */
+            height: auto;
+        }
+
+        /* 模态框的基本样式 */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定在页面上 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* 背景色半透明 */
+        }
+
+        /* 模态内容的样式 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% 从顶部开始，居中 */
+            padding: 60px;
+            border: 1px solid #888;
+            width: 80%; /* 可以根据需求调整宽度 */
+        }
+
+        /*!* 关闭按钮样式 *!*/
+        /*.close-button {*/
+        /*    color: #aaa;*/
+        /*    float: right;*/
+        /*    font-size: 46px;*/
+        /*    font-weight: bold;*/
+        /*}*/
+
+        /*.close-button:hover,*/
+        /*.close-button:focus {*/
+        /*    color: black;*/
+        /*    text-decoration: none;*/
+        /*    cursor: pointer;*/
+        /*}*/
+
+        /* 搜索输入框样式 */
+        #search-input {
+            width: 80%; /* 调整输入框的宽度 */
+            padding: 10px; /* 增加内边距 */
+            font-size: 32px; /* 字体大小 */
+            border: 1px solid #ccc; /* 边框样式 */
+            border-radius: 4px; /* 轻微的圆角 */
+            margin-bottom: 10px; /* 底部外边距 */
+        }
+
+        /* 搜索按钮样式 */
+        #search-form button {
+            padding: 10px 20px; /* 增加内边距 */
+            font-size: 32px; /* 字体大小 */
+            border: 1px solid #ccc; /* 边框样式 */
+            border-radius: 4px; /* 圆角 */
+            cursor: pointer; /* 鼠标悬停时显示指针形状 */
+            background-color: #4CAF50; /* 按钮背景色 */
+            color: white; /* 文字颜色 */
+        }
+
+        #search-modal .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% 从顶部开始，居中 */
+            padding: 60px;
+            border: 1px solid #888;
+            width: 80%; /* 可以根据需求调整宽度 */
+        }
+
+        #search-form button:hover {
+            background-color: #45a049; /* 鼠标悬停时的背景色 */
+        }
+
+        /* ai chat */
+        /* 聊天记录样式 */
+        .chat-history {
+            height: 300px; /* 可调整高度 */
+            overflow-y: auto; /* 添加滚动条 */
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 30px;
+            padding: 10px;
+        }
+
+        /* 文字输入框样式 */
+        #chat-input {
+            width: calc(100% - 90px); /* 让输入框和发送按钮并排 */
+            padding: 10px;
+            margin-right: 10px; /* 在输入框和发送按钮之间添加一些空间 */
+            font-size: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 发送按钮样式 */
+        #send-message {
+            width: 100px;
+            padding: 20px;
+            font-size: 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #send-message:hover {
+            background-color: #45a049;
+        }
+
+
+
+        .faq-question {
+            background-color: #eee; /* 问题部分的背景颜色为浅灰色 */
+            color: #444; /* 文字颜色为深灰色 */
+            cursor: pointer; /* 鼠标悬停时显示为指针形状，表示这是一个可点击的元素 */
+            padding: 32px; /* 内边距为32像素，增加点击区域的大小，提升可点击性 */
+            width: 100%; /* 宽度设置为100%，使得问题部分填满其父元素的宽度 */
+            text-align: left; /* 文字左对齐 */
+            border: none; /* 无边框 */
+            outline: none; /* 点击时无轮廓线 */
+            transition: 0.4s; /* 过渡效果的持续时间为0.4秒，使得样式变化更平滑 */
+            font-size: 32px;
+        }
+
+        .faq-answer {
+            padding: 0 32px; /* 答案部分左右各有32像素的内边距 */
+            font-size: 32px;
+            background-color: white; /* 答案部分的背景颜色为白色 */
+            display: none; /* 默认情况下答案不显示 */
+            overflow: hidden; /* 内容溢出隐藏，配合折叠效果使用 */
+        }
+
+        .setting-option-button {
+            /* 按钮样式，根据需要调整 */
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+
+        #setting-modal #create-folder-button {
+            border: none; /* 移除边框 */
+            /* 如果需要，可以添加其他样式 */
+        }
+
+
+
+        .setting-option-button img {
+            /* 图片样式，根据需要调整 */
+            width: 50px; /* 示例宽度 */
+            height: auto;
+        }
+
+        .modal-content p {
+            /* 文本标签的样式 */
+            text-align: center; /* 居中对齐文本 */
+            margin-top: 5px; /* 在按钮和文本之间添加一些空间 */
+        }
+
+        /* 包裹文件夹图标的容器样式 */
+        .folder-container {
+          display: flex; /* 使用Flexbox布局 */
+          justify-content: center; /* 水平居中对齐 */
+          align-items: center; /* 垂直居中对齐 */
+          flex-wrap: wrap; /* 如果需要可以换行 */
+        }
+
+        /* 文件夹图标的样式 */
+        .folder-icon {
+            display: inline-block; /* 或者flex, 根据需求 */
+            text-align: center;
+            margin: 0 20px; /* 两边的间距 */
+        }
+
+        .folder-icon img {
+          width: 100px; /* 根据需要设置适当的宽度 */
+          height: auto; /* 保持图片比例 */
+          cursor: pointer; /* 鼠标悬停时显示指针 */
+        }
+
+        .folder-label, .app-label {
+            display: block; /* 使其成为块级元素 */
+            text-align: center; /* 文本居中 */
+            margin-top: 5px; /* 距离图标的间距 */
+            font-size: 25px; /* 根据需求调整字体大小 */
+        }
+        /**/
+        /* 模态框基础样式 */
+        .modal {
+          display: none; /* 默认隐藏 */
+          position: fixed; /* 固定定位 */
+          z-index: 1; /* 确保它在页面内容之上 */
+          left: 0;
+          top: 0;
+          width: 100%; /* 全宽 */
+          height: 100%; /* 全高 */
+          overflow: auto; /* 如果需要滚动条 */
+          background-color: rgba(0,0,0,0.4); /* 半透明背景 */
+        }
+
+        /* 模态框内容样式 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 位于页面中央 */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* 根据需要设置适当的宽度 */
+            display: flex; /* 使用Flexbox布局 */
+            flex-wrap: wrap; /* 允许子元素换行 */
+            justify-content: flex-start; /* 子元素向行首对齐 */
+        }
+
+        /* 关闭按钮样式 */
+        /*.close-button {*/
+        /*  color: #aaa;*/
+        /*  float: right; !* 位于右上角 *!*/
+        /*  font-size: 28px;*/
+        /*  font-weight: bold;*/
+        /*}*/
+
+        /*.close-button:hover,*/
+        /*.close-button:focus {*/
+        /*  color: black;*/
+        /*  text-decoration: none;*/
+        /*  cursor: pointer;*/
+        /*}*/
+
+        /* 应用图标样式 */
+        /*.app-icon {*/
+        /*    display: inline-block; !* 内联显示 *!*/
+        /*    text-align: center; !* 文本居中 *!*/
+        /*    margin: 10px; !* 间距 *!*/
+
+        /*}*/
+        .app-icon {
+          /* 应用图标的样式 */
+          width: 100px; /* 图像的宽度，确保与其他图标一致 */
+          margin: 10px; /* 图像之间的间距 */
+          text-align: center; /* 文本居中 */
+          display: inline-block; /* 使元素呈现为行内块级元素，这将允许它们排列在一行 */
+        }
+
+        /* 包裹图标和名称的容器样式 */
+        .app-icon-container {
+          display: flex; /* 使用Flexbox布局 */
+          flex-direction: column; /* 使图标和文字垂直排列 */
+          align-items: center; /* 水平居中对齐 */
+          margin: 10px; /* 两边的间距 */
+          width: 100px; /* 容器宽度，确保与.app-icon的宽度一致 */
+        }
+
+        .app-icon img {
+          width: 80px; /* 图标的宽度 */
+          height: auto; /* 保持比例 */
+          cursor: pointer; /* 鼠标悬停时显示指针 */
+        }
+
+        .app-label {
+          margin-top: 5px; /* 与图标之间的距离 */
+          text-align: center; /* 文本居中 */
+          display: block; /* 使其成为块级元素 */
+          font-size: 14px; /* 文本的大小 */
+        }
+
+
+        /*右击*/
+        /* Style for small modal */
+        .small-modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 10; /* Sit on top */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .small-modal-content {
+              background-color: #fefefe;
+              margin: 15% auto; /* 15% from the top and centered */
+              padding: 40px;
+              border: 1px solid #888;
+              width: 80%; /* Could be more or less, depending on screen size */
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: center;
+              position: relative;
+        }
+
+         /*The Close Button */
+        .close-button {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+
+
+        .close-button:hover,
+        .close-button:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+        }
+
+        /* Style for software icons inside the modal */
+        .small-modal-content img {
+            padding: 10px; /* Space around the images */
+            margin: 10px; /* Space between the images */
+            width: 100px; /* 图像的宽度 */
+            height: auto; /* 保持图像的纵横比 */
+            display: block; /* 使图像成为块级元素，以便名称可以显示在下方 */
+
+        }
+
+        .custom-context-menu {
+          display: none;
+          position: absolute;
+          z-index: 1000; /* 保证在最顶层 */
+        }
+
+        /* 可见状态的样式，通过JavaScript动态添加这个类 */
+        .custom-context-menu.visible {
+          display: block;
+        }
+
+
+
+
+
+        /* 应用图标样式 */
+        .modal-content a img {
+            width: 100px; /* 应用图标尺寸 */
+            height: auto;
+            margin: 50px;
+        }
+
+
+        /* 人工客服相关内容的样式 */
+        #customer-service-modal .welcome-message {
+            font-size: 30px;
+            margin-top: 20px;
+        }
+
+
+        #customer-service-modal form {
+            margin-top: 40px;
+        }
+
+        #customer-service-modal input,
+        #customer-service-modal textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 20px 0;
+            box-sizing: border-box; /* 包含边框和内边距在宽度内 */
+            font-size: 30px;
+        }
+
+        #customer-service-modal button {
+            /* 根据需要调整样式 */
+            font-size: 40px;
+        }
+
+
+
+
+        /*!* 右击按键 *!*/
+        /*.custom-menu {*/
+        /*    display: none;*/
+        /*    position: absolute;*/
+        /*    background-color: #f0f0f0;*/
+        /*    border: 1px solid #d4d4d4;*/
+        /*    font-size: 30px;*/
+        /*    z-index: 1000; !* 确保菜单在最上层 *!*/
+        /*}*/
+
+        /*.custom-menu div {*/
+        /*    padding: 10px 20px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+
+        /*.custom-menu div:hover {*/
+        /*    background-color: #ddd;*/
+        /*}*/
+
+        /*.menu-item {*/
+        /*    padding: 5px 10px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+
+        /*.menu-item:hover {*/
+        /*    background-color: #ddd;*/
+        /*}*/
+    </style>
+
+</head>
+<body>
+<!--<h1>欢迎来到主页</h1>-->
+    <!-- 顶部 -->
+    <div class="top-nav-bar">
+        <a href="/index">
+            <button class="nav-button" id="back-button">
+                <img src="{{ url_for('static', filename='home.jpg') }}" alt="返回">
+            </button>
+        </a>
+
+        <h1 class="page-title">Homepage</h1>
+
+        <button class="nav-button" id="search-button">
+            <img src="{{ url_for('static', filename='search.jpg') }}" alt="user">
+        </button>
+        <div id="search-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+
+                <h2>search</h2>
+
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Enter search content">
+                    <button type="submit">search</button>
+                </form>
+            </div>
+        </div>
+
+        <a href="/userinfo">
+            <button class="nav-button" id="user-info-button">
+                <img src="{{ url_for('static', filename='user-info.jpg') }}" alt="user">
+            </button>
+        </a>
+    </div>
+
+
+    <!-- 文件夹 -->
+    <!-- 文件夹图标 -->
+    <div class="folder-container">
+        <div class="folder-icon" id="folder1">
+            <img src="{{ url_for('static', filename='folder.jpg') }}" alt="文件夹"/>
+            <div class="folder-label">pre-processing</div>
+        </div>
+
+        <!-- 弹窗 -->
+{#        <div id="app-modal1" class="modal">#}
+{#            <div class="modal-content">#}
+{#                <span class="close-button">&times;</span>#}
+{#                <h2>App List</h2>#}
+{##}
+{#                <!-- 应用图标 -->#}
+{#                <a href="/simulation" class="app-icon">#}
+{#                    <img src="{{ url_for('static', filename='simulation.jpg') }}" alt="仿真"/>#}
+{#                    <div class="app-label">simulation</div>#}
+{#                </a>#}
+{#                <!-- 更多应用图标... -->#}
+{#                <a href="/connection" class="app-icon">#}
+{#                    <img src="{{ url_for('static', filename='connection.jpg') }}" alt="连接"/>#}
+{#                    <div class="app-label">connection</div>#}
+{#                </a>#}
+{#                <!-- 更多应用图标... -->#}
+{#                <a href="/code" class="app-icon">#}
+{#                    <img src="{{ url_for('static', filename='code.jpg') }}" alt="代码"/>#}
+{#                    <div class="app-label">code</div>#}
+{#                </a>#}
+{#                <!-- 更多应用图标... -->#}
+{#            </div>#}
+        </div>
+
+        <!-- 文件夹图标 -->
+        <div class="folder-icon" id="folder2">
+            <img src="{{ url_for('static', filename='folder.jpg') }}" alt="文件夹"/>
+            <div class="folder-label">record</div>
+        </div>
+
+        <!-- 弹窗 -->
+        <div id="app-modal2" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>App List</h2>
+
+                <!-- 应用图标 -->
+                <a href="/report" class="app-icon">
+                    <img src="{{ url_for('static', filename='report.jpg') }}" alt="仿真"/>
+                    <div class="app-label">report</div>
+                </a>
+                <!-- 更多应用图标... -->
+                <a href="/log" class="app-icon">
+                    <img src="{{ url_for('static', filename='log.jpg') }}" alt="连接"/>
+                    <div class="app-label">log</div>
+                </a>
+                <!-- 更多应用图标... -->
+                <a href="/task" class="app-icon">
+                    <img src="{{ url_for('static', filename='task.jpg') }}" alt="代码"/>
+                    <div class="app-label">task</div>
+                </a>
+                <!-- 更多应用图标... -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 自定义右键菜单 -->
+    <div id="customContextMenu" class="custom-context-menu">
+        <button id="addButton">Add</button>
+        <button id="deleteButton">Delete</button>
+        <button id="renameButton">Rename</button>
+    </div>
+
+
+    <!-- 应用列表 -->
+    <div id="smallModal" class="small-modal">
+        <div class="small-modal-content">
+            <span class="close-button">&times;</span>
+            <a href="/simulation" class="app-icon">
+                    <img src="{{ url_for('static', filename='simulation.jpg') }}" alt="仿真"/>
+                    <div class="app-label">simulation</div>
+            </a>
+                <!-- 更多应用图标... -->
+            <a href="/connection" class="app-icon">
+                    <img src="{{ url_for('static', filename='connection.jpg') }}" alt="连接"/>
+                    <div class="app-label">connection</div>
+            </a>
+                <!-- 更多应用图标... -->
+            <a href="/code" class="app-icon">
+                    <img src="{{ url_for('static', filename='code.jpg') }}" alt="代码"/>
+                    <div class="app-label">code</div>
+            </a>
+
+            <a href="/report" class="app-icon">
+                    <img src="{{ url_for('static', filename='report.jpg') }}" alt="report"/>
+                    <div class="app-label">report</div>
+            </a>
+                <!-- 更多应用图标... -->
+            <a href="/log" class="app-icon">
+                    <img src="{{ url_for('static', filename='log.jpg') }}" alt="log"/>
+                    <div class="app-label">log</div>
+            </a>
+                <!-- 更多应用图标... -->
+            <a href="/task" class="app-icon">
+                    <img src="{{ url_for('static', filename='task.jpg') }}" alt="task"/>
+                    <div class="app-label">task</div>
+            </a>
+
+        </div>
+    </div>
+
+
+    <!-- 固定在底部的导航栏 -->
+    <div class="fixed-bottom-bar">
+        <!-- 常规帮助 -->
+        <button id="help-service-button" class="icon-button">
+            <img src="{{url_for('static', filename='ph_question.jpg')}}" alt="帮助">
+        </button>
+        <div id="help-service-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>help</h2>
+
+                <!-- 可折叠的问题 1 -->
+                <div class="faq-section">
+                    <button class="faq-question">question 1</button>
+                    <div class="faq-answer" style="display: none;">
+                        <p>solution 1 ：......</p>
+                    </div>
+                </div>
+
+                <!-- 可折叠的问题 2 -->
+                <div class="faq-section">
+                    <button class="faq-question">question 2</button>
+                    <div class="faq-answer" style="display: none;">
+                        <p>solution 2 ：......</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 人工客服 -->
+        <button id="customer-service-button" class="icon-button">
+            <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="服务"/>
+        </button>
+<!--        <div id="customer-service-modal" class="modal">-->
+<!--            &lt;!&ndash; 模态内容 &ndash;&gt;-->
+<!--            <div class="modal-content">-->
+<!--                <span class="close-button">&times;</span>-->
+<!--                <h2>人工客服</h2>-->
+<!--                &lt;!&ndash; 人工客服相关内容 &ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+        <div id="customer-service-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>customer service</h2>
+
+                <!-- 在这里添加人工客服相关内容 -->
+                <p class="welcome-message">Welcome to our customer service center! How can we help you?</p>
+
+                <!-- 联系表单（示例） -->
+                <form id="contact-form">
+                    <input type="text" placeholder="username" required><br>
+                    <input type="email" placeholder="E-mail" required><br>
+                    <textarea placeholder="question"></textarea><br>
+                    <button type="submit">submit</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- AIchat -->
+        <button id="AI-chat-button" class="icon-button">
+            <img src="{{ url_for('static', filename='AIchat.jpg') }}" alt="服务"/>
+        </button>
+        <div id="AI-chat-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>AI chat</h2>
+
+                <!-- 对话记录 -->
+                <div id="chat-history" class="chat-history">
+                    <!-- 在这里动态添加聊天内容 -->
+                </div>
+
+                <!-- 文字输入框 -->
+                <input type="text" id="chat-input" placeholder="Enter question ......">
+                <button id="send-message">send</button>
+            </div>
+        </div>
+
+
+        <!-- 设置 -->
+        <button id="setting-button" class="icon-button">
+            <img src="{{ url_for('static', filename='setting.jpg') }}" alt="服务"/>
+        </button>
+        <div id="setting-modal" class="modal">
+            <!-- 模态内容 -->
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>setting</h2>
+
+                        <!-- 设置按钮 1 -->
+                <button class="setting-option-button">
+                    <img src="{{ url_for('static', filename='copy.jpg') }}" alt="选项1"/>
+                </button>
+
+                        <!-- 设置按钮 2 -->
+                <button class="setting-option-button">
+                    <img src="{{ url_for('static', filename='delete.jpg') }}" alt="选项2"/>
+                </button>
+
+                <!-- 触发按钮 -->
+                <button id="create-folder-button">
+                    <img src="{{ url_for('static', filename='add.jpg') }}" alt="选项2"/>
+                </button>
+
+
+            </div>
+        </div>
+
+
+        <!-- 监控 -->
+        <button id="monitoring-button" class="icon-button">
+            <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="服务"/>
+        </button>
+        <div id="monitoring-modal" class="modal">
+            <!-- 模态内容 -->
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>monitoring</h2>
+                <!-- 人工客服相关内容 -->
+            </div>
+        </div>
+        <!-- 根据需要添加更多按钮 -->
+    </div>
+
+    <script>
+
+
+        // 为每个文件夹和对应的弹窗绑定事件处理器
+        function setupFolderAndModal(folderId, modalId) {
+          var folderIcon = document.getElementById(folderId);
+          var appModal = document.getElementById(modalId);
+          var closeButton = appModal.querySelector('.close-button');
+
+          // 点击文件夹图标时打开弹窗
+          folderIcon.onclick = function() {
+            appModal.style.display = 'block';
+          };
+
+          // 点击关闭按钮时关闭弹窗
+          closeButton.onclick = function() {
+            appModal.style.display = 'none';
+          };
+
+          // 点击弹窗外部时关闭弹窗
+          window.onclick = function(event) {
+            if (event.target == appModal) {
+              appModal.style.display = 'none';
+            }
+          };
+        }
+
+        // 设置第一个文件夹和弹窗
+        setupFolderAndModal('folder1', 'app-modal1');
+
+        // 设置第二个文件夹和弹窗
+        setupFolderAndModal('folder2', 'app-modal2');
+
+        // 如果您有更多的文件夹，继续使用上面的模式为它们设置。
+
+        //=============================右击事件==============================
+        // 获取所有模态内容区域
+        const modalContents = document.querySelectorAll('.modal-content');
+
+        {#// 自定义右键菜单#}
+        {#const customContextMenu = document.createElement('div');#}
+        {#customContextMenu.innerHTML = `#}
+        {#  <button id="addButton" style="display:block;">Add</button>#}
+        {#  <button id="deleteButton" style="display:none;">Delete</button>#}
+        {#  <button id="renameButton" style="display:none;">Rename</button>#}
+        {#`;#}
+        {#customContextMenu.classList.add('custom-context-menu');#}
+        {#document.body.appendChild(customContextMenu);#}
+        {##}
+        {#const addButton = customContextMenu.querySelector('#addButton');#}
+
+        // 用于存储当前右键点击的图标元素
+        let currentIconElement = null;
+
+        // 为每个模态内容区域添加右键点击事件监听器
+        modalContents.forEach(content => {
+            content.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+
+                // 隐藏所有上下文菜单按钮
+                hideContextMenuButtons();
+                showContextMenuButtons(event); // 显示自定义上下文菜单
+                // 判断点击的是否是图标元素或其子元素
+                const isIconClicked = event.target.matches('.app-icon, .app-icon *');
+
+                if (isIconClicked) {
+                    // 如果点击的是图标，显示删除和重命名按钮
+                    document.getElementById('deleteButton').style.display = 'block';
+                    document.getElementById('renameButton').style.display = 'block';
+                    // 阻止事件冒泡到模态内容区域
+                    event.stopPropagation();
+                } else {
+                    // 如果点击的是模态内容区域（不包括图标），显示添加按钮
+                    document.getElementById('addButton').style.display = 'block';
+                }
+
+                // 显示自定义菜单，并根据点击位置调整位置
+                customContextMenu.style.left = `${event.pageX}px`;
+                customContextMenu.style.top = `${event.pageY}px`;
+                customContextMenu.classList.add('visible');
+            }); // 使用事件捕获来确保在冒泡之前处理点击
+        });
+
+
+        const smallModal = document.getElementById('smallModal');
+
+        // 点击"add"按钮时显示小弹窗
+        addButton.addEventListener('click', () => {
+            smallModal.style.display = 'block';
+        });
+
+        // 点击其他地方隐藏小弹窗
+        document.addEventListener('click', (event) => {
+          if (!customContextMenu.contains(event.target)) {
+            customContextMenu.classList.remove('visible');
+          }
+        });
+
+        // 在小弹窗中查找关闭按钮
+        const closeButton = smallModal.querySelector('.close-button');
+
+        // 添加点击事件监听器来关闭小弹窗
+        closeButton.addEventListener('click', () => {
+            smallModal.style.display = 'none';
+        });
+
+
+        function addIconToFolder(folderId, iconSrc, iconName, iconHref) {
+            const folderModalContent = document.getElementById(folderId).querySelector('.modal-content');
+            const newLink = document.createElement('a');
+            newLink.href = iconHref; // 设置新图标的链接地址
+            newLink.className = 'app-icon'; // 设置样式类名
+
+            const newIcon = document.createElement('img');
+            newIcon.src = iconSrc;
+            newIcon.alt = iconName;
+            newLink.appendChild(newIcon);
+
+            const newLabel = document.createElement('div');
+            newLabel.className = 'app-label';
+            newLabel.textContent = iconName;
+
+            // 创建包裹图标和标签的容器
+            const iconContainer = document.createElement('div');
+            iconContainer.className = 'app-icon-container';
+            iconContainer.appendChild(newLink);
+            iconContainer.appendChild(newLabel);
+
+            // 为新添加的应用图标绑定右键点击事件监听器
+            iconContainer.addEventListener('contextmenu', function(event) {
+                event.preventDefault();
+                currentIconElement = iconContainer; // 存储当前点击的图标元素
+
+                // 显示删除和重命名按钮
+                document.getElementById('deleteButton').style.display = 'block';
+                document.getElementById('renameButton').style.display = 'block';
+
+                // 显示自定义菜单，并调整位置
+                customContextMenu.style.left = `${event.pageX}px`;
+                customContextMenu.style.top = `${event.pageY}px`;
+                customContextMenu.classList.add('visible');
+            },true);
+
+            // 将图标容器添加到大弹窗的内容中
+            folderModalContent.appendChild(iconContainer);
+        }
+
+
+        // 在app-list中为每个图标添加点击事件
+        document.querySelectorAll('.small-modal-content .app-icon').forEach(appIconLink => {
+          appIconLink.addEventListener('click', function(event) {
+            event.preventDefault(); // 阻止<a>标签的默认点击行为
+
+            const folderId = 'app-modal1'; // 目标大弹窗的ID
+            const iconSrc = this.querySelector('img').src;
+            const iconName = this.querySelector('img').alt;
+            const iconHref = this.getAttribute('href'); // 获取当前点击的<a>标签的链接地址
+
+            // 执行添加图标到大弹窗的操作
+            addIconToFolder(folderId, iconSrc, iconName, iconHref);
+          });
+        });
+
+
+        // 初始化时隐藏所有上下文菜单按钮
+        function hideContextMenuButtons() {
+            document.getElementById('addButton').style.display = 'none';
+            document.getElementById('deleteButton').style.display = 'none';
+            document.getElementById('renameButton').style.display = 'none';
+        }
+        // 根据点击位置显示指定的按钮
+        function showContextMenuButtons(event) {
+            const customContextMenu = document.getElementById('customContextMenu');
+            hideContextMenuButtons(); // 首先隐藏所有按钮
+            const folderIcon = event.currentTarget; // 获取当前点击的文件夹或图标
+
+            // 检查点击是否在蓝框范围内，但不在红框范围内
+            if (folderIcon.classList.contains('folder-icon') && !event.target.classList.contains('app-icon')) {
+                document.getElementById('addButton').style.display = 'block'; // 显示添加按钮
+            }
+            // 检查点击是否在红桜范围内
+            else if (event.target.classList.contains('app-icon')) {
+                document.getElementById('deleteButton').style.display = 'block'; // 显示删除按钮
+                document.getElementById('renameButton').style.display = 'block'; // 显示重命名按钮
+            }
+
+            // 设置上下文菜单的位置并显示
+            customContextMenu.style.left = `${event.pageX}px`;
+            customContextMenu.style.top = `${event.pageY}px`;
+            customContextMenu.classList.add('visible');
+        }
+
+        customContextMenu.addEventListener('contextmenu', function(event) {
+            event.stopPropagation(); // 阻止事件冒泡
+        }, true);
+
+        // 为蓝框（文件夹）添加右键点击事件监听器
+        document.querySelectorAll('.folder-icon').forEach(folder => {
+            folder.addEventListener('contextmenu', function(event) {
+                event.preventDefault(); // 阻止默认的上下文菜单
+                showContextMenuButtons(event); // 显示上下文菜单
+            });
+        });
+
+        // 为红框（图标）添加右键点击事件监听器
+        document.querySelectorAll('.app-icon').forEach(icon => {
+            icon.addEventListener('contextmenu', function(event) {
+                event.preventDefault();
+                // 存储当前点击的图标元素
+
+                currentIconElement = icon;
+                // 显示删除和重命名按钮
+                document.getElementById('deleteButton').style.display = 'block';
+                document.getElementById('renameButton').style.display = 'block';
+                // 隐藏添加按钮
+                document.getElementById('addButton').style.display = 'none';
+                // 显示自定义菜单，并调整位置
+                customContextMenu.style.left = `${event.pageX}px`;
+                customContextMenu.style.top = `${event.pageY}px`;
+                customContextMenu.classList.add('visible');
+            },true); // 事件捕获阶段调用
+        });
+
+        // 为“Delete”按钮添加点击事件监听器
+        document.getElementById('deleteButton').addEventListener('click', function() {
+            if (currentIconElement) {
+                currentIconElement.remove(); // 删除被点击的图标
+                customContextMenu.classList.remove('visible'); // 隐藏上下文菜单
+            }
+        });
+
+        // 为"Rename"按钮添加点击事件监听器
+        document.getElementById('renameButton').addEventListener('click', function() {
+            // 只有在当前图标元素存在时才执行重命名操作
+            if (currentIconElement) {
+                // 弹出输入框要求用户输入新名称
+                var newName = prompt("请输入新名称:", "");
+                // 如果用户输入了新名称，则更新图标的文本内容
+                if (newName !== null && newName.trim() !== "") {
+                    // 假设每个图标下都有一个类名为'app-label'的元素用于显示名称
+                    var label = currentIconElement.querySelector('.app-label');
+                    if (label) {
+                        label.textContent = newName;
+                    }
+                }
+                // 隐藏上下文菜单
+                customContextMenu.classList.remove('visible');
+            }
+        });
+
+
+        // 点击其他地方隐藏上下文菜单
+        window.addEventListener('click', function(event) {
+            const customContextMenu = document.getElementById('customContextMenu');
+            if (event.target !== customContextMenu && !customContextMenu.contains(event.target)) {
+                customContextMenu.classList.remove('visible');
+            }
+        });
+
+        
+        //============================================================
+        // 获取模态框元素
+        var customerServiceModal = document.getElementById("customer-service-modal");
+        var aiChatModal = document.getElementById("AI-chat-modal");
+        var helpServiceModal = document.getElementById("help-service-modal")
+        var settingModal = document.getElementById("setting-modal")
+        var monitoringModal = document.getElementById("monitoring-modal")
+        var searchModal = document.getElementById("search-modal")
+
+        // 获取打开模态框的按钮元素
+        var customerServiceBtn = document.getElementById("customer-service-button");
+        var aiChatBtn = document.getElementById("AI-chat-button");
+        var helpServiceBtn = document.getElementById("help-service-button")
+        var settingBtn = document.getElementById("setting-button")
+        var monitoringBtn = document.getElementById("monitoring-button")
+        var searchBtn = document.getElementById("search-button")
+
+        // 获取模态框内的所有关闭按钮元素
+        var closeButtons = document.getElementsByClassName("close-button");
+
+        // 点击按钮时打开对应的模态框
+        customerServiceBtn.onclick = function() {
+            customerServiceModal.style.display = "block";
+        }
+
+        aiChatBtn.onclick = function() {
+            aiChatModal.style.display = "block";
+        }
+
+        settingBtn.onclick = function() {
+            settingModal.style.display = "block";
+        }
+
+        monitoringBtn.onclick = function() {
+            monitoringModal.style.display = "block";
+        }
+
+        helpServiceBtn.onclick = function() {
+            helpServiceModal.style.display = "block";
+        }
+
+        searchBtn.onclick = function() {
+            searchModal.style.display = "block";
+        }
+
+        // 为每个关闭按钮添加点击事件监听器
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                // 这里我们可以关闭这个按钮所在的模态框
+                this.closest('.modal').style.display = 'none';
+            }
+        }
+
+        // 点击模态框外任何地方关闭模态框
+        window.onclick = function(event) {
+            if (event.target == customerServiceModal) {
+                customerServiceModal.style.display = "none";
+            }
+            if (event.target == aiChatModal) {
+                aiChatModal.style.display = "none";
+            }
+            if (event.target == helpServiceModal) {
+                helpServiceModal.style.display = "none";
+            }
+            if (event.target == settingModal) {
+                settingModal.style.display = "none";
+            }
+            if (event.target == monitoringModal) {
+                monitoringModal.style.display = "none";
+            }
+            if (event.target == searchModal) {
+                searchModal.style.display = "none";
+            }
+        }
+
+    </script>
+</body>
+</html>
+

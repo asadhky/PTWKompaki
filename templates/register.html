@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <!-- Add any additional CSS or JS here -->
+    <link rel="stylesheet" type="text/css" href="static/css/login.css">
+
+</head>
+<body>
+    <div>
+        <h1>Create an Account</h1>
+        <form action="/register" method="post">
+            <label for="username">Choose a username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Choose a password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <input type="submit" value="Register">
+        </form>
+        <p>Already have an account? <a href="/login">Login here</a>.</p>
+    </div>
+</body>
+</html>

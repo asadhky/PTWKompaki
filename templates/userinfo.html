@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kompaki</title>
+    <style>
+        /* Top navigation bar styles */
+        .top-nav-bar {
+            display: flex; /* 使用弹性盒子布局 */
+            justify-content: space-between; /* 子元素之间平均分布空间 */
+            align-items: center; /* 子元素垂直居中 */
+            padding: 30px 20px; /* 上下30px，左右20px的内边距 */
+        }
+
+        .nav-button {
+            background: none; /* 按钮无背景色 */
+            border: none; /* 按钮无边框 */
+            padding: 10px 10px; /* 按钮内边距 */
+            cursor: pointer; /* 鼠标悬停时显示指针形状 */
+            margin-right: 20px; /* 右边距20px */
+        }
+
+        .nav-button:first-child{
+            margin-right: 40px;
+        }
+
+        .page-title {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        .fixed-bottom-bar {
+            position: fixed; /* 固定位置 */
+            bottom: 0; /* 在底部 */
+            left: 0; /* 从左边开始 */
+            width: 100%; /* 宽度占满整个屏幕 */
+            background-color: #fff; /* 背景颜色，可以根据需要更改 */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* 可选的阴影效果 */
+            display: flex;
+            justify-content: space-around; /* 图标平均分布 */
+            padding: 10px 0; /* 上下填充 */
+        }
+
+        .icon-button.active-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background-color: #4CAF50;
+        }
+
+        .icon-button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .icon-button img {
+            width: 80px; /* 图标大小，根据需要调整 */
+            height: auto;
+        }
+
+        /* 模态框的基本样式 */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定在页面上 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* 背景色半透明 */
+        }
+
+        /* 模态内容的样式 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% 从顶部开始，居中 */
+            padding: 60px;
+            border: 1px solid #888;
+            width: 80%; /* 可以根据需求调整宽度 */
+        }
+
+        /* 关闭按钮样式 */
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 46px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 搜索输入框样式 */
+        #search-input {
+            width: 80%; /* 调整输入框的宽度 */
+            padding: 10px; /* 增加内边距 */
+            font-size: 32px; /* 字体大小 */
+            border: 1px solid #ccc; /* 边框样式 */
+            border-radius: 4px; /* 轻微的圆角 */
+            margin-bottom: 10px; /* 底部外边距 */
+        }
+
+        /* 搜索按钮样式 */
+        #search-form button {
+            padding: 10px 20px; /* 增加内边距 */
+            font-size: 32px; /* 字体大小 */
+            border: 1px solid #ccc; /* 边框样式 */
+            border-radius: 4px; /* 圆角 */
+            cursor: pointer; /* 鼠标悬停时显示指针形状 */
+            background-color: #4CAF50; /* 按钮背景色 */
+            color: white; /* 文字颜色 */
+        }
+
+        #search-modal .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% 从顶部开始，居中 */
+            padding: 60px;
+            border: 1px solid #888;
+            width: 80%; /* 可以根据需求调整宽度 */
+        }
+
+        #search-form button:hover {
+            background-color: #45a049; /* 鼠标悬停时的背景色 */
+        }
+
+        /* ai chat */
+        /* 聊天记录样式 */
+        .chat-history {
+            height: 300px; /* 可调整高度 */
+            overflow-y: auto; /* 添加滚动条 */
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 30px;
+            padding: 10px;
+        }
+
+        /* 文字输入框样式 */
+        #chat-input {
+            width: calc(100% - 90px); /* 让输入框和发送按钮并排 */
+            padding: 10px;
+            margin-right: 10px; /* 在输入框和发送按钮之间添加一些空间 */
+            font-size: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 发送按钮样式 */
+        #send-message {
+            width: 100px;
+            padding: 20px;
+            font-size: 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #send-message:hover {
+            background-color: #45a049;
+        }
+
+
+
+        .faq-question {
+            background-color: #eee; /* 问题部分的背景颜色为浅灰色 */
+            color: #444; /* 文字颜色为深灰色 */
+            cursor: pointer; /* 鼠标悬停时显示为指针形状，表示这是一个可点击的元素 */
+            padding: 32px; /* 内边距为32像素，增加点击区域的大小，提升可点击性 */
+            width: 100%; /* 宽度设置为100%，使得问题部分填满其父元素的宽度 */
+            text-align: left; /* 文字左对齐 */
+            border: none; /* 无边框 */
+            outline: none; /* 点击时无轮廓线 */
+            transition: 0.4s; /* 过渡效果的持续时间为0.4秒，使得样式变化更平滑 */
+            font-size: 32px;
+        }
+
+        .faq-answer {
+            padding: 0 32px; /* 答案部分左右各有32像素的内边距 */
+            font-size: 32px;
+            background-color: white; /* 答案部分的背景颜色为白色 */
+            display: none; /* 默认情况下答案不显示 */
+            overflow: hidden; /* 内容溢出隐藏，配合折叠效果使用 */
+        }
+
+        .setting-option-button {
+            /* 按钮样式，根据需要调整 */
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .setting-option-button img {
+            /* 图片样式，根据需要调整 */
+            width: 50px; /* 示例宽度 */
+            height: auto;
+        }
+
+        .modal-content p {
+            /* 文本标签的样式 */
+            text-align: center; /* 居中对齐文本 */
+            margin-top: 5px; /* 在按钮和文本之间添加一些空间 */
+        }
+
+
+
+        /* 人工客服相关内容的样式 */
+        #customer-service-modal .welcome-message {
+            font-size: 30px;
+            margin-top: 20px;
+        }
+
+
+        #customer-service-modal form {
+            margin-top: 40px;
+        }
+
+        #customer-service-modal input,
+        #customer-service-modal textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 20px 0;
+            box-sizing: border-box; /* 包含边框和内边距在宽度内 */
+            font-size: 30px;
+        }
+
+        #customer-service-modal button {
+            /* 根据需要调整样式 */
+            font-size: 40px;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+<!--<h1>欢迎来到主页</h1>-->
+    <!-- 顶部 -->
+    <div class="top-nav-bar">
+        <a href="/index">
+            <button class="nav-button" id="back-button">
+                <img src="{{ url_for('static', filename='home.jpg') }}" alt="返回">
+            </button>
+        </a>
+
+        <h1 class="page-title">user information</h1>
+
+        <button class="nav-button" id="search-button">
+            <img src="{{ url_for('static', filename='search.jpg') }}" alt="user">
+        </button>
+        <div id="search-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+
+                <h2>search</h2>
+
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Enter search content">
+                    <button type="submit">search</button>
+                </form>
+            </div>
+        </div>
+
+        <a href="/userinfo">
+            <button class="nav-button" id="user-info-button">
+                <img src="{{ url_for('static', filename='user-info.jpg') }}" alt="user">
+            </button>
+        </a>
+    </div>
+
+    <!-- 固定在底部的导航栏 -->
+    <div class="fixed-bottom-bar">
+        <!-- 常规帮助 -->
+        <button id="help-service-button" class="icon-button">
+            <img src="{{url_for('static', filename='ph_question.jpg')}}" alt="帮助">
+        </button>
+        <div id="help-service-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>help</h2>
+
+                <!-- 可折叠的问题 1 -->
+                <div class="faq-section">
+                    <button class="faq-question">question 1</button>
+                    <div class="faq-answer" style="display: none;">
+                        <p>solution 1 ：......</p>
+                    </div>
+                </div>
+
+                <!-- 可折叠的问题 2 -->
+                <div class="faq-section">
+                    <button class="faq-question">question 2</button>
+                    <div class="faq-answer" style="display: none;">
+                        <p>solution 2 ：......</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 人工客服 -->
+        <button id="customer-service-button" class="icon-button">
+            <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="服务"/>
+        </button>
+        <div id="customer-service-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>customer service</h2>
+
+                <!-- 在这里添加人工客服相关内容 -->
+                <p class="welcome-message">Welcome to our customer service center! How can we help you?</p>
+
+                <!-- 联系表单（示例） -->
+                <form id="contact-form">
+                    <input type="text" placeholder="username" required><br>
+                    <input type="email" placeholder="E-mail" required><br>
+                    <textarea placeholder="question"></textarea><br>
+                    <button type="submit">submit</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- AIchat -->
+        <button id="AI-chat-button" class="icon-button">
+            <img src="{{ url_for('static', filename='AIchat.jpg') }}" alt="服务"/>
+        </button>
+        <div id="AI-chat-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>AI chat</h2>
+
+                <!-- 对话记录 -->
+                <div id="chat-history" class="chat-history">
+                    <!-- 在这里动态添加聊天内容 -->
+                </div>
+
+                <!-- 文字输入框 -->
+                <input type="text" id="chat-input" placeholder="Enter question ......">
+                <button id="send-message">send</button>
+            </div>
+        </div>
+
+
+        <!-- 设置 -->
+        <button id="setting-button" class="icon-button">
+            <img src="{{ url_for('static', filename='setting.jpg') }}" alt="服务"/>
+        </button>
+        <div id="setting-modal" class="modal">
+            <!-- 模态内容 -->
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>setting</h2>
+
+                        <!-- 设置按钮 1 -->
+                <button class="setting-option-button">
+                    <img src="{{ url_for('static', filename='copy.jpg') }}" alt="选项1"/>
+                </button>
+
+
+                        <!-- 设置按钮 2 -->
+                <button class="setting-option-button">
+                    <img src="{{ url_for('static', filename='delete.jpg') }}" alt="选项2"/>
+                </button>
+
+                <!-- 触发按钮 -->
+                <button id="create-folder-button">
+                    <img src="{{ url_for('static', filename='add.jpg') }}" alt="选项2"/>
+                </button>
+
+
+            </div>
+        </div>
+
+
+        <!-- 监控 -->
+        <button id="monitoring-button" class="icon-button">
+            <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="服务"/>
+        </button>
+        <div id="monitoring-modal" class="modal">
+            <!-- 模态内容 -->
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>monitoring</h2>
+                <!-- 人工客服相关内容 -->
+            </div>
+        </div>
+        <!-- 根据需要添加更多按钮 -->
+    </div>
+
+    <script>
+
+
+        // 人工客服
+        document.querySelectorAll('#customer-service-modal .faq-question').forEach(function(question) {
+            question.addEventListener('click', function() {
+                var answer = this.nextElementSibling;
+                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+
+        // 添加联系表单的提交逻辑（示例）
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // 在这里处理表单提交，例如发送AJAX请求或显示确认消息
+            alert('表单已提交！');
+        });
+
+        //ai-chat
+        document.getElementById('send-message').addEventListener('click', function() {
+            var input = document.getElementById('chat-input');
+            var message = input.value;
+            input.value = ''; // 清空输入框
+
+            // 将消息添加到聊天记录
+            var chatHistory = document.getElementById('chat-history');
+            var newMessage = document.createElement('div');
+            newMessage.textContent = message;
+            chatHistory.appendChild(newMessage);
+
+            // 这里可以添加调用AI聊天接口的逻辑
+            // ...
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var faqQuestions = document.querySelectorAll('.faq-question');
+
+            faqQuestions.forEach(function(question) {
+                question.addEventListener('click', function() {
+                    this.classList.toggle("active");
+                    var answer = this.nextElementSibling;
+                    if (answer.style.display === "block") {
+                        answer.style.display = "none";
+                    } else {
+                        answer.style.display = "block";
+                    }
+                });
+            });
+        });
+
+
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // 阻止表单默认提交行为
+
+            var searchText = document.getElementById('search-input').value;
+            console.log('搜索内容：', searchText);
+
+            // 在这里添加搜索逻辑，例如发送AJAX请求或者使用表单提交
+        });
+
+        // 获取模态框元素
+        var customerServiceModal = document.getElementById("customer-service-modal");
+        var aiChatModal = document.getElementById("AI-chat-modal");
+        var helpServiceModal = document.getElementById("help-service-modal")
+        var settingModal = document.getElementById("setting-modal")
+        var monitoringModal = document.getElementById("monitoring-modal")
+        var searchModal = document.getElementById("search-modal")
+
+        // 获取打开模态框的按钮元素
+        var customerServiceBtn = document.getElementById("customer-service-button");
+        var aiChatBtn = document.getElementById("AI-chat-button");
+        var helpServiceBtn = document.getElementById("help-service-button")
+        var settingBtn = document.getElementById("setting-button")
+        var monitoringBtn = document.getElementById("monitoring-button")
+        var searchBtn = document.getElementById("search-button")
+
+        // 获取模态框内的所有关闭按钮元素
+        var closeButtons = document.getElementsByClassName("close-button");
+
+        // 点击按钮时打开对应的模态框
+        customerServiceBtn.onclick = function() {
+            customerServiceModal.style.display = "block";
+        }
+
+        aiChatBtn.onclick = function() {
+            aiChatModal.style.display = "block";
+        }
+
+        settingBtn.onclick = function() {
+            settingModal.style.display = "block";
+        }
+
+        monitoringBtn.onclick = function() {
+            monitoringModal.style.display = "block";
+        }
+
+        helpServiceBtn.onclick = function() {
+            helpServiceModal.style.display = "block";
+        }
+
+        searchBtn.onclick = function() {
+            searchModal.style.display = "block";
+        }
+
+        // 为每个关闭按钮添加点击事件监听器
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                // 这里我们可以关闭这个按钮所在的模态框
+                this.closest('.modal').style.display = 'none';
+            }
+        }
+
+        // 点击模态框外任何地方关闭模态框
+        window.onclick = function(event) {
+            if (event.target == customerServiceModal) {
+                customerServiceModal.style.display = "none";
+            }
+            if (event.target == aiChatModal) {
+                aiChatModal.style.display = "none";
+            }
+            if (event.target == helpServiceModal) {
+                helpServiceModal.style.display = "none";
+            }
+            if (event.target == settingModal) {
+                settingModal.style.display = "none";
+            }
+            if (event.target == monitoringModal) {
+                monitoringModal.style.display = "none";
+            }
+            if (event.target == searchModal) {
+                searchModal.style.display = "none";
+            }
+        }
+
+    </script>
+</body>
+</html>
