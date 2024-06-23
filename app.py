@@ -13,11 +13,17 @@ import json
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://xixi:123456@localhost:3308/userdb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 这行是可选的，可以避免 SQLAlchemy 发出警告
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/db_name'
+db = SQLAlchemy()
 app.secret_key = '123456'  # Ensure to replace with your actual secret key
 
-db = SQLAlchemy(app)
+db_config = {
+    'user': 'xixi',
+    'password': '123456',
+    'host': 'localhost',
+    'port': 3308,
+    'database': 'userdb'
+}
 
 # 用您的OpenAI API密钥替换此处
 openai.api_key = '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'
