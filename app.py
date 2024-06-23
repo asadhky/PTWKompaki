@@ -13,7 +13,7 @@ import json
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://xixi:NewPassword123!@localhost:3308/userdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://xixi:Chenxi1213!@localhost:3308/userdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
