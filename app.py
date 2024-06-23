@@ -13,17 +13,11 @@ import json
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/db_name'
-db = SQLAlchemy()
-app.secret_key = '123456'  # Ensure to replace with your actual secret key
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://xixi:NewPassword123!@localhost:3308/userdb'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.urandom(24)
 
-db_config = {
-    'user': 'xixi',
-    'password': '123456',
-    'host': 'localhost',
-    'port': 3308,
-    'database': 'userdb'
-}
+db = SQLAlchemy(app)
 
 # 用您的OpenAI API密钥替换此处
 openai.api_key = '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'
@@ -40,7 +34,18 @@ PLCTYPE_MAP = {
     # 根据需要添加更多映射
 }
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
 
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+# 初始化数据库（首次运行时创建表）
+with app.app_context():
+    db.create_all()
+    
 # 将原来的根路由重定向到登录页面
 @app.route('/')
 def root():
@@ -58,17 +63,13 @@ def login():
         username = request.form['username']
         password = hashlib.sha256(request.form['password'].encode()).hexdigest()
 
-        conn = mysql.connector.connect(**db_config)  # Replace with your actual database config
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
-        account = cursor.fetchone()  # Fetch the account from the database
-        cursor.close()
-        conn.close()
+        # 使用 SQLAlchemy 进行数据库查询
+        account = User.query.filter_by(username=username, password=password).first()
 
         if account:
             session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
+            session['id'] = account.id
+            session['username'] = account.username
             return redirect(url_for('choose_settings'))
         else:
             message = 'Incorrect username/password!'
@@ -81,27 +82,20 @@ def register():
         username = request.form['username']
         password = hashlib.sha256(request.form['password'].encode()).hexdigest()
 
-        # 连接到数据库
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor()
-
         # 检查用户名是否已存在
-        cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
-        account = cursor.fetchone()
+        account = User.query.filter_by(username=username).first()
         if account:
             flash('Username already exists!')
         else:
             # 将新用户的数据插入到数据库中
-            cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, password))
-            conn.commit()
+            new_user = User(username=username, password=password)
+            db.session.add(new_user)
+            db.session.commit()
             flash('You have successfully registered! You can now log in.')
 
-        cursor.close()
-        conn.close()
         return redirect(url_for('login'))
 
     return render_template('register.html')
-
 
 @app.route('/choose_settings')
 def choose_settings():
