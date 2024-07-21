@@ -26,7 +26,7 @@ db_config = {
 }
 
 # 用您的OpenAI API密钥替换此处
- api_key = os.getenv('OPENAI_API_KEY')
+api_key = os.getenv('OPENAI_API_KEY')
 openai.api_key = api_key
 # Initialize a global variable for the PLC connection
 plc = None
