@@ -303,7 +303,7 @@ class FolderApp(db.Model):
 # 定义 ask_gpt 函数，输入问题，返回 GPT-3 的回答
 def ask_gpt(question):
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
