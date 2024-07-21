@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="static/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* Existing CSS from index.html */
         .category {
             cursor: pointer;
         }
@@ -19,7 +20,109 @@
             border: 1px solid #ddd;
             padding: 5px;
         }
+
+        /* Existing CSS */
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            /* 增加每部分之间的间距 */
+        }
+
+        .section {
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-group-inline label {
+            margin: 0;
+            white-space: nowrap;
+            /* 确保标签不会换行 */
+        }
+
+        .form-group-inline input {
+            flex: 2;
+            padding: 10px;
+            border-radius: 4px;
+            min-width: 0;
+            /* 确保输入框不会超出父容器 */
+        }
+
+        .form-group-inline button {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            white-space: nowrap;
+            /* 确保按钮文字不会换行 */
+        }
+
+        .axis-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .axis {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .axis h2 {
+            margin-top: 0;
+        }
+
+        .axis.selected {
+            background-color: #FFD700 !important;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .slider-container label {
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .slider-container input {
+            flex-grow: 1;
+        }
+
+        .terminal-output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            height: 200px;
+            overflow-y: auto;
+            border-radius: 5px;
+        }
     </style>
+
 
 </head>
 
@@ -44,16 +147,16 @@
         <button class="nav-button" id="search-button">
             <img src="{{ url_for('static', filename='search.jpg') }}" alt="user">
         </button>
+        <!-- 搜索 -->
         <div id="search-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-
                 <h2>search</h2>
-
                 <form id="search-form">
                     <input type="text" id="search-input" placeholder="Enter search content">
                     <button type="submit">search</button>
                 </form>
+                <div id="search-results"></div>
             </div>
         </div>
 
@@ -77,54 +180,58 @@
     <!-- Application icons will be displayed here when the Planning category is clicked -->
     <div id="category-planning-apps-container" class="apps-container">
         <!-- Moved the apps from the modal here -->
-        <a href="/simulation" class="app-icon">
+        <a href="/connection" class="app-icon">
             <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
             <div class="app-label">connection</div>
         </a>
         <!-- Other applications... -->
-        <a href="/connection" class="app-icon">
+        <a href="/Tool manager" class="app-icon">
             <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
             <div class="app-label">Tool manager</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/code" class="app-icon">
+        <a href="/Calendar" class="app-icon">
             <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
             <div class="app-label">Calendar</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/code" class="app-icon">
+        <a href="/File manager" class="app-icon">
             <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
             <div class="app-label">File manager</div>
         </a>
-        <a href="/code" class="app-icon">
+        <a href="/Cycle time estimation" class="app-icon">
             <img src="{{ url_for('static', filename='cycle.jpg') }}" alt="代码" />
             <div class="app-label">Cycle time estimation</div>
+        </a>
+        <a href="/code" class="app-icon">
+            <img src="{{ url_for('static', filename='code.jpg') }}" alt="仿真" />
+            <div class="app-label">code</div>
         </a>
     </div>
 
     <!-- Application icons will be displayed here when the Planning category is clicked -->
     <div id="category-machining-apps-container" class="apps-container">
         <!-- 应用图标 -->
-        <a href="/report" class="app-icon">
+        <a href="/simulation" class="app-icon">
             <img src="{{ url_for('static', filename='simulation.jpg') }}" alt="仿真" />
             <div class="app-label">Simulation</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/log" class="app-icon">
+        <a href="/Digital twin" class="app-icon">
             <img src="{{ url_for('static', filename='digital-twin.jpg') }}" alt="连接" />
             <div class="app-label">Digital twin</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/3D viewer" class="app-icon">
             <img src="{{ url_for('static', filename='3d-viewer.jpg') }}" alt="代码" />
             <div class="app-label">2D/3D viewer</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/NC operation" class="app-icon">
             <img src="{{ url_for('static', filename='operations.jpg') }}" alt="代码" />
             <div class="app-label">NC operation</div>
         </a>
-        <a href="/task" class="app-icon">
+        <a href="/Collision advance" class="app-icon">
             <img src="{{ url_for('static', filename='collision.jpg') }}" alt="代码" />
             <div class="app-label">Collision advance</div>
         </a>
@@ -132,22 +239,22 @@
 
     <!-- Application icons will be displayed here when the Planning category is clicked -->
     <div id="category-monitoring-apps-container" class="apps-container">
-        <a href="/report" class="app-icon">
+        <a href="/Data logger" class="app-icon">
             <img src="{{ url_for('static', filename='log.jpg') }}" alt="仿真" />
             <div class="app-label">Data logger</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/log" class="app-icon">
+        <a href="/Maintenance manager" class="app-icon">
             <img src="{{ url_for('static', filename='report.jpg') }}" alt="连接" />
             <div class="app-label">Maintenance manager</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/Servo viewer" class="app-icon">
             <img src="{{ url_for('static', filename='Servo-viewer.jpg') }}" alt="代码" />
             <div class="app-label">Servo viewer</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/KPI" class="app-icon">
             <img src="{{ url_for('static', filename='kpi.jpg') }}" alt="代码" />
             <div class="app-label">KPI</div>
         </a>
@@ -155,31 +262,31 @@
 
     <div id="category-community-apps-container" class="apps-container">
         <!-- 应用图标 -->
-        <a href="/report" class="app-icon">
+        <a href="/team board" class="app-icon">
             <img src="{{ url_for('static', filename='team.jpg') }}" alt="仿真" />
             <div class="app-label">Team board</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/log" class="app-icon">
+        <a href="/cloud" class="app-icon">
             <img src="{{ url_for('static', filename='cloud.jpg') }}" alt="连接" />
             <div class="app-label">Cloud Machining</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/finance" class="app-icon">
             <img src="{{ url_for('static', filename='finance.jpg') }}" alt="代码" />
             <div class="app-label">Finance</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/update" class="app-icon">
             <img src="{{ url_for('static', filename='update.jpg') }}" alt="代码" />
             <div class="app-label">Update</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/consumer_service" class="app-icon">
             <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="代码" />
             <div class="app-label">Customer Support</div>
         </a>
-        <a href="/task" class="app-icon">
+        <a href="/shopping" class="app-icon">
             <img src="{{ url_for('static', filename='shopping.jpg') }}" alt="代码" />
             <div class="app-label">Shopping</div>
         </a>
@@ -187,36 +294,36 @@
 
     <div id="category-utility-apps-container" class="apps-container">
         <!-- 应用图标 -->
-        <a href="/report" class="app-icon">
+        <a href="/manual" class="app-icon">
             <img src="{{ url_for('static', filename='manual.jpg') }}" alt="仿真" />
             <div class="app-label">manual</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/log" class="app-icon">
+        <a href="/memo" class="app-icon">
             <img src="{{ url_for('static', filename='memo.jpg') }}" alt="连接" />
             <div class="app-label">memo</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/camera" class="app-icon">
             <img src="{{ url_for('static', filename='camera.jpg') }}" alt="代码" />
             <div class="app-label">camera</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/calculator" class="app-icon">
             <img src="{{ url_for('static', filename='calculator.jpg') }}" alt="代码" />
             <div class="app-label">calculator</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/browser" class="app-icon">
             <img src="{{ url_for('static', filename='browser.jpg') }}" alt="代码" />
             <div class="app-label">browser</div>
         </a>
-        <a href="/task" class="app-icon">
+        <a href="/setting1" class="app-icon">
             <img src="{{ url_for('static', filename='setting.jpg') }}" alt="代码" />
             <div class="app-label">setting</div>
         </a>
         <!-- 更多应用图标... -->
-        <a href="/task" class="app-icon">
+        <a href="/maintenance" class="app-icon">
             <img src="{{ url_for('static', filename='maintenance.jpg') }}" alt="代码" />
             <div class="app-label">maintenance</div>
         </a>
@@ -411,7 +518,97 @@
         </div>
     </div>
 
+    <!-- Middle section for axis status -->
+    <div class="axis-status" id="axis-status">
+        <div class="container">
+            <!-- 上部：Connection -->
+            <div class="section" id="connection-section">
+                <h2>Connection</h2>
+                <div class="form-group-inline">
+                    <label for="amsnetid">AmsNetID</label>
+                    <input type="text" id="amsnetid">
+                    <label for="port">Port</label>
+                    <input type="text" id="port">
+                    <button id="open-port-btn">Open Port</button>
+                </div>
+            </div>
 
+            <!-- 中部：Axis Status -->
+            <div class="section" id="axis-status-section">
+                <h2>Axis Status</h2>
+                <div class="axis-container">
+                    <div class="axis" id="status-x-axis" onclick="selectAxis('x')">
+                        <h2>X Axis</h2>
+                        <div>Current Position: <span id="x-current">0.000</span></div>
+                        <div>End Position: <span id="x-end">0.000</span></div>
+                        <div>Active Position: <span id="x-active">0.000</span></div>
+                    </div>
+                    <div class="axis" id="status-y-axis" onclick="selectAxis('y')">
+                        <h2>Y Axis</h2>
+                        <div>Current Position: <span id="y-current">0.000</span></div>
+                        <div>End Position: <span id="y-end">0.000</span></div>
+                        <div>Active Position: <span id="y-active">0.000</span></div>
+                    </div>
+                    <div class="axis" id="status-z-axis" onclick="selectAxis('z')">
+                        <h2>Z Axis</h2>
+                        <div>Current Position: <span id="z-current">0.000</span></div>
+                        <div>End Position: <span id="z-end">0.000</span></div>
+                        <div>Active Position: <span id="z-active">0.000</span></div>
+                    </div>
+                </div>
+
+                <div id="axis-controls" style="display:none;" class="form-group-inline">
+                    <button id="enable-axis">Enable Axis</button>
+                    <label for="speed">Speed</label>
+                    <input type="number" id="speed" placeholder="Enter speed">
+                    <button id="set-speed">Set Speed</button>
+                    <label for="position">Position</label>
+                    <input type="number" id="position" placeholder="Enter position">
+                    <button id="set-position">Set Position</button>
+                </div>
+
+                <div class="slider-container">
+                    <label for="override-slider">Override:</label>
+                    <input type="range" id="override-slider" min="0" max="100" value="98">
+                    <span id="override-value">98%</span>
+                </div>
+                <div class="slider-container">
+                    <label for="spindle-slider">Spindle:</label>
+                    <input type="range" id="spindle-slider" min="0" max="100" value="0">
+                    <span id="spindle-value">0%</span>
+                </div>
+            </div>
+
+            <!-- 下部：Terminal 输出台 -->
+            <div class="section" id="terminal-section">
+                <h2>Terminal Output</h2>
+                <div class="terminal-output" id="terminal-output">
+                    <!-- Terminal output will be appended here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Existing bottom-bar and other sections -->
+    <div class="fixed-bottom-bar">
+        <!-- Bottom bar content -->
+        <button id="help-service-button" class="icon-button">
+            <img src="{{url_for('static', filename='ph_question.jpg')}}" alt="Help">
+            <div class="icon-button">Help</div>
+        </button>
+        <!-- More buttons -->
+    </div>
+
+    <!-- Existing bottom-bar and other sections -->
+    <div class="fixed-bottom-bar">
+        <!-- Bottom bar content -->
+        <button id="help-service-button" class="icon-button">
+            <img src="{{url_for('static', filename='ph_question.jpg')}}" alt="Help">
+            <div class="icon-button">Help</div>
+        </button>
+        <!-- More buttons -->
+    </div>
 
     <!-- 固定在底部的导航栏 -->
     <div class="fixed-bottom-bar">
@@ -1104,14 +1301,73 @@
         //     };
         //   }
         // });
+        // 状态框
+        // 当前选择的轴
+        let selectedAxis = null;
 
-        // 点击其他位置隐藏自定义上下文菜单
-        window.addEventListener('click', function () {
-            document.getElementById('customContextMenu').style.display = 'none';
+        // 更新选择的轴并显示控制按钮
+        function selectAxis(axis) {
+            selectedAxis = axis;
+            document.getElementById('axis-controls').style.display = 'block';
+
+            // 更新选择的轴的样式
+            document.querySelectorAll('.axis').forEach(el => el.classList.remove('selected'));
+            document.getElementById(`status-${axis}-axis`).classList.add('selected');
+
+            logMessage(`Selected ${axis.toUpperCase()} Axis`);
+        }
+
+        // JavaScript for terminal output
+        function logMessage(message) {
+            const terminalOutput = document.getElementById('terminal-output');
+            const newMessage = document.createElement('div');
+            newMessage.textContent = message;
+            terminalOutput.appendChild(newMessage);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight; // Scroll to bottom
+        }
+
+        // JavaScript for connection and axis functions
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('open-port-btn').addEventListener('click', function () {
+                const amsNetID = document.getElementById('amsnetid').value;
+                const port = document.getElementById('port').value;
+                logMessage(`Opening port with AmsNetID: ${amsNetID} and Port: ${port}`);
+            });
+
+            document.getElementById('enable-axis').addEventListener('click', function () {
+                if (selectedAxis) {
+                    logMessage(`${selectedAxis.toUpperCase()} Axis enabled`);
+                } else {
+                    logMessage('No axis selected');
+                }
+            });
+
+            document.getElementById('set-speed').addEventListener('click', function () {
+                if (selectedAxis) {
+                    const speed = document.getElementById('speed').value;
+                    logMessage(`Setting ${selectedAxis.toUpperCase()} Axis speed to ${speed}`);
+                } else {
+                    logMessage('No axis selected');
+                }
+            });
+
+            document.getElementById('set-position').addEventListener('click', function () {
+                if (selectedAxis) {
+                    const position = document.getElementById('position').value;
+                    logMessage(`Setting ${selectedAxis.toUpperCase()} Axis position to ${position}`);
+                } else {
+                    logMessage('No axis selected');
+                }
+            });
+
+            document.getElementById('override-slider').addEventListener('input', function () {
+                document.getElementById('override-value').textContent = this.value + '%';
+            });
+
+            document.getElementById('spindle-slider').addEventListener('input', function () {
+                document.getElementById('spindle-value').textContent = this.value + '%';
+            });
         });
-
-
-
 
         //============================================================
         // 获取模态框元素
@@ -1243,7 +1499,44 @@
             });
         });
 
+        // 搜索
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
 
+            document.getElementById('search-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const query = searchInput.value.trim();
+
+                if (query) {
+                    fetch(`/search?query=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            displaySearchResults(data);
+                        });
+                }
+            });
+
+            function displaySearchResults(results) {
+                searchResults.innerHTML = '';
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<p>No results found</p>';
+                } else {
+                    results.forEach(result => {
+                        const resultItem = document.createElement('div');
+                        resultItem.classList.add('search-result-item');
+                        resultItem.innerHTML = `
+                    <img src="${result.icon}" alt="${result.name}">
+                    <span>${result.name}</span>
+                `;
+                        resultItem.addEventListener('click', function () {
+                            window.location.href = result.url;
+                        });
+                        searchResults.appendChild(resultItem);
+                    });
+                }
+            }
+        });
 
     </script>
 </body>
