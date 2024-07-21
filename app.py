@@ -40,6 +40,63 @@ PLCTYPE_MAP = {
     # 根据需要添加更多映射
 }
 
+applications = [
+    {"name": "3d-viewer", "icon": "/static/3d-viewer.jpg", "url": "/3d-viewer"},
+    {"name": "add", "icon": "/static/add.jpg", "url": "/add"},
+    {"name": "AI chat", "icon": "/static/AIchat.jpg", "url": "/AIchat"},
+    {"name": "ai-mode", "icon": "/static/ai-mode.jpg", "url": "/ai-mode"},
+    {"name": "application", "icon": "/static/application.jpg", "url": "/application"},
+    {"name": "automatic", "icon": "/static/automatic.jpg", "url": "/automatic"},
+    {"name": "back", "icon": "/static/back.jpg", "url": "/back"},
+    {"name": "browser", "icon": "/static/browser.jpg", "url": "/browser"},
+    {"name": "calculator", "icon": "/static/calculator.jpg", "url": "/calculator"},
+    {"name": "calendar", "icon": "/static/calendar.jpg", "url": "/calendar"},
+    {"name": "camera", "icon": "/static/camera.jpg", "url": "/camera"},
+    {"name": "ci_note-edit", "icon": "/static/ci_note-edit.jpg", "url": "/ci_note-edit"},
+    {"name": "cloud", "icon": "/static/cloud.jpg", "url": "/cloud"},
+    {"name": "code", "icon": "/static/code.jpg", "url": "/code"},
+    {"name": "collision", "icon": "/static/collision.jpg", "url": "/collision"},
+    {"name": "community", "icon": "/static/community.jpg", "url": "/community"},
+    {"name": "connection", "icon": "/static/connection.jpg", "url": "/connection"},
+    {"name": "consumer_service", "icon": "/static/consumer_service.jpg", "url": "/consumer_service"},
+    {"name": "copy", "icon": "/static/copy.jpg", "url": "/copy"},
+    {"name": "cycle", "icon": "/static/cycle.jpg", "url": "/cycle"},
+    {"name": "delete", "icon": "/static/delete.jpg", "url": "/delete"},
+    {"name": "digital-twin", "icon": "/static/digital-twin.jpg", "url": "/digital-twin"},
+    {"name": "file", "icon": "/static/file.jpg", "url": "/file"},
+    {"name": "finance", "icon": "/static/finance.jpg", "url": "/finance"},
+    {"name": "folder", "icon": "/static/folder.jpg", "url": "/folder"},
+    {"name": "home", "icon": "/static/home.jpg", "url": "/home"},
+    {"name": "kpi", "icon": "/static/kpi.jpg", "url": "/kpi"},
+    {"name": "log", "icon": "/static/log.jpg", "url": "/log"},
+    {"name": "maintenance", "icon": "/static/maintenance.jpg", "url": "/maintenance"},
+    {"name": "manual", "icon": "/static/manual.jpg", "url": "/manual"},
+    {"name": "manual-mode", "icon": "/static/manual-mode.jpg", "url": "/manual-mode"},
+    {"name": "memo", "icon": "/static/memo.jpg", "url": "/memo"},
+    {"name": "mode", "icon": "/static/mode.jpg", "url": "/mode"},
+    {"name": "monitoring", "icon": "/static/monitoring.jpg", "url": "/monitoring"},
+    {"name": "operations", "icon": "/static/operations.jpg", "url": "/operations"},
+    {"name": "pc", "icon": "/static/pc.jpg", "url": "/pc"},
+    {"name": "ph_question", "icon": "/static/ph_question.jpg", "url": "/ph_question"},
+    {"name": "planning", "icon": "/static/planning.jpg", "url": "/planning"},
+    {"name": "pre-processing", "icon": "/static/pre-processing.jpg", "url": "/pre-processing"},
+    {"name": "record", "icon": "/static/record.jpg", "url": "/record"},
+    {"name": "rename", "icon": "/static/rename.jpg", "url": "/rename"},
+    {"name": "report", "icon": "/static/report.jpg", "url": "/report"},
+    {"name": "search", "icon": "/static/search.jpg", "url": "/search"},
+    {"name": "Servo-viewer", "icon": "/static/Servo-viewer.jpg", "url": "/Servo-viewer"},
+    {"name": "setting", "icon": "/static/setting.jpg", "url": "/setting"},
+    {"name": "shopping", "icon": "/static/shopping.jpg", "url": "/shopping"},
+    {"name": "simulation", "icon": "/static/simulation.jpg", "url": "/simulation"},
+    {"name": "team", "icon": "/static/team.jpg", "url": "/team"},
+    {"name": "Tool-manager", "icon": "/static/Tool-manager.jpg", "url": "/Tool-manager"},
+    {"name": "update", "icon": "/static/update.jpg", "url": "/update"},
+    {"name": "user-info", "icon": "/static/user-info.jpg", "url": "/user-info"},
+    {"name": "user-settings", "icon": "/static/user-settings.jpg", "url": "/user-settings"},
+    {"name": "utility", "icon": "/static/utility.jpg", "url": "/utility"}
+]
+
+
 
 # 将原来的根路由重定向到登录页面
 @app.route('/')
@@ -372,11 +429,22 @@ def monitoring():
 
 @app.route('/userinfo')
 def userinfo():
-    return render_template('userinfo.html')
+    if 'loggedin' in session:
+        return render_template('userinfo.html', username=session['username'])
+    return redirect(url_for('login'))
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 @app.route('/search')
 def search():
-    return render_template('search.html')
+    query = request.args.get('query', '').lower()
+    results = [app for app in applications if query in app['name'].lower()]
+    return jsonify(results)
 
 @app.route('/connection')
 def connection():
@@ -607,7 +675,57 @@ def Servo_viewer():
 def KPI():
     return render_template('KPI.html')
 
+@app.route('/team board')
+def team_board():
+    return render_template('team board.html')
 
+@app.route('/cloud')
+def cloud():
+    return render_template('cloud.html')
+
+@app.route('/finance')
+def finance():
+    return render_template('finance.html')
+
+@app.route('/update')
+def update():
+    return render_template('update.html')
+
+@app.route('/consumer_service')
+def consumer_service():
+    return render_template('consumer_service.html')
+
+@app.route('/shopping')
+def shopping():
+    return render_template('shopping.html')
+
+@app.route('/manual')
+def manual():
+    return render_template('manual.html')
+
+@app.route('/memo')
+def memo():
+    return render_template('memo.html')
+
+@app.route('/camera')
+def camera():
+    return render_template('camera.html')
+
+@app.route('/calculator')
+def calculator():
+    return render_template('calculator.html')
+
+@app.route('/browser')
+def browser():
+    return render_template('browser.html')
+
+@app.route('/setting1')
+def setting1():
+    return render_template('setting1.html')
+
+@app.route('/maintenance')
+def maintenance():
+    return render_template('maintenance.html')
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
