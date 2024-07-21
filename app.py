@@ -6,8 +6,8 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 import hashlib
 from mysql.connector import Error
-import openai
-import logging
+from openai import OpenAI
+import logging 
 import pyads
 import json
 import os
@@ -26,8 +26,9 @@ db_config = {
 }
 
 # 用您的OpenAI API密钥替换此处
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
+client = OpenAI(
+  api_key = os.environ['OPENAI_API_KEY'],  # this is also the default, it can be omitted
+)
 # Initialize a global variable for the PLC connection
 plc = None
 
@@ -303,7 +304,8 @@ class FolderApp(db.Model):
 # 定义 ask_gpt 函数，输入问题，返回 GPT-3 的回答
 def ask_gpt(question):
     try:
-        response = openai.ChatCompletion.create(
+        client = OpenAI()
+        response = client.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "user", "content": question}
