@@ -22,7 +22,7 @@ db_config = {
     'password': 'Chenxi1213!',
     'host': 'localhost',
     'port': 3308,
-    'database': 'demo'
+    'database': 'userdb'
 }
 
 # 用您的OpenAI API密钥替换此处
