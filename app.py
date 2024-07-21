@@ -26,8 +26,8 @@ db_config = {
 }
 
 # 用您的OpenAI API密钥替换此处
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
+ api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = api_key
 # Initialize a global variable for the PLC connection
 plc = None
 
@@ -303,6 +303,8 @@ class FolderApp(db.Model):
 # 定义 ask_gpt 函数，输入问题，返回 GPT-3 的回答
 def ask_gpt(question):
     try:
+        print(f"Using API Key: {api_key}")
+        
         response = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
