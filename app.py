@@ -303,15 +303,16 @@ class FolderApp(db.Model):
 # 定义 ask_gpt 函数，输入问题，返回 GPT-3 的回答
 def ask_gpt(question):
     try:
-        response = openai.Completion.create(
-            engine="gpt-3.5-turbo",  # 使用最新的模型名称
-            prompt=question,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": question}
+            ],
             max_tokens=100,
-            n=1,
-            stop=None,
             temperature=0.7
         )
-        result = response.choices[0].text.strip()
+        result = response.choices[0].message['content'].strip()
         return result
     except Exception as e:
         print("Error occurred:", str(e))
@@ -324,11 +325,12 @@ def ask():
         question = request.json['question']
         answer = ask_gpt(question)
         response = {
-            'answer' : answer
+            'answer': answer
         }
         return jsonify(response)
     else:
         return render_template('index.html')
+
 
 @app.errorhandler(500)
 def internal_server_error(e):
