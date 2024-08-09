@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Kompaki</title>
     <style>
-        /* Top navigation bar styles */
         .top-nav-bar {
-            display: flex; /* 使用弹性盒子布局 */
-            z-index: 1000; /* 一个高于代码列表的z-index值 */
-            justify-content: space-between; /* 子元素之间平均分布空间 */
-            align-items: center; /* 子元素垂直居中 */
-            padding: 30px 20px; /* 上下30px，左右20px的内边距 */
+            display: flex;
+            z-index: 1000;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
         }
 
         .nav-button {
-            background: none; /* 按钮无背景色 */
-            border: none; /* 按钮无边框 */
-            padding: 10px 10px; /* 按钮内边距 */
-            cursor: pointer; /* 鼠标悬停时显示指针形状 */
-            margin-right: 20px; /* 右边距20px */
+            background: none;
+            border: none;
+            padding: 10px 10px;
+            cursor: pointer;
+            margin-right: 20px;
         }
 
-        .nav-button:first-child{
+        .nav-button:first-child {
             margin-right: 40px;
         }
 
         .page-title {
             flex-grow: 1;
             text-align: center;
-            margin: 0; /* Remove default margin */
+            margin: 0;
         }
 
         .fixed-bottom-bar {
-            position: fixed; /* 固定位置 */
-            bottom: 0; /* 在底部 */
-            left: 0; /* 从左边开始 */
-            width: 100%; /* 宽度占满整个屏幕 */
-            background-color: #fff; /* 背景颜色，可以根据需要更改 */
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* 可选的阴影效果 */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
             display: flex;
-            justify-content: space-around; /* 图标平均分布 */
-            padding: 10px 0; /* 上下填充 */
+            justify-content: space-around;
+            padding: 10px 0;
         }
 
         .icon-button.active-icon::after {
@@ -60,28 +60,34 @@
         }
 
         .icon-button img {
-            width: 80px; /* 图标大小，根据需要调整 */
+            width: 80px;
             height: auto;
         }
 
         /* 模态框的基本样式 */
         .modal {
-            display: none; /* 默认隐藏 */
-            position: fixed; /* 固定在页面上 */
+            display: none;
+            /* 默认隐藏 */
+            position: fixed;
+            /* 固定在页面上 */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* 背景色半透明 */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* 背景色半透明 */
+            z-index: 1000;
         }
 
         /* 模态内容的样式 */
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; /* 15% 从顶部开始，居中 */
+            margin: 15% auto;
+            /* 15% 从顶部开始，居中 */
             padding: 60px;
             border: 1px solid #888;
-            width: 80%; /* 可以根据需求调整宽度 */
+            width: 80%;
+            /* 可以根据需求调整宽度 */
         }
 
         /* 关闭按钮样式 */
@@ -99,60 +105,54 @@
             cursor: pointer;
         }
 
-        /* 搜索输入框样式 */
         #search-input {
-            width: 80%; /* 调整输入框的宽度 */
-            padding: 10px; /* 增加内边距 */
-            font-size: 32px; /* 字体大小 */
-            border: 1px solid #ccc; /* 边框样式 */
-            border-radius: 4px; /* 轻微的圆角 */
-            margin-bottom: 10px; /* 底部外边距 */
+            width: 80%;
+            padding: 10px;
+            font-size: 32px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
         }
 
-        /* 搜索按钮样式 */
         #search-form button {
-            padding: 10px 20px; /* 增加内边距 */
-            font-size: 32px; /* 字体大小 */
-            border: 1px solid #ccc; /* 边框样式 */
-            border-radius: 4px; /* 圆角 */
-            cursor: pointer; /* 鼠标悬停时显示指针形状 */
-            background-color: #4CAF50; /* 按钮背景色 */
-            color: white; /* 文字颜色 */
+            padding: 10px 20px;
+            font-size: 32px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
         }
 
         #search-modal .modal-content {
             background-color: #fefefe;
-            margin: 5% auto; /* 15% 从顶部开始，居中 */
+            margin: 5% auto;
             padding: 60px;
             border: 1px solid #888;
-            width: 80%; /* 可以根据需求调整宽度 */
+            width: 80%;
         }
 
         #search-form button:hover {
-            background-color: #45a049; /* 鼠标悬停时的背景色 */
+            background-color: #45a049;
         }
 
-        /* ai chat */
-        /* 聊天记录样式 */
         .chat-history {
-            height: 300px; /* 可调整高度 */
-            overflow-y: auto; /* 添加滚动条 */
+            height: 300px;
+            overflow-y: auto;
             border: 1px solid #ddd;
             margin-bottom: 10px;
             font-size: 30px;
             padding: 10px;
         }
 
-        /* 文字输入框样式 */
         #chat-input {
-            width: calc(100% - 90px); /* 让输入框和发送按钮并排 */
+            width: calc(100% - 90px);
             padding: 10px;
-            margin-right: 10px; /* 在输入框和发送按钮之间添加一些空间 */
+            margin-right: 10px;
             font-size: 30px;
             box-sizing: border-box;
         }
 
-        /* 发送按钮样式 */
         #send-message {
             width: 100px;
             padding: 20px;
@@ -167,56 +167,47 @@
             background-color: #45a049;
         }
 
-
-
         .faq-question {
-            background-color: #eee; /* 问题部分的背景颜色为浅灰色 */
-            color: #444; /* 文字颜色为深灰色 */
-            cursor: pointer; /* 鼠标悬停时显示为指针形状，表示这是一个可点击的元素 */
-            padding: 32px; /* 内边距为32像素，增加点击区域的大小，提升可点击性 */
-            width: 100%; /* 宽度设置为100%，使得问题部分填满其父元素的宽度 */
-            text-align: left; /* 文字左对齐 */
-            border: none; /* 无边框 */
-            outline: none; /* 点击时无轮廓线 */
-            transition: 0.4s; /* 过渡效果的持续时间为0.4秒，使得样式变化更平滑 */
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 32px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
             font-size: 32px;
         }
 
         .faq-answer {
-            padding: 0 32px; /* 答案部分左右各有32像素的内边距 */
+            padding: 0 32px;
             font-size: 32px;
-            background-color: white; /* 答案部分的背景颜色为白色 */
-            display: none; /* 默认情况下答案不显示 */
-            overflow: hidden; /* 内容溢出隐藏，配合折叠效果使用 */
+            background-color: white;
+            display: none;
+            overflow: hidden;
         }
 
         .setting-option-button {
-            /* 按钮样式，根据需要调整 */
             background: none;
             border: none;
             cursor: pointer;
         }
 
         .setting-option-button img {
-            /* 图片样式，根据需要调整 */
-            width: 50px; /* 示例宽度 */
+            width: 50px;
             height: auto;
         }
 
         .modal-content p {
-            /* 文本标签的样式 */
-            text-align: center; /* 居中对齐文本 */
-            margin-top: 5px; /* 在按钮和文本之间添加一些空间 */
+            text-align: center;
+            margin-top: 5px;
         }
 
-
-
-        /* 人工客服相关内容的样式 */
         #customer-service-modal .welcome-message {
             font-size: 30px;
             margin-top: 20px;
         }
-
 
         #customer-service-modal form {
             margin-top: 40px;
@@ -227,46 +218,41 @@
             width: 100%;
             padding: 8px;
             margin: 20px 0;
-            box-sizing: border-box; /* 包含边框和内边距在宽度内 */
+            box-sizing: border-box;
             font-size: 30px;
         }
 
         #customer-service-modal button {
-            /* 根据需要调整样式 */
             font-size: 40px;
         }
 
-
-
-        .code-list {
-            width: 360px; /* 或者您希望的宽度 */
-            height: 60%;
-            overflow-y: auto; /* 如果列表很长，需要滚动条 */
-            position: fixed; /* 如果您希望它在滚动时固定在页面左侧 */
-            left: 0; /* 位于页面最左侧 */
-            top: 200px; /* 下移，避免覆盖顶部导航栏 */
-            background-color: #f9f9f9; /* 背景颜色，根据需要更改 */
-            border-right: 1px solid #ccc; /* 右边框，根据需要更改 */
-            padding: 10px; /* 内边距 */
-            box-sizing: border-box; /* 边框和内边距包含在宽度内 */
+        .container {
+            display: flex;
+            height: calc(100vh - 200px);
+            position: fixed;
+            top: 200px;
+            width: 100%;
         }
 
 
-        /* 新增代码显示区域的样式 */
         .code-display {
-            width: 900px; /* 减去左侧列表宽度 */
-            margin-left: 0px; /* 左侧列表宽度 */
-            height: 60%; /* 如果顶部有60px高的导航栏 */
-            position: absolute; /* 或其他布局方式 */
-            right: 0; /* 从右侧开始 */
-            top: 200px; /* 下移，避免覆盖顶部导航栏 */
-            background-color: #f9f9f9; /* 背景颜色，根据需要更改 */
-            padding: 10px; /* 内边距 */
-            overflow-y: auto; /* 如果代码很长，需要滚动条 */
-            border-left: 1px solid #ccc; /* 左边框，根据需要更改 */
-            box-sizing: border-box; /* 边框和内边距包含在宽度内 */
+            width: 40%;
+            background-color: #f9f9f9;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            border-left: 1px solid #ccc;
         }
 
+        /* 左侧代码列表的样式 */
+        .code-list {
+            width: 20%;
+            background-color: #f9f9f9;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
 
         .code-list ul {
             list-style: none;
@@ -276,44 +262,143 @@
         .code-list ul li {
             padding: 10px;
             cursor: pointer;
-        }
-        .code-list {
-            /* ... 其他样式 ... */
-        }
-
-        .code-list-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 5px;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            transition: background-color 0.2s;
+            /* 确保鼠标光标为指针 */
+            border: 1px solid transparent;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
-        .code-list-item:hover {
+        .code-list ul li:hover,
+        .code-list ul li.selected {
             background-color: #e0e0e0;
+            border-color: #888;
         }
 
+
+        /* 代码编辑框的样式 */
         #code-editor {
-          width: 100%;
-          height: 400px; /* 或根据需要调整大小 */
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            font-size: 16px;
+            font-family: monospace;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+            background-color: #f5f5f5;
+            transition: border-color 0.3s;
+        }
+
+        #code-editor:focus {
+            border-color: #4CAF50;
         }
 
         #save-code {
-          margin-top: 10px;
+            margin-top: 10px;
+        }
+
+        #view-3d-button {
+            margin-top: 10px;
         }
 
         #current-code-name {
-          font-weight: bold;
-          margin-bottom: 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            outline: none;
+            /* 移除默认的选中边框 */
         }
 
 
 
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+
+        #upload-button,
+        #save-code,
+        #view-3d-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #upload-button,
+        #save-code:hover,
+        #view-3d-button:hover {
+            background-color: #45a049;
+        }
+
+        /* 可视化模块的基本样式 */
+        .visualization-modal {
+            display: none;
+            /* 默认隐藏 */
+            position: fixed;
+            /* 固定在页面上 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            /* 背景色半透明 */
+            z-index: 1000;
+            /* 保证模态框在前面 */
+        }
+
+        /* 模态内容的样式 */
+        .visualization-modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            /* 15% 从顶部开始，居中 */
+            padding: 60px;
+            border: 1px solid #888;
+            width: 60%;
+            height: 80%;
+            /* 可以根据需求调整宽度 */
+            overflow: hidden;
+            /* 隐藏超出部分 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* 添加此行以确保关闭按钮相对于模态内容进行定位 */
+        }
+
+        /* 关闭按钮样式 */
+        .visualization-close-button {
+            color: #aaa;
+            position: absolute;
+            /* 绝对定位 */
+            top: 10px;
+            /* 调整位置 */
+            right: 20px;
+            /* 调整位置 */
+            font-size: 46px;
+            font-weight: bold;
+            z-index: 1001;
+            /* 确保z-index值高于模态框内容 */
+            cursor: pointer;
+        }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kerdirks/JSCut/gcodeviewer/gcodeviewer.js"></script>
+
+
 </head>
+
 <body>
-<!--<h1>欢迎来到主页</h1>-->
+    <!--<h1>欢迎来到主页</h1>-->
     <!-- 顶部 -->
     <div class="top-nav-bar">
         <a href="/index">
@@ -353,19 +438,32 @@
     </form>
     <button id="upload-button">Upload Code</button>
 
-    <div id="code-list" class="code-list">
-        <!-- 已上传的代码文件名将会被添加到这里 -->
+    <div class="container">
+        <div id="code-list" class="code-list">
+            <ul>
+                <!-- 已上传的代码文件名将会被添加到这里 -->
+            </ul>
+        </div>
+
+        <div id="code-display" class="code-display">
+            <div id="current-code-name"></div>
+            <textarea id="code-editor" name="codeEditor"></textarea>
+            <button id="save-code" style="display: none;">Save Changes</button>
+            <button id="view-3d-button" style="display: none;">View 3D</button>
+        </div>
+
+        <!-- 可视化模块模态框 -->
+        <div id="visualization-modal" class="visualization-modal">
+            <div class="visualization-modal-content">
+                <span class="visualization-close-button" id="close-visualization-modal">&times;</span>
+                <div id="visualization-container">
+                    <!-- 这里将放置可视化内容 -->
+                </div>
+            </div>
+        </div>
+
 
     </div>
-
-    <!-- 在现有结构中添加 -->
-    <div id="code-display" class="code-display">
-        <!-- 点击左侧代码名时，代码内容将显示在这里 -->
-         <div id="current-code-name"></div> <!-- 新增加的元素用于显示代码名称 -->
-         <textarea id="code-editor"></textarea>
-         <button id="save-code" style="display: none;">Save Changes</button> <!-- 保存按钮 -->
-    </div>
-
 
 
 
@@ -402,7 +500,7 @@
 
         <!-- 人工客服 -->
         <button id="customer-service-button" class="icon-button">
-            <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="服务"/>
+            <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="服务" />
         </button>
         <div id="customer-service-modal" class="modal">
             <div class="modal-content">
@@ -425,7 +523,7 @@
 
         <!-- AIchat -->
         <button id="AI-chat-button" class="icon-button">
-            <img src="{{ url_for('static', filename='AIchat.jpg') }}" alt="服务"/>
+            <img src="{{ url_for('static', filename='AIchat.jpg') }}" alt="服务" />
         </button>
         <div id="AI-chat-modal" class="modal">
             <div class="modal-content">
@@ -446,7 +544,7 @@
 
         <!-- 设置 -->
         <button id="setting-button" class="icon-button">
-            <img src="{{ url_for('static', filename='setting.jpg') }}" alt="服务"/>
+            <img src="{{ url_for('static', filename='setting.jpg') }}" alt="服务" />
         </button>
         <div id="setting-modal" class="modal">
             <!-- 模态内容 -->
@@ -454,20 +552,20 @@
                 <span class="close-button">&times;</span>
                 <h2>setting</h2>
 
-                        <!-- 设置按钮 1 -->
+                <!-- 设置按钮 1 -->
                 <button class="setting-option-button">
-                    <img src="{{ url_for('static', filename='copy.jpg') }}" alt="选项1"/>
+                    <img src="{{ url_for('static', filename='copy.jpg') }}" alt="选项1" />
                 </button>
 
 
-                        <!-- 设置按钮 2 -->
+                <!-- 设置按钮 2 -->
                 <button class="setting-option-button">
-                    <img src="{{ url_for('static', filename='delete.jpg') }}" alt="选项2"/>
+                    <img src="{{ url_for('static', filename='delete.jpg') }}" alt="选项2" />
                 </button>
 
                 <!-- 触发按钮 -->
                 <button id="create-folder-button">
-                    <img src="{{ url_for('static', filename='add.jpg') }}" alt="选项2"/>
+                    <img src="{{ url_for('static', filename='add.jpg') }}" alt="选项2" />
                 </button>
 
 
@@ -477,7 +575,7 @@
 
         <!-- 监控 -->
         <button id="monitoring-button" class="icon-button">
-            <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="服务"/>
+            <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="服务" />
         </button>
         <div id="monitoring-modal" class="modal">
             <!-- 模态内容 -->
@@ -584,6 +682,7 @@
                         codeEditor.value = data.code_content; // 将代码内容设置到textarea中
                         codeEditor.style.display = 'block'; // 显示编辑器
                         document.getElementById('save-code').style.display = 'block'; // 显示保存按钮
+                        document.getElementById('view-3d-button').style.display = 'block'; // 显示3D查看按钮
                         codeEditor.setAttribute('data-current-code', codeName); // 标记当前编辑的代码名称
                     } else {
                         throw new Error('Code content not found');
@@ -600,20 +699,20 @@
             var codeList = document.getElementById('code-list');
             var listItem = document.createElement('li');
             listItem.textContent = codeName;
-            listItem.addEventListener('click', function() {
+            listItem.addEventListener('click', function () {
                 displayCode(codeName);
             });
             codeList.appendChild(listItem);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // 处理文件上传
-            document.getElementById('upload-button').addEventListener('click', function() {
+            document.getElementById('upload-button').addEventListener('click', function () {
                 // 触发文件选择
                 document.getElementById('codeFile').click();
             });
 
-            document.getElementById('codeFile').addEventListener('change', function() {
+            document.getElementById('codeFile').addEventListener('change', function () {
                 // 获取选择的文件
                 var file = this.files[0];
                 if (file) {
@@ -625,25 +724,40 @@
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // 添加代码名称到左侧列表
-                            addListItem(data.codeName); // 使用函数添加列表项和事件监听器
-                        } else {
-                            alert('上传失败: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // 添加代码名称到左侧列表
+                                addListItem(data.codeName); // 使用函数添加列表项和事件监听器
+                            } else {
+                                alert('上传失败: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
                 }
             });
 
             // 绑定事件监听器到已存在的列表项
-            document.querySelectorAll('#code-list li').forEach(function(listItem) {
-                listItem.addEventListener('click', function() {
+            document.querySelectorAll('#code-list li').forEach(function (listItem) {
+                listItem.addEventListener('click', function () {
                     displayCode(listItem.textContent);
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var codeListItems = document.querySelectorAll('.code-list ul li');
+
+            codeListItems.forEach(function (item) {
+                item.addEventListener('click', function () {
+                    // 移除所有列表项的选中状态
+                    codeListItems.forEach(function (i) {
+                        i.classList.remove('selected');
+                    });
+                    // 为当前点击的项添加选中状态
+                    item.classList.add('selected');
                 });
             });
         });
@@ -671,7 +785,7 @@
         //       });
         // }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // 获取并显示所有已上传的代码
             function loadAndDisplayAllCodes() {
                 fetch('/get-all-codes')
@@ -683,7 +797,7 @@
                     })
                     .then(codes => {
                         var codeList = document.getElementById('code-list');
-                        codes.forEach(function(codeName) {
+                        codes.forEach(function (codeName) {
                             addListItem(codeName);  // 使用之前定义的函数添加到列表
                         });
                     })
@@ -697,8 +811,8 @@
             // ...其他代码保持不变...
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('code-list').addEventListener('contextmenu', function(event) {
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('code-list').addEventListener('contextmenu', function (event) {
                 event.preventDefault();  // 阻止默认的右键菜单
                 var codeName = event.target.textContent;
                 if (confirm(`Are you sure you want to delete ${codeName}?`)) {
@@ -710,19 +824,19 @@
                         },
                         body: `name=${encodeURIComponent(codeName)}`
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // 从页面上移除列表项
-                            event.target.remove();
-                            alert(data.message);  // 显示删除成功的消息
-                        } else {
-                            alert(data.error);  // 显示错误消息
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error deleting code:', error);
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // 从页面上移除列表项
+                                event.target.remove();
+                                alert(data.message);  // 显示删除成功的消息
+                            } else {
+                                alert(data.error);  // 显示错误消息
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting code:', error);
+                        });
                 }
             });
         });
@@ -740,54 +854,134 @@
                 },
                 body: JSON.stringify({ new_content: newContent })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('Code saved successfully');
-                } else {
-                    alert('Failed to save code: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error saving code:', error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Code saved successfully');
+                    } else {
+                        alert('Failed to save code: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving code:', error);
+                });
         }
 
         // 绑定保存按钮事件监听器
         document.getElementById('save-code').addEventListener('click', saveCode);
 
         // 绑定保存按钮事件监听器
-        document.getElementById('save-code').addEventListener('click', function() {
-          var codeName = document.querySelector('#code-list .selected').textContent; // 获取当前选中的代码名称
-          var newContent = document.getElementById('code-editor').value; // 获取编辑后的代码内容
-          saveCode(codeName, newContent); // 保存代码
+        document.getElementById('save-code').addEventListener('click', function () {
+            var codeName = document.querySelector('#code-list .selected').textContent; // 获取当前选中的代码名称
+            var newContent = document.getElementById('code-editor').value; // 获取编辑后的代码内容
+            saveCode(codeName, newContent); // 保存代码
+        });
+
+
+        document.getElementById('view-3d-button').addEventListener('click', function () {
+            var codeEditor = document.getElementById('code-editor');
+            var gcode = codeEditor.value;
+
+            const viewerContainer = document.getElementById('visualization-container'); // 修改此处
+            viewerContainer.innerHTML = ''; // 清除先前内容
+
+            const viewer = new GCodeViewer(viewerContainer);
+            viewer.loadGCode(gcode);
+
+            document.getElementById('visualization-modal').style.display = 'block'; // 修改此处
+        });
+
+        document.getElementById('close-visualization-modal').addEventListener('click', function () { // 修改此处
+            document.getElementById('visualization-modal').style.display = 'none'; // 修改此处
+        });
+
+        class GCodeViewer {
+            constructor(container) {
+                this.container = container;
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.container.appendChild(this.renderer.domElement);
+                this.camera.position.z = 100;
+            }
+
+            loadGCode(gcode) {
+                const lines = gcode.split('\n');
+                const material = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+                const geometry = new THREE.BufferGeometry();
+                const vertices = [];
+
+                let lastX = 0, lastY = 0, lastZ = 0;
+
+                lines.forEach(line => {
+                    if (line.startsWith('G1') || line.startsWith('G0')) {
+                        const parts = line.split(' ');
+                        let x = lastX, y = lastY, z = lastZ;
+                        parts.forEach(part => {
+                            if (part.startsWith('X')) x = parseFloat(part.substring(1));
+                            if (part.startsWith('Y')) y = parseFloat(part.substring(1));
+                            if (part.startsWith('Z')) z = parseFloat(part.substring(1));
+                        });
+                        if (!isNaN(x) && !isNaN(y) && !isNaN(z)) {
+                            vertices.push(x, y, z);
+                            lastX = x;
+                            lastY = y;
+                            lastZ = z;
+                        } else {
+                            console.warn(`Invalid line: ${line}`);
+                        }
+                    }
+                });
+
+                if (vertices.length > 0) {
+                    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                    const line = new THREE.Line(geometry, material);
+                    this.scene.add(line);
+                } else {
+                    console.error("No valid vertices found in G-code.");
+                }
+
+                this.animate();
+            }
+
+            animate() {
+                requestAnimationFrame(this.animate.bind(this));
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var closeVisualizationBtn = document.getElementById('close-visualization-modal');
+            closeVisualizationBtn.onclick = function () {
+                document.getElementById('visualization-modal').style.display = 'none';
+            };
         });
 
 
 
-
         // 人工客服
-        document.querySelectorAll('#customer-service-modal .faq-question').forEach(function(question) {
-            question.addEventListener('click', function() {
+        document.querySelectorAll('#customer-service-modal .faq-question').forEach(function (question) {
+            question.addEventListener('click', function () {
                 var answer = this.nextElementSibling;
                 answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
             });
         });
 
         // 添加联系表单的提交逻辑（示例）
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
+        document.getElementById('contact-form').addEventListener('submit', function (e) {
             e.preventDefault();
             // 在这里处理表单提交，例如发送AJAX请求或显示确认消息
             alert('表单已提交！');
         });
 
         //ai-chat
-        document.getElementById('send-message').addEventListener('click', function() {
+        document.getElementById('send-message').addEventListener('click', function () {
             var input = document.getElementById('chat-input');
             var message = input.value;
             input.value = ''; // 清空输入框
@@ -804,11 +998,11 @@
 
 
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var faqQuestions = document.querySelectorAll('.faq-question');
 
-            faqQuestions.forEach(function(question) {
-                question.addEventListener('click', function() {
+            faqQuestions.forEach(function (question) {
+                question.addEventListener('click', function () {
                     this.classList.toggle("active");
                     var answer = this.nextElementSibling;
                     if (answer.style.display === "block") {
@@ -821,7 +1015,7 @@
         });
 
 
-        document.getElementById('search-form').addEventListener('submit', function(e) {
+        document.getElementById('search-form').addEventListener('submit', function (e) {
             e.preventDefault(); // 阻止表单默认提交行为
 
             var searchText = document.getElementById('search-input').value;
@@ -850,40 +1044,40 @@
         var closeButtons = document.getElementsByClassName("close-button");
 
         // 点击按钮时打开对应的模态框
-        customerServiceBtn.onclick = function() {
+        customerServiceBtn.onclick = function () {
             customerServiceModal.style.display = "block";
         }
 
-        aiChatBtn.onclick = function() {
+        aiChatBtn.onclick = function () {
             aiChatModal.style.display = "block";
         }
 
-        settingBtn.onclick = function() {
+        settingBtn.onclick = function () {
             settingModal.style.display = "block";
         }
 
-        monitoringBtn.onclick = function() {
+        monitoringBtn.onclick = function () {
             monitoringModal.style.display = "block";
         }
 
-        helpServiceBtn.onclick = function() {
+        helpServiceBtn.onclick = function () {
             helpServiceModal.style.display = "block";
         }
 
-        searchBtn.onclick = function() {
+        searchBtn.onclick = function () {
             searchModal.style.display = "block";
         }
 
         // 为每个关闭按钮添加点击事件监听器
         for (var i = 0; i < closeButtons.length; i++) {
-            closeButtons[i].onclick = function() {
+            closeButtons[i].onclick = function () {
                 // 这里我们可以关闭这个按钮所在的模态框
                 this.closest('.modal').style.display = 'none';
             }
         }
 
         // 点击模态框外任何地方关闭模态框
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target == customerServiceModal) {
                 customerServiceModal.style.display = "none";
             }
@@ -906,4 +1100,5 @@
 
     </script>
 </body>
+
 </html>
