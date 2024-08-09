@@ -4,10 +4,15 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kompaki</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* Existing CSS from index.html */
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 800;
+        }
         .category {
             cursor: pointer;
         }
@@ -132,37 +137,39 @@
     <div class="top-nav-bar">
         <a href="/index">
             <button class="nav-button" id="back-button">
-                <img src="{{ url_for('static', filename='home.jpg') }}" alt="返回">
+                <img src="{{ url_for('static', filename='TEC-Logo.svg') }}" alt="返回" style="width: 170px;">
             </button>
         </a>
+
+        <h1 class="page-title" style="font-family: 'Roboto', sans-serif; text-align: center; color: #0b0c10; padding-left: 7%;"> </h1>
 
         <a href="/choose_settings">
             <button class="nav-button" id="choose-button">
-                <img src="{{ url_for('static', filename='mode.jpg') }}" alt="返回">
+                <img src="{{ url_for('static', filename='ModeSelection.png') }}" alt="返回" style="width: 50px; height: auto;">
             </button>
         </a>
 
-        <h1 class="page-title">Homepage</h1>
-
+        <a href="/searching">
         <button class="nav-button" id="search-button">
-            <img src="{{ url_for('static', filename='search.jpg') }}" alt="user">
+            <img src="{{ url_for('static', filename='search.png') }}" alt="user" style="width: 40px; height: auto;">
         </button>
-        <!-- 搜索 -->
         <div id="search-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
+
                 <h2>search</h2>
+
                 <form id="search-form">
                     <input type="text" id="search-input" placeholder="Enter search content">
                     <button type="submit">search</button>
                 </form>
-                <div id="search-results"></div>
             </div>
         </div>
+    </a>
 
         <a href="/userinfo">
             <button class="nav-button" id="user-info-button">
-                <img src="{{ url_for('static', filename='user-info.jpg') }}" alt="user">
+                <img src="{{ url_for('static', filename='user.png') }}" alt="user" style="width: 50px; height: auto;">
             </button>
         </a>
     </div>
@@ -171,10 +178,10 @@
     <!-- Assuming you have a top bar where the categories will go -->
     <div class="top-categories" id="categories">
         <div class="category" id="category-planning">Planning</div>
-        <div class="category" id="category-machining">machining</div>
-        <div class="category" id="category-monitoring">monitoring</div>
-        <div class="category" id="category-community">community</div>
-        <div class="category" id="category-utility">utility</div>
+        <div class="category" id="category-machining">Machining</div>
+        <div class="category" id="category-monitoring">Monitoring</div>
+        <div class="category" id="category-community">Community</div>
+        <div class="category" id="category-utility">Utility</div>
     </div>
 
     <!-- Application icons will be displayed here when the Planning category is clicked -->
@@ -594,7 +601,7 @@
     <div class="fixed-bottom-bar">
         <!-- Bottom bar content -->
         <button id="help-service-button" class="icon-button">
-            <img src="{{url_for('static', filename='ph_question.jpg')}}" alt="Help">
+            <img src="{{url_for('static', filename='ph_question.jpg')}}" alt="Help" style="width: 60px; height: auto;" >
             <div class="icon-button">Help</div>
         </button>
         <!-- More buttons -->
@@ -642,8 +649,8 @@
 
         <!-- 人工客服 -->
         <button id="customer-service-button" class="icon-button">
-            <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="consumer_service" />
-            <div class="icon-button">consumer_service</div>
+            <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="consumer_service" style="width: 60px; height: auto;" />
+            <div class="icon-button">Customer Service</div>
         </button>
         <!--        <div id="customer-service-modal" class="modal">-->
         <!--            &lt;!&ndash; 模态内容 &ndash;&gt;-->
@@ -674,7 +681,7 @@
 
         <!-- AIchat -->
         <button id="AI-chat-button" class="icon-button">
-            <img src="{{ url_for('static', filename='AIchat.jpg') }}" alt="AI-chat" />
+            <img src="{{ url_for('static', filename='ChatGPT.png') }}" alt="AI-chat"  style="width: 60px; height: auto;"/>
             <div class="icon-button">AI chat</div>
         </button>
         <div id="AI-chat-modal" class="modal">
@@ -700,8 +707,8 @@
 
         <!-- 设置 -->
         <button id="setting-button" class="icon-button">
-            <img src="{{ url_for('static', filename='setting.jpg') }}" alt="setting" />
-            <div class="icon-button">setting</div>
+            <img src="{{ url_for('static', filename='Settings.svg') }}" alt="setting" style="width: 60px; height: auto;" />
+            <div class="icon-button">Settings</div>
         </button>
         <div id="setting-modal" class="modal">
             <!-- Modal content -->
@@ -726,8 +733,8 @@
 
         <!-- 监控 -->
         <button id="monitoring-button" class="icon-button">
-            <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="monitoring" />
-            <div class="icon-button">monitoring</div>
+            <img src="{{ url_for('static', filename='monitoring.jpg') }}" alt="monitoring" style="width: 60px; height: auto;"/>
+            <div class="icon-button">Monitoring</div>
         </button>
         <div id="monitoring-modal" class="modal">
             <!-- 模态内容 -->

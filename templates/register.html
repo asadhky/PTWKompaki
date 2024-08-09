@@ -4,22 +4,37 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <!-- Add any additional CSS or JS here -->
+     <!-- Link to the Roboto font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="static/css/login.css">
-
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <h1>Create an Account</h1>
+    <nav>
+        <a href="#"><img src="../static/TEC-Logo.svg" alt="logo"></a>
+    </nav>
+    <div class="form-wrapper">
+        <h2>Register</h2>
         <form action="/register" method="post">
-            <label for="username">Choose a username:</label>
+            <label for="username">Choose a username</label>
             <input type="text" id="username" name="username" required>
             <br>
-            <label for="password">Choose a password:</label>
+            <label for="password">Choose a password</label>
             <input type="password" id="password" name="password" required>
             <br>
             <input type="submit" value="Register">
         </form>
+        <div class="form-help">
         <p>Already have an account? <a href="/login">Login here</a>.</p>
+    </div>
     </div>
 </body>
 </html>
