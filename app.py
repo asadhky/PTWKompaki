@@ -127,7 +127,7 @@ def login():
             session['username'] = account['username']
             return redirect(url_for('choose_settings'))
         else:
-            message = 'Incorrect username/password!'
+            message = 'Incorrect username or password. Please try again.'
 
     return render_template('login.html', message=message)
 
