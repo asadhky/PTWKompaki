@@ -30,11 +30,11 @@
     bottom: 0; /* 在底部 */
     left: 0; /* 从左边开始 */
     width: 100%; /* 宽度占满整个屏幕 */
-    background-color: #fff; /* 背景颜色，可以根据需要更改 */
+    background-color: #f0f0f0; /* 背景颜色，可以根据需要更改 */
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* 可选的阴影效果 */
     display: flex;
     justify-content: space-around; /* 图标平均分布 */
-    padding: 10px 0; /* 上下填充 */
+    padding: 5px 0; /* 上下填充 */
     flex-wrap: wrap; /* 允许图标换行 */
     align-items: center; /* 图标垂直居中 */
 }
@@ -511,7 +511,7 @@
     text-align: center; /* 文字居中 */
     padding: 10px 0; /* 上下padding确保点击区域较大 */
     cursor: pointer; /* 鼠标悬停显示指针，增强可点击的视觉效果 */
-    border-radius: 5px;
+    border-radius: 5px; /* 添加圆角边框效果 */
 }
 
 /* 被激活的类别样式 */
