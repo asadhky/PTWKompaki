@@ -127,7 +127,7 @@ def login():
             session['username'] = account['username']
             return redirect(url_for('choose_settings'))
         else:
-            message = 'Incorrect username or password. Please try again.'
+            message = 'Incorrect username/password!'
 
     return render_template('login.html', message=message)
 
@@ -562,6 +562,31 @@ def save_code():
         app.logger.error(f'Database error: {e}')
         return jsonify({'error': 'Internal Server Error'}), 500
 
+@app.route('/rename-code', methods=['POST'])
+def rename_code():
+    old_name = request.form.get('old_name')
+    new_name = request.form.get('new_name')
+
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        # 更新数据库中的代码名称
+        cursor.execute('UPDATE code SET code_name = %s WHERE code_name = %s', (new_name, old_name))
+        conn.commit()
+
+        # 检查是否有行受影响
+        if cursor.rowcount == 0:
+            return jsonify(success=False, error="Old file does not exist in database.")
+        
+        cursor.close()
+        conn.close()
+        return jsonify(success=True)
+    except mysql.connector.Error as e:
+        app.logger.error(f'Database error: {e}')
+        return jsonify(success=False, error=str(e))
+
+
 
 # 创建数据库连接
 def create_db_connection():
@@ -727,6 +752,11 @@ def setting1():
 @app.route('/maintenance')
 def maintenance():
     return render_template('maintenance.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
