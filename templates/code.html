@@ -234,7 +234,7 @@
             width: 100%;
         }
 
-
+        /* ------------------------------------*/
         .code-display {
             width: 40%;
             background-color: #f9f9f9;
@@ -247,30 +247,91 @@
         /* 左侧代码列表的样式 */
         .code-list {
             width: 20%;
-            background-color: #f9f9f9;
+            background-color: #f0f0f0;
             border-right: 1px solid #ccc;
             padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
         }
 
-        .code-list ul {
-            list-style: none;
+        /* 样式调整 */
+        .code-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-size: 16px;
+            font-weight: bold;
+            position: relative;
+            /* 为绝对定位的元素提供参考 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-item.selected {
+            background-color: #4CAF50;
+            /* 选中时的背景颜色 */
+            color: white;
+            /* 选中时的文字颜色 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* 选中时的阴影效果 */
+        }
+
+        .options-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            /* 调整图标大小 */
+            padding: 5px;
+            margin-left: 10px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            /* 确保菜单与右侧对齐 */
+            top: 100%;
+            /* 下方显示 */
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            min-width: 30%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
             padding: 0;
         }
 
-        .code-list ul li {
+        .rename-button,
+        .delete-button {
+            background-color: white;
+            border: none;
             padding: 10px;
+            width: 100%;
+            /* 宽度设置为100%，以填满父元素 */
+            text-align: left;
             cursor: pointer;
-            /* 确保鼠标光标为指针 */
-            border: 1px solid transparent;
-            transition: background-color 0.3s, border-color 0.3s;
+            font-size: 14px;
+            box-sizing: border-box;
         }
 
-        .code-list ul li:hover,
-        .code-list ul li.selected {
-            background-color: #e0e0e0;
-            border-color: #888;
+        .rename-button:hover {
+            background-color: #f5f5f5;
+        }
+
+        .delete-button {
+            color: red;
+        }
+
+        .delete-button:hover {
+            background-color: #f5f5f5;
         }
 
 
@@ -394,6 +455,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/kerdirks/JSCut/gcodeviewer/gcodeviewer.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/gcode/gcode.min.js"></script>
+
+
 
 </head>
 
@@ -440,16 +506,15 @@
 
     <div class="container">
         <div id="code-list" class="code-list">
-            <ul>
-                <!-- 已上传的代码文件名将会被添加到这里 -->
-            </ul>
+            <!-- 已上传的代码文件名将会被添加到这里 -->
+
         </div>
 
         <div id="code-display" class="code-display">
             <div id="current-code-name"></div>
-            <textarea id="code-editor" name="codeEditor"></textarea>
-            <button id="save-code" style="display: none;">Save Changes</button>
-            <button id="view-3d-button" style="display: none;">View 3D</button>
+            <textarea id="code-editor" name="codeEditor" spellcheck="false"></textarea>
+            <button id="save-code" style="display: block;">Save Changes</button>
+            <button id="view-3d-button" style="display: block;">View 3D</button>
         </div>
 
         <!-- 可视化模块模态框 -->
@@ -590,80 +655,18 @@
 
     <script>
 
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     // 函数来添加新的列表项并绑定点击事件
-        //     function addListItem(codeName) {
-        //         var codeList = document.getElementById('code-list');
-        //         var listItem = document.createElement('li');
-        //         listItem.textContent = codeName;
-        //         listItem.addEventListener('click', function() {
-        //             displayCode(codeName);
-        //         });
-        //         codeList.appendChild(listItem);
-        //     }
-        //
-        //     // 为每个列表项添加点击事件监听器
-        //     document.querySelectorAll('#code-list li').forEach(function(listItem) {
-        //         listItem.addEventListener('click', function() {
-        //             displayCode(listItem.textContent);
-        //         });
-        //     });
-        //
-        //     // 动态添加列表项
-        //     // 假设这是通过上传代码后触发的
-        //     // addListItem('example.gcode'); // 此行现在不需要，因为上传后会动态添加
-        //
-        //     // 处理文件上传
-        //     document.getElementById('upload-button').addEventListener('click', function() {
-        //         // 触发文件选择
-        //         document.getElementById('codeFile').click();
-        //     });
-        //
-        //     document.getElementById('codeFile').addEventListener('change', function() {
-        //         // 获取选择的文件
-        //         var file = this.files[0];
-        //         if (file) {
-        //             var formData = new FormData();
-        //             formData.append('codeFile', file);
-        //
-        //             // 发送文件到服务器
-        //             fetch('/upload-code', {
-        //                 method: 'POST',
-        //                 body: formData
-        //             })
-        //             .then(response => response.json())
-        //             .then(data => {
-        //                 if (data.success) {
-        //                     // 添加代码名称到左侧列表
-        //                     addListItem(data.codeName); // 使用函数添加列表项和事件监听器
-        //                 } else {
-        //                     alert('上传失败: ' + data.message);
-        //                 }
-        //             })
-        //             .catch(error => {
-        //                 console.error('Error:', error);
-        //             });
-        //         }
-        //     });
-        // });
+        var codeEditor;
 
-        // // 函数来处理代码显示
-        // function displayCode(codeName) {
-        //     // 发送请求到后端以获取代码内容
-        //     fetch(`/get-code?name=${encodeURIComponent(codeName)}`)
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             return response.json();
-        //         })
-        //         .then(codeContent => {
-        //             document.getElementById('code-display').textContent = codeContent;
-        //         })
-        //         .catch(error => {
-        //             console.error('Error fetching code:', error);
-        //         });
-        // }
+        document.addEventListener('DOMContentLoaded', function () {
+            // 初始化 CodeMirror 或 Ace Editor
+            codeEditor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+                lineNumbers: true,
+                mode: 'gcode',
+                theme: 'default'
+            });
+
+            // 其他页面加载逻辑
+        });
 
         // 函数来处理代码显示和编辑
         function displayCode(codeName) {
@@ -676,14 +679,23 @@
                 })
                 .then(data => {
                     if (data.code_content) {
-                        var codeEditor = document.getElementById('code-editor');
-                        var currentCodeName = document.getElementById('current-code-name');
-                        currentCodeName.textContent = codeName; // 设置代码名称
-                        codeEditor.value = data.code_content; // 将代码内容设置到textarea中
-                        codeEditor.style.display = 'block'; // 显示编辑器
-                        document.getElementById('save-code').style.display = 'block'; // 显示保存按钮
-                        document.getElementById('view-3d-button').style.display = 'block'; // 显示3D查看按钮
-                        codeEditor.setAttribute('data-current-code', codeName); // 标记当前编辑的代码名称
+                        // 将代码内容加载到 CodeMirror 或 Ace Editor 中
+                        codeEditor.setValue(data.code_content);  // 对于 CodeMirror 和 Ace Editor 都适用
+                        // codeEditor.clearSelection();  // 清除选中的部分，防止用户误编辑
+                        // 显示保存按钮和3D查看按钮
+                        document.getElementById('save-code').style.display = 'block';
+                        document.getElementById('view-3d-button').style.display = 'block';
+
+                        var codeListItems = document.querySelectorAll('#code-list li');
+                        codeListItems.forEach(function (item) {
+                            item.classList.remove('selected');  // 移除其他项的选中状态
+                            if (item.textContent.trim() === codeName) {
+                                item.classList.add('selected');  // 为匹配的项添加选中状态
+                            }
+                        });
+
+
+
                     } else {
                         throw new Error('Code content not found');
                     }
@@ -694,16 +706,115 @@
         }
 
 
+
         // 函数来添加新的列表项并绑定点击事件
         function addListItem(codeName) {
             var codeList = document.getElementById('code-list');
-            var listItem = document.createElement('li');
-            listItem.textContent = codeName;
-            listItem.addEventListener('click', function () {
-                displayCode(codeName);
+            var listItem = document.createElement('div');
+            listItem.className = 'code-item';
+
+            // 添加文件名的文本部分
+            var textSpan = document.createElement('span');
+            textSpan.textContent = codeName;
+            listItem.appendChild(textSpan);
+
+            // 添加三个点的按钮
+            var optionsButton = document.createElement('button');
+            optionsButton.className = 'options-button';
+            optionsButton.innerHTML = '&#x22EE;';  // 使用Unicode字符表示三个点
+            listItem.appendChild(optionsButton);
+
+            // 创建下拉菜单
+            var dropdownMenu = document.createElement('div');
+            dropdownMenu.className = 'dropdown-menu';
+            dropdownMenu.style.display = 'none';  // 默认隐藏
+
+            // 添加重命名按钮
+            var renameButton = document.createElement('button');
+            renameButton.textContent = 'Rename';
+            renameButton.className = 'rename-button';
+            dropdownMenu.appendChild(renameButton);
+
+            // 添加删除按钮
+            var deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'delete-button';
+            dropdownMenu.appendChild(deleteButton);
+
+            listItem.appendChild(dropdownMenu);
+
+            // 显示/隐藏下拉菜单
+            optionsButton.addEventListener('click', function (event) {
+                event.stopPropagation();  // 阻止事件冒泡
+                dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
             });
+
+            // 点击删除按钮时执行删除操作
+            deleteButton.addEventListener('click', function () {
+                if (confirm(`确认删除 ${codeName} 吗?`)) {
+                    listItem.remove();
+                    deleteCodeFromServer(codeName);  // 你需要实现的函数，用于从服务器删除
+                }
+            });
+
+            // 点击重命名按钮时执行重命名操作
+            renameButton.addEventListener('click', function () {
+                var newName = prompt("Please enter a new filename:", codeName);
+                if (newName && newName !== codeName) {
+                    renameCodeOnServer(codeName, newName).then(success => {
+                        if (success) {
+                            textSpan.textContent = newName;  // 更新UI中的文件名
+                            codeName = newName;  // 更新变量中的文件名
+                        } else {
+                            alert("Rename failures!");
+                        }
+                    });
+                }
+            });
+
+            // 点击其他地方时隐藏下拉菜单
+            document.addEventListener('click', function () {
+                dropdownMenu.style.display = 'none';
+            });
+
+            listItem.addEventListener('click', function () {
+                // 取消其他项的选中状态
+                document.querySelectorAll('.code-item').forEach(function (item) {
+                    item.classList.remove('selected');
+                });
+                // 为当前项添加选中状态
+                listItem.classList.add('selected');
+                var codeName = textSpan.textContent.trim();
+                displayCode(codeName);  // 显示代码内容
+            });
+
             codeList.appendChild(listItem);
         }
+
+
+        function renameCodeOnServer(oldName, newName) {
+            return fetch('/rename-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `old_name=${encodeURIComponent(oldName)}&new_name=${encodeURIComponent(newName)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        return true;
+                    } else {
+                        console.error('Error renaming code:', data.error);
+                        return false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error renaming code:', error);
+                    return false;
+                });
+        }
+
 
         document.addEventListener('DOMContentLoaded', function () {
             // 处理文件上传
@@ -762,28 +873,6 @@
             });
         });
 
-        // // 函数来处理代码显示
-        // function displayCode(codeName) {
-        //       fetch(`/get-code?name=${encodeURIComponent(codeName)}`)
-        //             .then(response => {
-        //                   if (!response.ok) {
-        //                         throw new Error('Network response was not ok');
-        //                   }
-        //                   return response.json();
-        //             })
-        //       .then(data => {
-        //             if (data.code_content) {
-        //                     var codeEditor = document.getElementById('code-editor');
-        //                     codeEditor.value = data.code_content; // 将代码内容设置到textarea中
-        //                     codeEditor.style.display = 'block'; // 显示编辑器
-        //                     document.getElementById('save-code').style.display = 'block'; // 显示保存按钮
-        //             } else {
-        //                 throw new Error('Code content not found');
-        //             }
-        //       }).catch(error => {
-        //                 console.error('Error fetching code:', error);
-        //       });
-        // }
 
         document.addEventListener('DOMContentLoaded', function () {
             // 获取并显示所有已上传的代码
@@ -807,45 +896,72 @@
             }
 
             loadAndDisplayAllCodes();  // 调用函数加载并显示所有代码
-
-            // ...其他代码保持不变...
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('code-list').addEventListener('contextmenu', function (event) {
-                event.preventDefault();  // 阻止默认的右键菜单
-                var codeName = event.target.textContent;
-                if (confirm(`Are you sure you want to delete ${codeName}?`)) {
-                    // 发送删除请求到后端
-                    fetch('/delete-code', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `name=${encodeURIComponent(codeName)}`
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // 从页面上移除列表项
-                                event.target.remove();
-                                alert(data.message);  // 显示删除成功的消息
-                            } else {
-                                alert(data.error);  // 显示错误消息
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error deleting code:', error);
-                        });
-                }
-            });
-        });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     document.getElementById('code-list').addEventListener('contextmenu', function (event) {
+        //         event.preventDefault();  // 阻止默认的右键菜单
+        //         var codeName = event.target.textContent;
+        //         if (confirm(`Are you sure you want to delete ${codeName}?`)) {
+        //             // 发送删除请求到后端
+        //             fetch('/delete-code', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/x-www-form-urlencoded',
+        //                 },
+        //                 body: `name=${encodeURIComponent(codeName)}`
+        //             })
+        //                 .then(response => response.json())
+        //                 .then(data => {
+        //                     if (data.success) {
+        //                         // 从页面上移除列表项
+        //                         event.target.remove();
+        //                         alert(data.message);  // 显示删除成功的消息
+        //                     } else {
+        //                         alert(data.error);  // 显示错误消息
+        //                     }
+        //                 })
+        //                 .catch(error => {
+        //                     console.error('Error deleting code:', error);
+        //                 });
+        //         }
+        //     });
+        // });
+        function deleteCodeFromServer(codeName) {
+            fetch('/delete-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `name=${encodeURIComponent(codeName)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`${codeName} Successfully deleted`);
+                    } else {
+                        alert(`Failed to delete: ${data.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting code:', error);
+                });
+        }
 
         // 函数来处理代码保存
         function saveCode() {
-            var codeEditor = document.getElementById('code-editor');
-            var codeName = codeEditor.getAttribute('data-current-code'); // 获取正在编辑的代码名称
-            var newContent = codeEditor.value; // 获取编辑器中的代码内容
+
+            var selectedElement = document.querySelector('#code-list .selected');
+            if (!selectedElement) {
+                alert('No code is selected. Please select a code to save.');
+                return;
+            }
+
+            var codeName = selectedElement.querySelector('span').textContent.trim();
+            var newContent = codeEditor.getValue(); // 获取编辑器中的代码内容
+
+            console.log('Code name:', codeName);  // 输出当前正在保存的代码名称
+            console.log('Code content:', newContent);  // 输出当前代码内容
 
             fetch(`/save-code?name=${encodeURIComponent(codeName)}`, {
                 method: 'POST',
@@ -873,19 +989,23 @@
         }
 
         // 绑定保存按钮事件监听器
-        document.getElementById('save-code').addEventListener('click', saveCode);
+        document.getElementById('save-code').addEventListener('click', function () {
+            console.log('save button clicked')
+            saveCode();
+        });
 
         // 绑定保存按钮事件监听器
-        document.getElementById('save-code').addEventListener('click', function () {
-            var codeName = document.querySelector('#code-list .selected').textContent; // 获取当前选中的代码名称
-            var newContent = document.getElementById('code-editor').value; // 获取编辑后的代码内容
-            saveCode(codeName, newContent); // 保存代码
-        });
+        // document.getElementById('save-code').addEventListener('click', function () {
+        //     var codeName = document.querySelector('#code-list .selected').textContent; // 获取当前选中的代码名称
+        //     var newContent = document.getElementById('code-editor').value; // 获取编辑后的代码内容
+        //     // var newContent = codeEditor.getValue(); // 获取编辑后的代码内容
+        //     saveCode(codeName, newContent); // 保存代码
+        // });
 
 
         document.getElementById('view-3d-button').addEventListener('click', function () {
-            var codeEditor = document.getElementById('code-editor');
-            var gcode = codeEditor.value;
+            // var codeEditor = document.getElementById('code-editor');
+            var gcode = codeEditor.getValue();
 
             const viewerContainer = document.getElementById('visualization-container'); // 修改此处
             viewerContainer.innerHTML = ''; // 清除先前内容
