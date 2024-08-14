@@ -505,14 +505,15 @@
     background-color: #f0f0f0;
 }
 
-/* 顶部每个类别样式 */
+/* The styling for the 5 buttons below the header Planning, Machining etc. */
 .top-categories .category {
-    flex-grow: 1; /* 每个类别平均分配空间 */
-    text-align: center; /* 文字居中 */
-    padding: 10px 0; /* 上下padding确保点击区域较大 */
-    cursor: pointer; /* 鼠标悬停显示指针，增强可点击的视觉效果 */
-    border-radius: 5px; /* 添加圆角边框效果 */
+    flex: 1 1 150px;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
 }
+
 
 /* 被激活的类别样式 */
 .top-categories .category.active {

@@ -126,6 +126,15 @@
             overflow-y: auto;
             border-radius: 5px;
         }
+
+        .langBtn {
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .langBtn img {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 
 
@@ -142,6 +151,16 @@
         </a>
 
         <h1 class="page-title" style="font-family: 'Roboto', sans-serif; text-align: center; color: #0b0c10; padding-left: 7%;"> </h1>
+
+        <!-- Language change buttons -->
+        <div class="nav-button">
+            <a href="#" class="langBtn" language="english">
+                <img src="../static/EnglishFlag.png" alt="EN" class="langIcon">
+            </a>
+            <a href="#" class="langBtn" language="german">
+                <img src="../static/GermanFlag.png" alt="DE" class="langIcon">
+            </a>
+        </div>
 
         <a href="/choose_settings">
             <button class="nav-button" id="choose-button">
@@ -186,155 +205,141 @@
 
     <!-- Application icons will be displayed here when the Planning category is clicked -->
     <div id="category-planning-apps-container" class="apps-container">
-        <!-- Moved the apps from the modal here -->
         <a href="/connection" class="app-icon">
             <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
-            <div class="app-label">connection</div>
+            <div class="app-label" data-key="label-connection">Connection</div>
         </a>
         <!-- Other applications... -->
         <a href="/Tool manager" class="app-icon">
             <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
-            <div class="app-label">Tool manager</div>
+            <div class="app-label" data-key="label-tool-manager">Tool Manager</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Calendar" class="app-icon">
             <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
-            <div class="app-label">Calendar</div>
+            <div class="app-label" data-key="label-calendar">Calendar</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/File manager" class="app-icon">
             <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
-            <div class="app-label">File manager</div>
+            <div class="app-label" data-key="label-file-manager">File Manager</div>
         </a>
         <a href="/Cycle time estimation" class="app-icon">
             <img src="{{ url_for('static', filename='cycle.jpg') }}" alt="代码" />
-            <div class="app-label">Cycle time estimation</div>
+            <div class="app-label" data-key="label-cycle-time-estimation">Cycle Time Estimation</div>
         </a>
         <a href="/code" class="app-icon">
             <img src="{{ url_for('static', filename='code.jpg') }}" alt="仿真" />
-            <div class="app-label">code</div>
+            <div class="app-label" data-key="label-code">Code</div>
         </a>
     </div>
 
-    <!-- Application icons will be displayed here when the Planning category is clicked -->
+    <!-- Application icons will be displayed here when the Machining category is clicked -->
     <div id="category-machining-apps-container" class="apps-container">
-        <!-- 应用图标 -->
         <a href="/simulation" class="app-icon">
             <img src="{{ url_for('static', filename='simulation.jpg') }}" alt="仿真" />
-            <div class="app-label">Simulation</div>
+            <div class="app-label" data-key="label-simulation">Simulation</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Digital twin" class="app-icon">
             <img src="{{ url_for('static', filename='digital-twin.jpg') }}" alt="连接" />
-            <div class="app-label">Digital twin</div>
+            <div class="app-label" data-key="label-digital-twin">Digital twin</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/3D viewer" class="app-icon">
             <img src="{{ url_for('static', filename='3d-viewer.jpg') }}" alt="代码" />
-            <div class="app-label">2D/3D viewer</div>
+            <div class="app-label" data-key="label-2d-3d-viewer">2D/3D viewer</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/NC operation" class="app-icon">
             <img src="{{ url_for('static', filename='operations.jpg') }}" alt="代码" />
-            <div class="app-label">NC operation</div>
+            <div class="app-label" data-key="label-nc-operation">NC operation</div>
         </a>
         <a href="/Collision advance" class="app-icon">
             <img src="{{ url_for('static', filename='collision.jpg') }}" alt="代码" />
-            <div class="app-label">Collision advance</div>
+            <div class="app-label" data-key="label-collision-advance">Collision advance</div>
         </a>
     </div>
+    
+    
 
-    <!-- Application icons will be displayed here when the Planning category is clicked -->
+    <!-- Application icons will be displayed here when the Monitoring category is clicked -->
     <div id="category-monitoring-apps-container" class="apps-container">
         <a href="/Data logger" class="app-icon">
             <img src="{{ url_for('static', filename='log.jpg') }}" alt="仿真" />
-            <div class="app-label">Data logger</div>
+            <div class="app-label" data-key="label-data-logger">Data logger</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Maintenance manager" class="app-icon">
             <img src="{{ url_for('static', filename='report.jpg') }}" alt="连接" />
-            <div class="app-label">Maintenance manager</div>
+            <div class="app-label" data-key="label-maintenance-manager">Maintenance manager</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Servo viewer" class="app-icon">
             <img src="{{ url_for('static', filename='Servo-viewer.jpg') }}" alt="代码" />
-            <div class="app-label">Servo viewer</div>
+            <div class="app-label" data-key="label-servo-viewer">Servo viewer</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/KPI" class="app-icon">
             <img src="{{ url_for('static', filename='kpi.jpg') }}" alt="代码" />
-            <div class="app-label">KPI</div>
+            <div class="app-label" data-key="label-kpi">KPI</div>
         </a>
     </div>
+    
 
+    <!-- Application icons will be displayed here when the Community category is clicked -->
     <div id="category-community-apps-container" class="apps-container">
-        <!-- 应用图标 -->
         <a href="/team board" class="app-icon">
             <img src="{{ url_for('static', filename='team.jpg') }}" alt="仿真" />
-            <div class="app-label">Team board</div>
+            <div class="app-label" data-key="label-team-board">Team board</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/cloud" class="app-icon">
             <img src="{{ url_for('static', filename='cloud.jpg') }}" alt="连接" />
-            <div class="app-label">Cloud Machining</div>
+            <div class="app-label" data-key="label-cloud-machining">Cloud Machining</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/finance" class="app-icon">
             <img src="{{ url_for('static', filename='finance.jpg') }}" alt="代码" />
-            <div class="app-label">Finance</div>
+            <div class="app-label" data-key="label-finance">Finance</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/update" class="app-icon">
             <img src="{{ url_for('static', filename='update.jpg') }}" alt="代码" />
-            <div class="app-label">Update</div>
+            <div class="app-label" data-key="label-update">Update</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/consumer_service" class="app-icon">
             <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="代码" />
-            <div class="app-label">Customer Support</div>
+            <div class="app-label" data-key="label-customer-support">Customer Support</div>
         </a>
         <a href="/shopping" class="app-icon">
             <img src="{{ url_for('static', filename='shopping.jpg') }}" alt="代码" />
-            <div class="app-label">Shopping</div>
+            <div class="app-label" data-key="label-shopping">Shopping</div>
         </a>
     </div>
+    
 
+    <!-- Application icons will be displayed here when the Utility category is clicked -->
     <div id="category-utility-apps-container" class="apps-container">
-        <!-- 应用图标 -->
         <a href="/manual" class="app-icon">
             <img src="{{ url_for('static', filename='manual.jpg') }}" alt="仿真" />
-            <div class="app-label">manual</div>
+            <div class="app-label" data-key="label-manual">manual</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/memo" class="app-icon">
             <img src="{{ url_for('static', filename='memo.jpg') }}" alt="连接" />
-            <div class="app-label">memo</div>
+            <div class="app-label" data-key="label-memo">memo</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/camera" class="app-icon">
             <img src="{{ url_for('static', filename='camera.jpg') }}" alt="代码" />
-            <div class="app-label">camera</div>
+            <div class="app-label" data-key="label-camera">camera</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/calculator" class="app-icon">
             <img src="{{ url_for('static', filename='calculator.jpg') }}" alt="代码" />
-            <div class="app-label">calculator</div>
+            <div class="app-label" data-key="label-calculator">calculator</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/browser" class="app-icon">
             <img src="{{ url_for('static', filename='browser.jpg') }}" alt="代码" />
-            <div class="app-label">browser</div>
+            <div class="app-label" data-key="label-browser">browser</div>
         </a>
         <a href="/setting1" class="app-icon">
             <img src="{{ url_for('static', filename='setting.jpg') }}" alt="代码" />
-            <div class="app-label">setting</div>
+            <div class="app-label" data-key="label-setting">setting</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/maintenance" class="app-icon">
             <img src="{{ url_for('static', filename='maintenance.jpg') }}" alt="代码" />
-            <div class="app-label">maintenance</div>
+            <div class="app-label" data-key="label-maintenance">maintenance</div>
         </a>
     </div>
+    
 
 
 
@@ -530,69 +535,72 @@
         <div class="container">
             <!-- 上部：Connection -->
             <div class="section" id="connection-section">
-                <h2>Connection</h2>
+                <h2 data-key="title-connection">Connection</h2>
                 <div class="form-group-inline">
-                    <label for="amsnetid">AmsNetID</label>
+                    <label for="amsnetid" data-key="label-amsnetid">AmsNetID</label>
                     <input type="text" id="amsnetid">
-                    <label for="port">Port</label>
+                    <label for="port" data-key="label-port">Port</label>
                     <input type="text" id="port">
-                    <button id="open-port-btn">Open Port</button>
+                    <button id="open-port-btn" data-key="button-open-port">Open Port</button>
                 </div>
             </div>
 
             <!-- 中部：Axis Status -->
             <div class="section" id="axis-status-section">
-                <h2>Axis Status</h2>
+                <h2 data-key="title-axis-status">Axis Status</h2>
                 <div class="axis-container">
                     <div class="axis" id="status-x-axis" onclick="selectAxis('x')">
-                        <h2>X Axis</h2>
-                        <div>Current Position: <span id="x-current">0.000</span></div>
-                        <div>End Position: <span id="x-end">0.000</span></div>
-                        <div>Active Position: <span id="x-active">0.000</span></div>
+                        <h2 data-key="title-x-axis">X Axis</h2>
+                        <div data-key="label-current-position">Current Position: <span id="x-current">0.000</span></div>
+                        <div data-key="label-end-position">End Position: <span id="x-end">0.000</span></div>
+                        <div data-key="label-active-position">Active Position: <span id="x-active">0.000</span></div>
                     </div>
                     <div class="axis" id="status-y-axis" onclick="selectAxis('y')">
-                        <h2>Y Axis</h2>
-                        <div>Current Position: <span id="y-current">0.000</span></div>
-                        <div>End Position: <span id="y-end">0.000</span></div>
-                        <div>Active Position: <span id="y-active">0.000</span></div>
+                        <h2 data-key="title-y-axis">Y Axis</h2>
+                        <div data-key="label-current-position">Current Position: <span id="y-current">0.000</span></div>
+                        <div data-key="label-end-position">End Position: <span id="y-end">0.000</span></div>
+                        <div data-key="label-active-position">Active Position: <span id="y-active">0.000</span></div>
                     </div>
                     <div class="axis" id="status-z-axis" onclick="selectAxis('z')">
-                        <h2>Z Axis</h2>
-                        <div>Current Position: <span id="z-current">0.000</span></div>
-                        <div>End Position: <span id="z-end">0.000</span></div>
-                        <div>Active Position: <span id="z-active">0.000</span></div>
+                        <h2 data-key="title-z-axis">Z Axis</h2>
+                        <div data-key="label-current-position">Current Position: <span id="z-current">0.000</span></div>
+                        <div data-key="label-end-position">End Position: <span id="z-end">0.000</span></div>
+                        <div data-key="label-active-position">Active Position: <span id="z-active">0.000</span></div>
                     </div>
                 </div>
-
+            </div>
+            
+            
                 <div id="axis-controls" style="display:none;" class="form-group-inline">
-                    <button id="enable-axis">Enable Axis</button>
-                    <label for="speed">Speed</label>
+                    <button id="enable-axis" data-key="button-enable-axis">Enable Axis</button>
+                    <label for="speed" data-key="label-speed">Speed</label>
                     <input type="number" id="speed" placeholder="Enter speed">
-                    <button id="set-speed">Set Speed</button>
-                    <label for="position">Position</label>
+                    <button id="set-speed" data-key="button-set-speed">Set Speed</button>
+                    <label for="position" data-key="label-position">Position</label>
                     <input type="number" id="position" placeholder="Enter position">
-                    <button id="set-position">Set Position</button>
+                    <button id="set-position" data-key="button-set-position">Set Position</button>
                 </div>
-
+            
                 <div class="slider-container">
-                    <label for="override-slider">Override:</label>
+                    <label for="override-slider" data-key="label-override">Override:</label>
                     <input type="range" id="override-slider" min="0" max="100" value="98">
                     <span id="override-value">98%</span>
                 </div>
                 <div class="slider-container">
-                    <label for="spindle-slider">Spindle:</label>
+                    <label for="spindle-slider" data-key="label-spindle">Spindle:</label>
                     <input type="range" id="spindle-slider" min="0" max="100" value="0">
                     <span id="spindle-value">0%</span>
                 </div>
-            </div>
+            </div>            
 
             <!-- 下部：Terminal 输出台 -->
             <div class="section" id="terminal-section">
-                <h2>Terminal Output</h2>
+                <h2 data-key="terminal-output-title">Terminal Output</h2>
                 <div class="terminal-output" id="terminal-output">
                     <!-- Terminal output will be appended here -->
                 </div>
             </div>
+            
         </div>
     </div>
 
@@ -678,10 +686,9 @@
             </div>
         </div>
 
-
         <!-- AIchat -->
         <button id="AI-chat-button" class="icon-button">
-            <img src="{{ url_for('static', filename='ChatGPT.png') }}" alt="AI-chat"  style="width: 60px; height: auto;"/>
+            <img src="{{ url_for('static', filename='UpdatedAIChat.svg') }}" alt="AI-chat"  style="width: 70px; height: auto;"/>
             <div class="icon-button"> </div>
         </button>
         <div id="AI-chat-modal" class="modal">
@@ -758,6 +765,176 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const langEl = document.querySelector('.langWrap');
+        const link = document.querySelectorAll('a');
+        const textElements = document.querySelectorAll('.category');
+        const axisStatusElements = document.querySelectorAll('[data-key]'); // Select all elements with data-key attributes
+
+        // Retrieve the saved language from localStorage
+        const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+
+        // Function to update the text content based on selected language
+        function updateLanguage(language) {
+            const data = {
+            "english": {
+                "category-planning": "Planning",
+                "category-machining": "Machining",
+                "category-monitoring": "Monitoring",
+                "category-community": "Community",
+                "category-utility": "Utility",
+                "label-connection": "Connection",
+                "label-tool-manager": "Tool Manager",
+                "label-calendar": "Calendar",
+                "label-file-manager": "File Manager",
+                "label-cycle-time-estimation": "Cycle Time Estimation",
+                "label-code": "Code",
+                "label-simulation": "Simulation",
+                "label-digital-twin": "Digital twin",
+                "label-2d-3d-viewer": "2D/3D viewer",
+                "label-nc-operation": "NC operation",
+                "label-collision-advance": "Collision advance",
+                "label-data-logger": "Data logger",
+                "label-maintenance-manager": "Maintenance manager",
+                "label-servo-viewer": "Servo viewer",
+                "label-kpi": "KPI",
+                "label-team-board": "Team board",
+                "label-cloud-machining": "Cloud Machining",
+                "label-finance": "Finance",
+                "label-update": "Update",
+                "label-customer-support": "Customer Support",
+                "label-shopping": "Shopping",
+                "label-manual": "manual",
+                "label-memo": "memo",
+                "label-camera": "camera",
+                "label-calculator": "calculator",
+                "label-browser": "browser",
+                "label-setting": "setting",
+                "label-maintenance": "maintenance",
+                "title-connection": "Connection",
+                "label-amsnetid": "AmsNetID",
+                "label-port": "Port",
+                "button-open-port": "Open Port",
+                "title-axis-status": "Axis Status",
+                "title-x-axis": "X Axis",
+                "title-y-axis": "Y Axis",
+                "title-z-axis": "Z Axis",
+                "label-current-position": "Current Position: ",
+                "label-end-position": "End Position: ",
+                "label-active-position": "Active Position: ",
+                "button-enable-axis": "Enable Axis",
+                "label-speed": "Speed",
+                "button-set-speed": "Set Speed",
+                "label-position": "Position",
+                "button-set-position": "Set Position",
+                "label-override": "Override:",
+                "label-spindle": "Spindle:",
+                "terminal-output-title": "Terminal Output"
+            },
+            "german": {
+                "category-planning": "Planung",
+                "category-machining": "Bearbeitung",
+                "category-monitoring": "Überwachung",
+                "category-community": "Gemeinschaft",
+                "category-utility": "Dienstprogramm",
+                "label-connection": "Verbindung",
+                "label-tool-manager": "Werkzeugmanager",
+                "label-calendar": "Kalender",
+                "label-file-manager": "Dateimanager",
+                "label-cycle-time-estimation": "Zykluszeit Schätzung",
+                "label-code": "Code",
+                "label-simulation": "Simulation",
+                "label-digital-twin": "Digitaler Zwilling",
+                "label-2d-3d-viewer": "2D/3D-Viewer",
+                "label-nc-operation": "NC-Betrieb",
+                "label-collision-advance": "Kollisionsvorschau",
+                "label-data-logger": "Datenlogger",
+                "label-maintenance-manager": "Wartungsmanager",
+                "label-servo-viewer": "Servobetrachter",
+                "label-kpi": "KPI",
+                "label-team-board": "Teamboard",
+                "label-cloud-machining": "Cloud-Bearbeitung",
+                "label-finance": "Finanzen",
+                "label-update": "Aktualisierung",
+                "label-customer-support": "Kundendienst",
+                "label-shopping": "Einkaufen",
+                "label-manual": "Handbuch",
+                "label-memo": "Notiz",
+                "label-camera": "Kamera",
+                "label-calculator": "Rechner",
+                "label-browser": "Browser",
+                "label-setting": "Einstellung",
+                "label-maintenance": "Wartung",
+                "title-connection": "Verbindung",
+                "label-amsnetid": "AmsNetID",
+                "label-port": "Port",
+                "button-open-port": "Port öffnen",
+                "title-axis-status": "Achsenstatus",
+                "title-x-axis": "X-Achse",
+                "title-y-axis": "Y-Achse",
+                "title-z-axis": "Z-Achse",
+                "label-current-position": "Aktuelle Position: ",
+                "label-end-position": "Endposition: ",
+                "label-active-position": "Aktive Position: ",
+                "button-enable-axis": "Achse aktivieren",
+                "label-speed": "Geschwindigkeit",
+                "button-set-speed": "Geschwindigkeit einstellen",
+                "label-position": "Position",
+                "button-set-position": "Position einstellen",
+                "label-override": "Überschreibung:",
+                "label-spindle": "Spindel:",
+                "terminal-output-title": "Terminalausgabe"
+            }
+        };
+
+            // Update category text elements
+            textElements.forEach(element => {
+                const id = element.getAttribute('id');
+                if (data[language][id]) {
+                    element.textContent = data[language][id];
+                }
+            });
+
+            // Update app-label text elements
+            const appLabels = document.querySelectorAll('.app-label');
+            appLabels.forEach(element => {
+                const labelKey = element.getAttribute('data-key');
+                if (data[language][labelKey]) {
+                    element.textContent = data[language][labelKey];
+                }
+            });
+
+            // Update axis status text elements
+            axisStatusElements.forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (data[language][key]) {
+                    // If the element contains a <span>, preserve its inner content
+                    const span = element.querySelector('span');
+                    if (span) {
+                        element.innerHTML = data[language][key] + span.outerHTML;
+                    } else {
+                        element.textContent = data[language][key];
+                    }
+                }
+            });
+        }
+
+        // Update the language on page load
+        updateLanguage(savedLanguage);
+
+        // Language switch event listener
+        link.forEach(el => {
+            el.addEventListener('click', () => {
+                const attr = el.getAttribute('language');
+                localStorage.setItem('preferredLanguage', attr); // Save language to localStorage
+                updateLanguage(attr);
+            });
+        });
+    });
+
+
+        // Data object containing translations
+        
 
         // 为每个类别添加点击事件监听器并更新激活状态
         document.querySelectorAll('.top-categories .category').forEach(category => {

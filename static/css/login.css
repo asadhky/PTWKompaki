@@ -16,6 +16,8 @@ body {
 .form-wrapper h2 {
     color: #fff;
     font-size: 2rem;
+    margin-top: 0px; /* Removes the default top margin */
+    padding-top: 0; /* Removes any padding on the top */
 }
 
 nav {
