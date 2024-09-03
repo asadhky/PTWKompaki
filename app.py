@@ -133,30 +133,26 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    message = ''
     if request.method == 'POST':
         username = request.form['username']
         password = hashlib.sha256(request.form['password'].encode()).hexdigest()
 
-        # 连接到数据库
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor()
+        try:
+            with mysql.connector.connect(**db_config) as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+                    account = cursor.fetchone()
+                    if account:
+                        message = 'The username already exists.'
+                    else:
+                        cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, password))
+                        conn.commit()
+                        message = 'You have successfully registered! You can now log in.'
+        except Error as e:
+            message = f"Error connecting to the database: {e}"
 
-        # 检查用户名是否已存在
-        cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
-        account = cursor.fetchone()
-        if account:
-            flash('Username already exists!')
-        else:
-            # 将新用户的数据插入到数据库中
-            cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, password))
-            conn.commit()
-            flash('You have successfully registered! You can now log in.')
-
-        cursor.close()
-        conn.close()
-        return redirect(url_for('login'))
-
-    return render_template('register.html')
+    return render_template('register.html', message=message)
 
 
 @app.route('/choose_settings')

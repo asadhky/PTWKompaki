@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <!-- Add any additional CSS or JS here -->
-     <!-- Link to the Roboto font -->
+    <!-- Link to the Roboto font -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="static/css/login.css">
     <style>
@@ -15,26 +15,112 @@
             color: red;
             margin-top: 10px;
         }
+        .langWrap {
+            display: flex;
+            justify-content: right;
+        }
+        .langWrap a img {
+            width: 20px; /* Set the desired width */
+            height: 20px; /* Set the desired height */
+        }
+        .langWrap a {
+            padding-left: 0px; /* Add margin between buttons */
+        }
+
     </style>
 </head>
 <body>
     <nav>
         <a href="#"><img src="../static/TEC-Logo.svg" alt="logo"></a>
     </nav>
+    
+
+    
     <div class="form-wrapper">
-        <h2>Register</h2>
+        <!-- Language Switcher -->
+        <div class="langWrap">
+            <a href="#" id="lang-english" language="english" class="active">
+                <img src="../static/EnglishFlag.png" alt="English">
+            </a>
+            <a href="#" id="lang-german" language="german">
+                <img src="../static/GermanFlag.png" alt="German">
+            </a>
+        </div>
+        <h2 id="title-register">Register</h2>
         <form action="/register" method="post">
-            <label for="username">Choose a username</label>
+            <label for="username" id="label-username">Choose a username</label>
             <input type="text" id="username" name="username" required>
             <br>
-            <label for="password">Choose a password</label>
+            <label for="password" id="label-password">Choose a password</label>
             <input type="password" id="password" name="password" required>
             <br>
-            <input type="submit" value="Register">
+            <input type="submit" id="button-register" value="Register">
         </form>
-        <div class="form-help">
-        <p>Already have an account? <a href="/login">Login here</a>.</p>
+        {% if message %}
+        <div class="error-message" data-key="error-message">
+            {{ message }}
+        </div>
+        {% endif %}
+        <div class="form-help" id="form-help">
+            <p><span id="form-help-text">Already have an account? </span><a href="/login" id="link-login">Login here</a></p>
+        </div>
     </div>
-    </div>
+
+    <script>
+        // Language data
+        const data = {
+            english: {
+                "title-register": "Register",
+                "label-username": "Choose a username",
+                "label-password": "Choose a password",
+                "button-register": "Register",
+                "form-help": "Already have an account? ",
+                "link-login": "Login here"
+            },
+            german: {
+                "title-register": "Registrieren",
+                "label-username": "Wählen Sie einen Benutzernamen",
+                "label-password": "Wählen Sie ein Passwort",
+                "button-register": "Registrieren",
+                "form-help": "Haben Sie bereits ein Konto? ",
+                "link-login": "Hier anmelden"
+            }
+        };
+
+        // Language switcher
+        const langSwitcher = document.querySelector('.langWrap');
+        const links = langSwitcher.querySelectorAll('a');
+
+        links.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+
+                // Update active class
+                langSwitcher.querySelector('.active').classList.remove('active');
+                link.classList.add('active');
+
+                // Get selected language
+                const language = link.getAttribute('language');
+
+                localStorage.setItem('preferredLanguage', language);
+
+                // Update text content based on selected language
+                document.getElementById('title-register').textContent = data[language]["title-register"];
+                document.getElementById('label-username').textContent = data[language]["label-username"];
+                document.getElementById('label-password').textContent = data[language]["label-password"];
+                document.getElementById('button-register').value = data[language]["button-register"];
+                document.getElementById('form-help-text').textContent = data[language]["form-help"];
+                document.getElementById('link-login').textContent = data[language]["link-login"];
+            });
+        });
+        // Set default language from localStorage or fallback to English
+        const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+        document.getElementById('title-register').textContent = data[savedLanguage]["title-register"];
+        document.getElementById('label-username').textContent = data[savedLanguage]["label-username"];
+        document.getElementById('label-password').textContent = data[savedLanguage]["label-password"];
+        document.getElementById('button-register').value = data[savedLanguage]["button-register"];
+        document.getElementById('form-help-text').textContent = data[savedLanguage]["form-help"];
+        document.getElementById('link-login').textContent = data[savedLanguage]["link-login"];
+    </script>
 </body>
 </html>

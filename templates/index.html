@@ -126,215 +126,217 @@
             overflow-y: auto;
             border-radius: 5px;
         }
+
+        .langBtn {
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .langBtn img {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 
 
 </head>
 
 <body>
-    <!--<h1>欢迎来到主页</h1>-->
-    <!-- 顶部 -->
-    <div class="top-nav-bar">
-        <a href="/index">
-            <button class="nav-button" id="back-button">
-                <img src="{{ url_for('static', filename='TEC-Logo.svg') }}" alt="返回" style="width: 170px;">
-            </button>
-        </a>
-
-        <h1 class="page-title" style="font-family: 'Roboto', sans-serif; text-align: center; color: #0b0c10; padding-left: 7%;"> </h1>
-
-        <a href="/choose_settings">
-            <button class="nav-button" id="choose-button">
-                <img src="{{ url_for('static', filename='ModeSelection.png') }}" alt="返回" style="width: 50px; height: auto;">
-            </button>
-        </a>
-
-        <a>
-        <button class="nav-button" id="search-button">
-            <img src="{{ url_for('static', filename='search.png') }}" alt="user" style="width: 40px; height: auto;">
-        </button>
-        <div id="search-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-
-                <h2>search</h2>
-
-                <form id="search-form">
-                    <input type="text" id="search-input" placeholder="Enter search content">
-                    <button type="submit">search</button>
-                </form>
-            </div>
-        </div>
-    </a>
-
-        <a href="/userinfo">
-            <button class="nav-button" id="user-info-button">
-                <img src="{{ url_for('static', filename='user.png') }}" alt="user" style="width: 50px; height: auto;">
-            </button>
-        </a>
-    </div>
-
+    <!-- Top navigation bar -->
+    {% include 'NavBar.html' %}
 
     <!-- Assuming you have a top bar where the categories will go -->
     <div class="top-categories" id="categories">
+        <div class="category" id="category-individualworkflow">Individual Workflow</div>
         <div class="category" id="category-planning">Planning</div>
         <div class="category" id="category-machining">Machining</div>
         <div class="category" id="category-monitoring">Monitoring</div>
         <div class="category" id="category-community">Community</div>
+        <div class="category" id="category-development">Development</div>
         <div class="category" id="category-utility">Utility</div>
     </div>
 
-    <!-- Application icons will be displayed here when the Planning category is clicked -->
-    <div id="category-planning-apps-container" class="apps-container">
-        <!-- Moved the apps from the modal here -->
+    <!-- Application icons will be displayed here when the Individual Workflow category is clicked -->
+    <div id="category-individualworkflow-apps-container" class="apps-container">
         <a href="/connection" class="app-icon">
             <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
-            <div class="app-label">connection</div>
+            <div class="app-label" data-key="label-sample">sample1</div>
         </a>
         <!-- Other applications... -->
         <a href="/Tool manager" class="app-icon">
             <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
-            <div class="app-label">Tool manager</div>
+            <div class="app-label" data-key="label-sample">sample2</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Calendar" class="app-icon">
             <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
-            <div class="app-label">Calendar</div>
+            <div class="app-label" data-key="label-sample">sample3</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/File manager" class="app-icon">
             <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
-            <div class="app-label">File manager</div>
+            <div class="app-label" data-key="label-sample">sample4</div>
+        </a>
+        </a>
+    </div>
+
+    <!-- Application icons will be displayed here when the Planning category is clicked -->
+    <div id="category-planning-apps-container" class="apps-container">
+        <a href="/connection" class="app-icon">
+            <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
+            <div class="app-label" data-key="label-connection">Connection</div>
+        </a>
+        <!-- Other applications... -->
+        <a href="/Tool manager" class="app-icon">
+            <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
+            <div class="app-label" data-key="label-tool-manager">Tool Manager</div>
+        </a>
+        <a href="/Calendar" class="app-icon">
+            <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-calendar">Calendar</div>
+        </a>
+        <a href="/File manager" class="app-icon">
+            <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-file-manager">File Manager</div>
         </a>
         <a href="/Cycle time estimation" class="app-icon">
             <img src="{{ url_for('static', filename='cycle.jpg') }}" alt="代码" />
-            <div class="app-label">Cycle time estimation</div>
+            <div class="app-label" data-key="label-cycle-time-estimation">Cycle Time Estimation</div>
         </a>
         <a href="/code" class="app-icon">
             <img src="{{ url_for('static', filename='code.jpg') }}" alt="仿真" />
-            <div class="app-label">code</div>
+            <div class="app-label" data-key="label-code">Code</div>
         </a>
     </div>
 
-    <!-- Application icons will be displayed here when the Planning category is clicked -->
+    <!-- Application icons will be displayed here when the Machining category is clicked -->
     <div id="category-machining-apps-container" class="apps-container">
-        <!-- 应用图标 -->
         <a href="/simulation" class="app-icon">
             <img src="{{ url_for('static', filename='simulation.jpg') }}" alt="仿真" />
-            <div class="app-label">Simulation</div>
+            <div class="app-label" data-key="label-simulation">Simulation</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Digital twin" class="app-icon">
             <img src="{{ url_for('static', filename='digital-twin.jpg') }}" alt="连接" />
-            <div class="app-label">Digital twin</div>
+            <div class="app-label" data-key="label-digital-twin">Digital twin</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/3D viewer" class="app-icon">
             <img src="{{ url_for('static', filename='3d-viewer.jpg') }}" alt="代码" />
-            <div class="app-label">2D/3D viewer</div>
+            <div class="app-label" data-key="label-2d-3d-viewer">2D/3D viewer</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/NC operation" class="app-icon">
             <img src="{{ url_for('static', filename='operations.jpg') }}" alt="代码" />
-            <div class="app-label">NC operation</div>
+            <div class="app-label" data-key="label-nc-operation">NC operation</div>
         </a>
         <a href="/Collision advance" class="app-icon">
             <img src="{{ url_for('static', filename='collision.jpg') }}" alt="代码" />
-            <div class="app-label">Collision advance</div>
+            <div class="app-label" data-key="label-collision-advance">Collision advance</div>
         </a>
     </div>
+    
+    
 
-    <!-- Application icons will be displayed here when the Planning category is clicked -->
+    <!-- Application icons will be displayed here when the Monitoring category is clicked -->
     <div id="category-monitoring-apps-container" class="apps-container">
         <a href="/Data logger" class="app-icon">
             <img src="{{ url_for('static', filename='log.jpg') }}" alt="仿真" />
-            <div class="app-label">Data logger</div>
+            <div class="app-label" data-key="label-data-logger">Data logger</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Maintenance manager" class="app-icon">
             <img src="{{ url_for('static', filename='report.jpg') }}" alt="连接" />
-            <div class="app-label">Maintenance manager</div>
+            <div class="app-label" data-key="label-maintenance-manager">Maintenance manager</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/Servo viewer" class="app-icon">
             <img src="{{ url_for('static', filename='Servo-viewer.jpg') }}" alt="代码" />
-            <div class="app-label">Servo viewer</div>
+            <div class="app-label" data-key="label-servo-viewer">Servo viewer</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/KPI" class="app-icon">
             <img src="{{ url_for('static', filename='kpi.jpg') }}" alt="代码" />
-            <div class="app-label">KPI</div>
+            <div class="app-label" data-key="label-kpi">KPI</div>
         </a>
     </div>
+    
 
+    <!-- Application icons will be displayed here when the Community category is clicked -->
     <div id="category-community-apps-container" class="apps-container">
-        <!-- 应用图标 -->
         <a href="/team board" class="app-icon">
             <img src="{{ url_for('static', filename='team.jpg') }}" alt="仿真" />
-            <div class="app-label">Team board</div>
+            <div class="app-label" data-key="label-team-board">Team board</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/cloud" class="app-icon">
             <img src="{{ url_for('static', filename='cloud.jpg') }}" alt="连接" />
-            <div class="app-label">Cloud Machining</div>
+            <div class="app-label" data-key="label-cloud-machining">Cloud Machining</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/finance" class="app-icon">
             <img src="{{ url_for('static', filename='finance.jpg') }}" alt="代码" />
-            <div class="app-label">Finance</div>
+            <div class="app-label" data-key="label-finance">Finance</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/update" class="app-icon">
             <img src="{{ url_for('static', filename='update.jpg') }}" alt="代码" />
-            <div class="app-label">Update</div>
+            <div class="app-label" data-key="label-update">Update</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/consumer_service" class="app-icon">
             <img src="{{ url_for('static', filename='consumer_service.jpg') }}" alt="代码" />
-            <div class="app-label">Customer Support</div>
+            <div class="app-label" data-key="label-customer-support">Customer Support</div>
         </a>
         <a href="/shopping" class="app-icon">
             <img src="{{ url_for('static', filename='shopping.jpg') }}" alt="代码" />
-            <div class="app-label">Shopping</div>
+            <div class="app-label" data-key="label-shopping">Shopping</div>
         </a>
     </div>
 
+    <!-- Application icons will be displayed here when the Development category is clicked -->
+    <div id="category-development-apps-container" class="apps-container">
+        <a href="/connection" class="app-icon">
+            <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
+            <div class="app-label" data-key="label-sample">sample1</div>
+        </a>
+        <!-- Other applications... -->
+        <a href="/Tool manager" class="app-icon">
+            <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
+            <div class="app-label" data-key="label-sample">sample2</div>
+        </a>
+        <a href="/Calendar" class="app-icon">
+            <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-sample">sample3</div>
+        </a>
+        <a href="/File manager" class="app-icon">
+            <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-sample">sample4</div>
+        </a>
+        </a>
+    </div>
+    
+
+    <!-- Application icons will be displayed here when the Utility category is clicked -->
     <div id="category-utility-apps-container" class="apps-container">
-        <!-- 应用图标 -->
         <a href="/manual" class="app-icon">
             <img src="{{ url_for('static', filename='manual.jpg') }}" alt="仿真" />
-            <div class="app-label">manual</div>
+            <div class="app-label" data-key="label-manual">manual</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/memo" class="app-icon">
             <img src="{{ url_for('static', filename='memo.jpg') }}" alt="连接" />
-            <div class="app-label">memo</div>
+            <div class="app-label" data-key="label-memo">memo</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/camera" class="app-icon">
             <img src="{{ url_for('static', filename='camera.jpg') }}" alt="代码" />
-            <div class="app-label">camera</div>
+            <div class="app-label" data-key="label-camera">camera</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/calculator" class="app-icon">
             <img src="{{ url_for('static', filename='calculator.jpg') }}" alt="代码" />
-            <div class="app-label">calculator</div>
+            <div class="app-label" data-key="label-calculator">calculator</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/browser" class="app-icon">
             <img src="{{ url_for('static', filename='browser.jpg') }}" alt="代码" />
-            <div class="app-label">browser</div>
+            <div class="app-label" data-key="label-browser">browser</div>
         </a>
         <a href="/setting1" class="app-icon">
             <img src="{{ url_for('static', filename='setting.jpg') }}" alt="代码" />
-            <div class="app-label">setting</div>
+            <div class="app-label" data-key="label-setting">setting</div>
         </a>
-        <!-- 更多应用图标... -->
         <a href="/maintenance" class="app-icon">
             <img src="{{ url_for('static', filename='maintenance.jpg') }}" alt="代码" />
-            <div class="app-label">maintenance</div>
+            <div class="app-label" data-key="label-maintenance">maintenance</div>
         </a>
     </div>
+    
 
 
 
@@ -530,69 +532,72 @@
         <div class="container">
             <!-- 上部：Connection -->
             <div class="section" id="connection-section">
-                <h2>Connection</h2>
+                <h2 data-key="title-connection">Connection</h2>
                 <div class="form-group-inline">
-                    <label for="amsnetid">AmsNetID</label>
+                    <label for="amsnetid" data-key="label-amsnetid">AmsNetID</label>
                     <input type="text" id="amsnetid">
-                    <label for="port">Port</label>
+                    <label for="port" data-key="label-port">Port</label>
                     <input type="text" id="port">
-                    <button id="open-port-btn">Open Port</button>
+                    <button id="open-port-btn" data-key="button-open-port">Open Port</button>
                 </div>
             </div>
 
             <!-- 中部：Axis Status -->
             <div class="section" id="axis-status-section">
-                <h2>Axis Status</h2>
+                <h2 data-key="title-axis-status">Axis Status</h2>
                 <div class="axis-container">
                     <div class="axis" id="status-x-axis" onclick="selectAxis('x')">
-                        <h2>X Axis</h2>
-                        <div>Current Position: <span id="x-current">0.000</span></div>
-                        <div>End Position: <span id="x-end">0.000</span></div>
-                        <div>Active Position: <span id="x-active">0.000</span></div>
+                        <h2 data-key="title-x-axis">X Axis</h2>
+                        <div data-key="label-current-position">Current Position: <span id="x-current">0.000</span></div>
+                        <div data-key="label-end-position">End Position: <span id="x-end">0.000</span></div>
+                        <div data-key="label-active-position">Active Position: <span id="x-active">0.000</span></div>
                     </div>
                     <div class="axis" id="status-y-axis" onclick="selectAxis('y')">
-                        <h2>Y Axis</h2>
-                        <div>Current Position: <span id="y-current">0.000</span></div>
-                        <div>End Position: <span id="y-end">0.000</span></div>
-                        <div>Active Position: <span id="y-active">0.000</span></div>
+                        <h2 data-key="title-y-axis">Y Axis</h2>
+                        <div data-key="label-current-position">Current Position: <span id="y-current">0.000</span></div>
+                        <div data-key="label-end-position">End Position: <span id="y-end">0.000</span></div>
+                        <div data-key="label-active-position">Active Position: <span id="y-active">0.000</span></div>
                     </div>
                     <div class="axis" id="status-z-axis" onclick="selectAxis('z')">
-                        <h2>Z Axis</h2>
-                        <div>Current Position: <span id="z-current">0.000</span></div>
-                        <div>End Position: <span id="z-end">0.000</span></div>
-                        <div>Active Position: <span id="z-active">0.000</span></div>
+                        <h2 data-key="title-z-axis">Z Axis</h2>
+                        <div data-key="label-current-position">Current Position: <span id="z-current">0.000</span></div>
+                        <div data-key="label-end-position">End Position: <span id="z-end">0.000</span></div>
+                        <div data-key="label-active-position">Active Position: <span id="z-active">0.000</span></div>
                     </div>
                 </div>
-
+            </div>
+            
+            
                 <div id="axis-controls" style="display:none;" class="form-group-inline">
-                    <button id="enable-axis">Enable Axis</button>
-                    <label for="speed">Speed</label>
+                    <button id="enable-axis" data-key="button-enable-axis">Enable Axis</button>
+                    <label for="speed" data-key="label-speed">Speed</label>
                     <input type="number" id="speed" placeholder="Enter speed">
-                    <button id="set-speed">Set Speed</button>
-                    <label for="position">Position</label>
+                    <button id="set-speed" data-key="button-set-speed">Set Speed</button>
+                    <label for="position" data-key="label-position">Position</label>
                     <input type="number" id="position" placeholder="Enter position">
-                    <button id="set-position">Set Position</button>
+                    <button id="set-position" data-key="button-set-position">Set Position</button>
                 </div>
-
+            
                 <div class="slider-container">
-                    <label for="override-slider">Override:</label>
+                    <label for="override-slider" data-key="label-override">Override:</label>
                     <input type="range" id="override-slider" min="0" max="100" value="98">
                     <span id="override-value">98%</span>
                 </div>
                 <div class="slider-container">
-                    <label for="spindle-slider">Spindle:</label>
+                    <label for="spindle-slider" data-key="label-spindle">Spindle:</label>
                     <input type="range" id="spindle-slider" min="0" max="100" value="0">
                     <span id="spindle-value">0%</span>
                 </div>
-            </div>
+            </div>            
 
             <!-- 下部：Terminal 输出台 -->
             <div class="section" id="terminal-section">
-                <h2>Terminal Output</h2>
+                <h2 data-key="terminal-output-title">Terminal Output</h2>
                 <div class="terminal-output" id="terminal-output">
                     <!-- Terminal output will be appended here -->
                 </div>
             </div>
+            
         </div>
     </div>
 
@@ -678,10 +683,9 @@
             </div>
         </div>
 
-
         <!-- AIchat -->
         <button id="AI-chat-button" class="icon-button">
-            <img src="{{ url_for('static', filename='ChatGPT.png') }}" alt="AI-chat"  style="width: 60px; height: auto;"/>
+            <img src="{{ url_for('static', filename='UpdatedAIChat.svg') }}" alt="AI-chat"  style="width: 70px; height: auto;"/>
             <div class="icon-button"> </div>
         </button>
         <div id="AI-chat-modal" class="modal">
@@ -758,7 +762,6 @@
     </div>
 
     <script>
-
         // 为每个类别添加点击事件监听器并更新激活状态
         document.querySelectorAll('.top-categories .category').forEach(category => {
             category.addEventListener('click', function (event) {

@@ -16,33 +16,135 @@
             margin-top: 10px;
             font-size: 0.9rem;
         }
+        .langWrap {
+            display: flex;
+            justify-content: right;
+        }
+        .langBtn {
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .langBtn img {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
     <nav>
         <a href="#"><img src="../static/TEC-Logo.svg" alt="logo"></a>
     </nav>
+    
     <div class="form-wrapper">
-        <!-- <h1>Welcome to KompAki</h1> -->
-        <h2>Sign In</h2>
+        <div class="langWrap">
+            <a href="#" class="langBtn" language="english">
+                <img src="../static/EnglishFlag.png" alt="EN" class="langIcon">
+            </a>
+            <a href="#" class="langBtn" language="german">
+                <img src="../static/GermanFlag.png" alt="DE" class="langIcon">
+            </a>
+        </div>
+        <h2 data-key="title-sign-in">Sign In</h2>
         <form action="/login" method="post">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-                <br>
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                <br>
-            <input type="submit" value="Sign In">
+            <label for="username" data-key="label-username">Username</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password" data-key="label-password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <label for="remember-me" data-key="label-remember-me">
+                <input type="checkbox" id="remember-me" name="remember-me"> Remember Me
+            </label>
+            <br>
+            <input type="submit" value="Sign In" data-key="button-sign-in">
         </form>
+        
         {% if message %}
-        <div class="error-message">
+        <div class="error-message" data-key="error-message">
             {{ message }}
         </div>
         {% endif %}
-        <div class="form-help">
-            <p>Don't have an account? <a href="/register">Register here</a>.</p>
-            <p>Or continue as a <a href="/index">visitor</a></p>
+        <div class="form-help" data-key="form-help">
+            <p data-key="help-no-account">Don't have an account? <a href="/register" data-key="link-register">Register here</a>.</p>
+            <p data-key="help-continue">Or continue as a <a href="/index" data-key="link-visitor">visitor</a></p>
         </div>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const langLinks = document.querySelectorAll('.langWrap a');
+            const textElements = document.querySelectorAll('[data-key]');
+
+        //     document.querySelector('form').addEventListener('submit', (event) => {
+        //     const rememberMeCheckbox = document.getElementById('remember-me');
+        //     if (rememberMeCheckbox.checked) {
+        //         localStorage.setItem('rememberMe', true);
+        //         localStorage.setItem('rememberedUser', document.getElementById('username').value);
+        //     } else {
+        //         localStorage.removeItem('rememberMe');
+        //         localStorage.removeItem('rememberedUser');
+        //     }
+        // });
+            
+            // Translation data
+            const translations = {
+                english: {
+                    "title-sign-in": "Sign In",
+                    "label-username": "Username",
+                    "label-password": "Password",
+                    "button-sign-in": "Sign In",
+                    "error-message": "An error occurred. Please try again.",
+                    "help-no-account": "Don't have an account? <a href='/register' data-key='link-register'>Register here</a>.",
+                    "help-continue": "Or continue as a <a href='/index' data-key='link-visitor'>visitor</a>"
+                },
+                german: {
+                    "title-sign-in": "Anmelden",
+                    "label-username": "Benutzername",
+                    "label-password": "Passwort",
+                    "button-sign-in": "Anmelden",
+                    "error-message": "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+                    "help-no-account": "Haben Sie kein Konto? <a href='/register' data-key='link-register'>Hier registrieren</a>.",
+                    "help-continue": "Oder fahren Sie als <a href='/index' data-key='link-visitor'>Besucher</a> fort"
+                }
+                // Add other languages as needed
+            };
+
+            // Function to update the text content based on selected language
+            function updateLanguage(language) {
+                const translation = translations[language];
+                if (!translation) return;
+
+                textElements.forEach(element => {
+                    const key = element.getAttribute('data-key');
+                    if (translation[key]) {
+                        element.innerHTML = translation[key]; // Use innerHTML to support HTML content
+                    }
+                });
+            }
+
+            // Event listener for language links
+            langLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default link behavior
+                    const selectedLanguage = link.getAttribute('language');
+                    localStorage.setItem('preferredLanguage', selectedLanguage); // Save language to localStorage
+                    updateLanguage(selectedLanguage);
+                });
+            });
+
+            // Autofill the form fields with URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            if (username && password) {
+                document.getElementById('username').value = username;
+            }
+
+
+
+
+            const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+            updateLanguage(savedLanguage);
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+   <html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="static/css/layoutstyle.css">
+
+      <title>Layouts</title>
+   </head>
+   <body>
+      <div class="container">
+         <div class="card__container">
+            <article class="card__article">
+               <img src="{{ url_for('static', filename='layout1.jpg') }}" alt="image" class="card__img">
+
+               <div class="card__data">
+                  <span class="card__description">The Default Layout</span>
+                  <h2 class="card__title">Standard Layout</h2>
+                  <a href="/index" class="card__button">Select</a>
+               </div>
+            </article>
+
+            <article class="card__article">
+                <img src="{{ url_for('static', filename='layoutai.jpg') }}" alt="image" class="card__img">
+
+               <div class="card__data">
+                  <span class="card__description">Designed For AI Purposes</span>
+                  <h2 class="card__title">AI Layout</h2>
+                  <a href="/index" class="card__button">Select</a>
+               </div>
+            </article>
+
+            <article class="card__article">
+                <img src="{{ url_for('static', filename='layout2.jpg') }}" alt="image" class="card__img">
+
+               <div class="card__data">
+                  <span class="card__description">Sample Description</span>
+                  <h2 class="card__title">Yet To Decide</h2>
+                  <a href="/index" class="card__button">Select</a>
+               </div>
+            </article>
+         </div>
+      </div>
+   </body>
+</html>
