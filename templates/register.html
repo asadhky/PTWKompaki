@@ -56,6 +56,11 @@
             <br>
             <input type="submit" id="button-register" value="Register">
         </form>
+        {% if message %}
+        <div class="error-message" data-key="error-message">
+            {{ message }}
+        </div>
+        {% endif %}
         <div class="form-help" id="form-help">
             <p><span id="form-help-text">Already have an account? </span><a href="/login" id="link-login">Login here</a></p>
         </div>

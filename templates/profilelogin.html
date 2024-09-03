@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" integrity="sha512-BnbUDfEUfV0SlxTunuB042k9tuKe3xrD6q4mg5Ed72LTgzDIcLPxg6yI2gcMFRyomt+yJJxE+zJwNmxki6/RA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/profileloginstyle.css">
+</head>
+<body>
+
+    <div class="whoIsWatching">
+        <nav>
+            <a href="#"><img src="../static/TEC-Logo.svg" alt="logo" style="width: 309px;"></a>
+        </nav>
+
+        <div class="main-div">
+            <h1>Accounts</h1>
+            <div class="memberDiv">
+                <button class="addIcon"><img src="../static/addusericon.svg"><i class="fas fa-plus-circle"></i> <span>Add Profile</span></button>
+            </div>
+            <button class="manageProfile">manage Profiles</button>
+        </div>
+    </div>
+
+    <!-- Hidden form -->
+    <form id="hiddenForm" method="POST" action="/profilelogin" class="hidden">
+        <input type="text" name="username" id="hiddenUsername">
+    </form>
+
+    <script>
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+    
+        const memberDiv = document.querySelector('.memberDiv');
+        const addIcon = document.querySelector('.addIcon');
+        const manageProfile = document.querySelector('.manageProfile');
+        const mainDiv = document.querySelector('.main-div');
+        const hiddenForm = document.getElementById('hiddenForm');
+        const hiddenUsername = document.getElementById('hiddenUsername');
+    
+        const userIcons = () => {
+            users.reverse();
+            users.map((curElem) => {
+            memberDiv.insertAdjacentHTML('afterbegin', `
+                <button class="btn">
+                <span>${curElem}</span>
+                <div class="remove-icon">
+                    <img src="../static/trash.png" style="width: 25px; padding-top: 7px;">
+                </div>
+                </button>
+            `);
+            });
+
+
+            // Add event listener to the buttons
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    if (mainDiv.classList.contains('manage-mode')) {
+                        const username = event.target.closest('.btn').querySelector('span').innerText;
+                        users.splice(users.indexOf(username), 1);
+                        button.remove();
+
+
+                    // Remove from cookies if it matches the remembered user
+                    if (getCookie('rememberedUser') === username) {
+                        deleteCookie('rememberMe');
+                        deleteCookie('rememberedUser');
+                    }
+                    localStorage.setItem('users', JSON.stringify(users));
+                    } else {
+                        const username = event.target.innerText;
+                        hiddenUsername.value = username;
+                        hiddenForm.submit();
+                    }
+                });
+            });
+
+            // Add event listener to the remove icons
+            document.querySelectorAll('.remove-icon').forEach(icon => {
+                icon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const username = event.target.closest('.btn').querySelector('span').innerText;
+                    users.splice(users.indexOf(username), 1);
+                    event.target.closest('.btn').remove();
+
+                    // Remove from cookies if it matches the remembered user
+                    if (getCookie('rememberedUser') === username) {
+                        deleteCookie('rememberMe');
+                        deleteCookie('rememberedUser');
+                    }
+                    localStorage.setItem('users', JSON.stringify(users));
+                });
+            });
+        };
+    
+        addIcon.addEventListener('click', () => {
+            if (users.length >= 5) {
+                alert('You cannot add more than 5 users.');
+                return;
+            }
+            window.location.href = '/login';
+        });
+
+        manageProfile.addEventListener('click', () => {
+            mainDiv.classList.toggle('manage-mode');
+            manageProfile.textContent = mainDiv.classList.contains('manage-mode') ? 'Done' : 'Manage Profiles';
+        });
+
+        // Check if "Remember Me" was checked and add username to users array
+        const rememberMe = getCookie('rememberMe');
+        if (rememberMe) {
+            const rememberedUser = getCookie('rememberedUser');
+            if (rememberedUser && !users.includes(rememberedUser)) {
+                users.push(rememberedUser);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+    
+        userIcons();
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function deleteCookie(name) {
+            document.cookie = name + '=; Max-Age=-99999999;';
+        }
+    </script>
+    
+</body>
+</html>

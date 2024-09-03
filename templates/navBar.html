@@ -1,35 +1,17 @@
+<head><style></style></head>
 <div class="top-nav-bar">
     <a href="/index">
         <button class="nav-button" id="back-button">
             <img src="{{ url_for('static', filename='TEC-Logo.svg') }}" alt="返回" style="width: 170px;">
         </button>
     </a>
+    <a href="/index">
+        <button class="nav-button" id="choose-button">
+            <img src="{{ url_for('static', filename='home.png') }}" alt="选择" style="width: 50px; height: auto;">
+        </button>
+    </a>
 
     <h1 class="page-title" style="font-family: 'Roboto', sans-serif; text-align: center; color: #0b0c10; padding-left: 7%;"></h1>
-
-
-
-    <!-- Language change buttons -->
-    <div class="nav-button">
-        <a href="#" class="langBtn" language="english">
-            <img src="../static/EnglishFlag.png" alt="EN" class="langIcon">
-        </a>
-        <a href="#" class="langBtn" language="german">
-            <img src="../static/GermanFlag.png" alt="DE" class="langIcon">
-        </a>
-    </div>
-
-    <a href="/layouts">
-        <button class="nav-button" id="choose-button">
-            <img src="{{ url_for('static', filename='layout.png') }}" alt="选择" style="width: 50px; height: auto;">
-        </button>
-    </a>
-
-    <a href="/choose_settings">
-        <button class="nav-button" id="choose-button">
-            <img src="{{ url_for('static', filename='ModeSelection.png') }}" alt="选择" style="width: 50px; height: auto;">
-        </button>
-    </a>
 
     <a>
         <button class="nav-button" id="search-button">
@@ -49,6 +31,286 @@
         </div>
     </a>
 
+    
+
+    <!-- Language change buttons -->
+    <div class="nav-button">
+        <a href="#" class="langBtn" language="english">
+            <img src="../static/EnglishFlag.png" alt="EN" class="langIcon">
+        </a>
+        <a href="#" class="langBtn" language="german">
+            <img src="../static/GermanFlag.png" alt="DE" class="langIcon">
+        </a>
+    </div>
+
+    <!-- <a href="/layouts">
+        <button class="nav-button" id="choose-button">
+            <img src="{{ url_for('static', filename='layout.png') }}" alt="选择" style="width: 50px; height: auto;">
+        </button>
+    </a> -->
+
+    <div class="nav-button">
+        <button id="layout-button" class="icon-button">
+            <img src="{{ url_for('static', filename='layout.png') }}" alt="Layout" style="width: 50px; height: auto;"/>
+            <div class="icon-button"></div>
+        </button>
+    </div>
+    
+    <dialog id="layout-dialog" class="layout-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+        <style>
+            /*=============== GOOGLE FONTS ===============*/
+            @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
+
+            /*=============== VARIABLES CSS ===============*/
+            .layout-dialog {
+              /*========== Colors ==========*/
+              /*Color mode HSL(hue, saturation, lightness)*/
+              --first-color: hsl(82, 60%, 28%);
+              --title-color: hsl(0, 0%, 15%);
+              --text-color: hsl(0, 0%, 35%);
+              --container-color: hsl(0, 0%, 100%);
+
+              /*========== Font and typography ==========*/
+              /*.5rem = 8px | 1rem = 16px ...*/
+              --body-font: "Poppins", sans-serif;
+              --h2-font-size: 1.25rem;
+              --small-font-size: .813rem;
+              background: linear-gradient(#444444, #222);
+              
+            }
+
+            /*========== Responsive typography ==========*/
+            @media screen and (min-width: 1120px) {
+              .layout-dialog {
+                --h2-font-size: 1.5rem;
+                --small-font-size: .875rem;
+              }
+            }
+
+            /*=============== BASE ===============*/
+            .layout-dialog * {
+              box-sizing: border-box;
+              padding: 0;
+              margin: 0;
+            }
+
+            .layout-dialog body {
+              font-family: var(--body-font);
+              background: linear-gradient(#444444, #222);
+              background: #0b0c10;
+              color: var(--text-color);
+            }
+
+            .layout-dialog img {
+              display: block;
+              max-width: 100%;
+              height: auto;
+            }
+
+            /*=============== CARD ===============*/
+            .layout-dialog .container {
+              display: grid;
+              place-items: center;
+              margin-inline: 1.5rem;
+              padding-block: 5rem;
+            }
+
+            .layout-dialog .card__container {
+              display: grid;
+              row-gap: 3.5rem;
+            }
+
+            .layout-dialog .card__article {
+              position: relative;
+              overflow: hidden;
+            }
+
+            .layout-dialog .card__img {
+              width: 328px;
+              border-radius: 1.5rem;
+            }
+
+            .layout-dialog .card__data {
+              width: 280px;
+              background-color: var(--container-color);
+              padding: 1.5rem 2rem;
+              box-shadow: 0 8px 24px hsla(0, 0%, 0%, .15);
+              border-radius: 1rem;
+              position: absolute;
+              bottom: -9rem;
+              left: 0;
+              right: 0;
+              margin-inline: auto;
+              opacity: 0;
+              transition: opacity 1s 1s;
+            }
+
+            .layout-dialog .card__description {
+              display: block;
+              font-size: var(--small-font-size);
+              margin-bottom: .25rem;
+            }
+
+            .layout-dialog .card__title {
+              font-size: var(--h2-font-size);
+              font-weight: 500;
+              color: var(--title-color);
+              margin-bottom: .75rem;
+            }
+
+            .layout-dialog .card__button {
+              text-decoration: none;
+              font-size: var(--small-font-size);
+              font-weight: 500;
+              color: var(--first-color);
+            }
+
+            .layout-dialog .card__button:hover {
+              text-decoration: underline;
+            }
+
+            /* Naming animations in hover */
+            .layout-dialog .card__article:hover .card__data {
+              animation: show-data 1s forwards;
+              opacity: 1;
+              transition: opacity .3s;
+            }
+
+            .layout-dialog .card__article:hover {
+              animation: remove-overflow 2s forwards;
+            }
+
+            .layout-dialog .card__article:not(:hover) {
+              animation: show-overflow 2s forwards;
+            }
+
+            .layout-dialog .card__article:not(:hover) .card__data {
+              animation: remove-data 1s forwards;
+            }
+
+            /* Card animation */
+            @keyframes show-data {
+              50% {
+                transform: translateY(-10rem);
+              }
+              100% {
+                transform: translateY(-7rem);
+              }
+            }
+
+            @keyframes remove-overflow {
+              to {
+                overflow: initial;
+              }
+            }
+
+            @keyframes remove-data {
+              0% {
+                transform: translateY(-7rem);
+              }
+              50% {
+                transform: translateY(-10rem);
+              }
+              100% {
+                transform: translateY(.5rem);
+              }
+            }
+            @keyframes show-overflow {
+                0% {
+                    overflow: initial;
+                    pointer-events: none;
+                }
+                50% {
+                    overflow: hidden;
+                }
+            }
+            /*=============== BREAKPOINTS ===============*/
+            /* For small devices */
+            @media screen and (max-width: 340px) {
+            .container {
+                margin-inline: 1rem;
+            }
+
+            .card__data {
+                width: 250px;
+                padding: 1rem;
+            }
+            }
+
+            /* For medium devices */
+            @media screen and (min-width: 768px) {
+            .card__container {
+                grid-template-columns: repeat(2, 1fr);
+                column-gap: 1.5rem;
+            }
+            }
+
+            /* For large devices */
+            @media screen and (min-width: 1120px) {
+                /* .container {
+                    height: 100vh;
+                } */
+
+                .card__container {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                .card__img {
+                    width: 348px;
+                }
+                .card__data {
+                    width: 316px;
+                    padding-inline: 2.5rem;
+                }
+            } 
+        </style>
+        <div class="dialog-content">
+            <button class="close-button" id="close-dialog" style="background: transparent; border: none; color: gray;">&times;</button>
+            <!-- <h2 id="dialog-title" style="color: white;">Layouts</h2> -->
+            <div id="dialog-description" class="container">
+                <div class="card__container">
+                    <article class="card__article">
+                        <img src="{{ url_for('static', filename='layout1.jpg') }}" alt="image" class="card__img">
+                        <div class="card__data">
+                            <span class="card__description" style="color: gray;">The Default Layout of the Application</span>
+                            <h2 class="card__title">Standard Layout</h2>
+                            <a href="/index" class="card__button">Select</a>
+                        </div>
+                    </article>
+    
+                    <article class="card__article">
+                        <img src="{{ url_for('static', filename='layoutai.jpg') }}" alt="image" class="card__img">
+                        <div class="card__data">
+                            <span class="card__description" style="color: gray;">Designed For More AI Usage</span>
+                            <h2 class="card__title">AI Layout</h2>
+                            <a href="/index" class="card__button">Select</a>
+                        </div>
+                    </article>
+    
+                    <article class="card__article">
+                        <img src="{{ url_for('static', filename='layout2.jpg') }}" alt="image" class="card__img">
+                        <div class="card__data">
+                            <span class="card__description" style="color: gray;">Sample Description</span>
+                            <h2 class="card__title">Yet To Decide</h2>
+                            <a href="/index" class="card__button">Select</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </dialog>
+    
+    
+    
+
+<!-- 
+    <a href="/choose_settings">
+        <button class="nav-button" id="choose-button">
+            <img src="{{ url_for('static', filename='ModeSelection.png') }}" alt="选择" style="width: 50px; height: auto;">
+        </button>
+    </a> -->
+
+
+
     <a href="/userinfo">
         <button class="nav-button" id="user-info-button">
             <img src="{{ url_for('static', filename='user.png') }}" alt="用户" style="width: 50px; height: auto;">
@@ -57,6 +319,21 @@
 </div>
 
 <script>
+    // Layout window dialog
+        const layoutButton = document.getElementById('layout-button');
+        const layoutDialog = document.getElementById('layout-dialog');
+        const closeDialogButton = document.getElementById('close-dialog');
+
+        layoutButton.addEventListener('click', () => {
+            layoutDialog.showModal();
+        });
+
+        closeDialogButton.addEventListener('click', () => {
+            layoutDialog.close();
+     });
+
+
+    // Language switcher
         document.addEventListener('DOMContentLoaded', () => {
             const langEl = document.querySelector('.langWrap');
             const link = document.querySelectorAll('a.langBtn');

@@ -147,11 +147,35 @@
 
     <!-- Assuming you have a top bar where the categories will go -->
     <div class="top-categories" id="categories">
+        <div class="category" id="category-individualworkflow">Individual Workflow</div>
         <div class="category" id="category-planning">Planning</div>
         <div class="category" id="category-machining">Machining</div>
         <div class="category" id="category-monitoring">Monitoring</div>
         <div class="category" id="category-community">Community</div>
+        <div class="category" id="category-development">Development</div>
         <div class="category" id="category-utility">Utility</div>
+    </div>
+
+    <!-- Application icons will be displayed here when the Individual Workflow category is clicked -->
+    <div id="category-individualworkflow-apps-container" class="apps-container">
+        <a href="/connection" class="app-icon">
+            <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
+            <div class="app-label" data-key="label-sample">sample1</div>
+        </a>
+        <!-- Other applications... -->
+        <a href="/Tool manager" class="app-icon">
+            <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
+            <div class="app-label" data-key="label-sample">sample2</div>
+        </a>
+        <a href="/Calendar" class="app-icon">
+            <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-sample">sample3</div>
+        </a>
+        <a href="/File manager" class="app-icon">
+            <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-sample">sample4</div>
+        </a>
+        </a>
     </div>
 
     <!-- Application icons will be displayed here when the Planning category is clicked -->
@@ -255,6 +279,28 @@
         <a href="/shopping" class="app-icon">
             <img src="{{ url_for('static', filename='shopping.jpg') }}" alt="代码" />
             <div class="app-label" data-key="label-shopping">Shopping</div>
+        </a>
+    </div>
+
+    <!-- Application icons will be displayed here when the Development category is clicked -->
+    <div id="category-development-apps-container" class="apps-container">
+        <a href="/connection" class="app-icon">
+            <img src="{{ url_for('static', filename='pc.jpg') }}" alt="仿真" />
+            <div class="app-label" data-key="label-sample">sample1</div>
+        </a>
+        <!-- Other applications... -->
+        <a href="/Tool manager" class="app-icon">
+            <img src="{{ url_for('static', filename='Tool-manager.jpg') }}" alt="连接" />
+            <div class="app-label" data-key="label-sample">sample2</div>
+        </a>
+        <a href="/Calendar" class="app-icon">
+            <img src="{{ url_for('static', filename='calendar.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-sample">sample3</div>
+        </a>
+        <a href="/File manager" class="app-icon">
+            <img src="{{ url_for('static', filename='file.jpg') }}" alt="代码" />
+            <div class="app-label" data-key="label-sample">sample4</div>
+        </a>
         </a>
     </div>
     

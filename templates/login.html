@@ -52,8 +52,13 @@
             <label for="password" data-key="label-password">Password</label>
             <input type="password" id="password" name="password" required>
             <br>
+            <label for="remember-me" data-key="label-remember-me">
+                <input type="checkbox" id="remember-me" name="remember-me"> Remember Me
+            </label>
+            <br>
             <input type="submit" value="Sign In" data-key="button-sign-in">
         </form>
+        
         {% if message %}
         <div class="error-message" data-key="error-message">
             {{ message }}
@@ -69,6 +74,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             const langLinks = document.querySelectorAll('.langWrap a');
             const textElements = document.querySelectorAll('[data-key]');
+
+        //     document.querySelector('form').addEventListener('submit', (event) => {
+        //     const rememberMeCheckbox = document.getElementById('remember-me');
+        //     if (rememberMeCheckbox.checked) {
+        //         localStorage.setItem('rememberMe', true);
+        //         localStorage.setItem('rememberedUser', document.getElementById('username').value);
+        //     } else {
+        //         localStorage.removeItem('rememberMe');
+        //         localStorage.removeItem('rememberedUser');
+        //     }
+        // });
             
             // Translation data
             const translations = {
@@ -115,7 +131,19 @@
                     updateLanguage(selectedLanguage);
                 });
             });
+
+            // Autofill the form fields with URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            if (username && password) {
+                document.getElementById('username').value = username;
+            }
+
+
+
+
             const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+            updateLanguage(savedLanguage);
         });
     </script>
 </body>
