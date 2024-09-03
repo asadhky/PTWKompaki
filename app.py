@@ -125,7 +125,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['username'] = account['username']
-            return redirect(url_for('choose_settings'))
+            return redirect(url_for('index'))
         else:
             message = 'Incorrect username/password!'
 
