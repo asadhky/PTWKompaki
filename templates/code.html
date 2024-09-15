@@ -354,13 +354,12 @@
             border-color: #4CAF50;
         }
 
-        #save-code {
+        #save-code,
+        #view-3d-button,
+        #download-gcode {
             margin-top: 10px;
         }
 
-        #view-3d-button {
-            margin-top: 10px;
-        }
 
         #current-code-name {
             font-weight: bold;
@@ -389,14 +388,16 @@
 
         #upload-button,
         #save-code,
-        #view-3d-button {
+        #view-3d-button,
+        #download-gcode {
             background-color: #4CAF50;
             color: white;
         }
 
         #upload-button,
         #save-code:hover,
-        #view-3d-button:hover {
+        #view-3d-button:hover,
+        #download-gcode:hover {
             background-color: #45a049;
         }
 
@@ -418,8 +419,9 @@
 
         /* 模态内容的样式 */
         .visualization-modal-content {
+
             background-color: #fefefe;
-            margin: 10% auto;
+            margin: 2% auto;
             /* 15% 从顶部开始，居中 */
             padding: 60px;
             border: 1px solid #888;
@@ -451,13 +453,20 @@
             cursor: pointer;
         }
     </style>
+    <!-- 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="static/js/OrbitControls.js"></script> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
     <script src="https://cdn.jsdelivr.net/gh/kerdirks/JSCut/gcodeviewer/gcodeviewer.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/gcode/gcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 
 
 
@@ -515,7 +524,9 @@
             <textarea id="code-editor" name="codeEditor" spellcheck="false"></textarea>
             <button id="save-code" style="display: block;">Save Changes</button>
             <button id="view-3d-button" style="display: block;">View 3D</button>
+            <button id="download-gcode" style="display: block;">download</button>
         </div>
+
 
         <!-- 可视化模块模态框 -->
         <div id="visualization-modal" class="visualization-modal">
@@ -656,6 +667,12 @@
     <script>
 
         var codeEditor;
+        let viewer;  // 提升 viewer 的作用域，使其在全局范围内可访问
+
+        // 手动绑定 OrbitControls 到 THREE 对象
+        // THREE.OrbitControls = OrbitControls;
+
+        // console.log(typeof OrbitControls);
 
         document.addEventListener('DOMContentLoaded', function () {
             // 初始化 CodeMirror 或 Ace Editor
@@ -898,6 +915,54 @@
             loadAndDisplayAllCodes();  // 调用函数加载并显示所有代码
         });
 
+        document.getElementById('download-gcode').addEventListener('click', function () {
+            var selectedElement = document.querySelector('.code-item.selected');
+            if (selectedElement) {
+                var codeName = selectedElement.querySelector('span').textContent.trim();
+                console.log('Selected code name:', codeName);
+
+                fetch('/download-gcode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: codeName })
+                })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        console.log('Blob received, initiating download...');
+
+                        // 创建一个a标签并触发点击事件
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `${codeName.replace(/\.gcode$/, '')}.gcode`; // 确保文件名只有一个.gcode扩展名
+                        document.body.appendChild(a);
+                        a.click();  // 触发点击事件以打开“另存为”对话框
+                        window.URL.revokeObjectURL(url);  // 释放内存
+                        document.body.removeChild(a);
+                    })
+                    .catch(error => console.error('Error downloading the file:', error));
+            } else {
+                console.error('No GCode file selected.');
+                alert('请先选择一个GCode文件。');
+            }
+        });
+
+
+
+
+
+
+
+
         // document.addEventListener('DOMContentLoaded', function () {
         //     document.getElementById('code-list').addEventListener('contextmenu', function (event) {
         //         event.preventDefault();  // 阻止默认的右键菜单
@@ -1002,13 +1067,18 @@
         //     saveCode(codeName, newContent); // 保存代码
         // });
 
-
         document.getElementById('view-3d-button').addEventListener('click', function () {
             // var codeEditor = document.getElementById('code-editor');
             var gcode = codeEditor.getValue();
 
             const viewerContainer = document.getElementById('visualization-container'); // 修改此处
             viewerContainer.innerHTML = ''; // 清除先前内容
+
+            // window.onload = function () {
+            //     const container = document.getElementById('visualization-container');
+            //     viewerContainer.innerHTML = ''; // 清除先前内容
+            //     const viewer = new GCodeViewer(container);
+            // };
 
             const viewer = new GCodeViewer(viewerContainer);
             viewer.loadGCode(gcode);
@@ -1020,6 +1090,7 @@
             document.getElementById('visualization-modal').style.display = 'none'; // 修改此处
         });
 
+
         class GCodeViewer {
             constructor(container) {
                 this.container = container;
@@ -1028,7 +1099,61 @@
                 this.renderer = new THREE.WebGLRenderer();
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 this.container.appendChild(this.renderer.domElement);
-                this.camera.position.z = 100;
+
+                // 设置OrbitControls
+                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.25;
+                this.controls.enableZoom = true;
+
+                window.addEventListener('resize', this.onWindowResize.bind(this), false);
+
+                // 创建带箭头的XYZ坐标系
+                this.createAxesWithLabels();
+            }
+
+            onWindowResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            // 创建带箭头的 XYZ 坐标轴，并加上标签
+            createAxesWithLabels() {
+                // 创建 X 轴箭头
+                const xArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 30, 0xff0000, 10, 3); // 红色箭头
+                this.scene.add(xArrow);
+
+                // 创建 Y 轴箭头
+                const yArrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 30, 0x00ff00, 10, 3); // 绿色箭头
+                this.scene.add(yArrow);
+
+                // 创建 Z 轴箭头
+                const zArrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 30, 0x0000ff, 10, 3); // 蓝色箭头
+                this.scene.add(zArrow);
+
+                // 添加X轴标签
+                this.addAxisLabel('X', new THREE.Vector3(30, 0, 0), 0xff0000);
+                // 添加Y轴标签
+                this.addAxisLabel('Y', new THREE.Vector3(0, 30, 0), 0x00ff00);
+                // 添加Z轴标签
+                this.addAxisLabel('Z', new THREE.Vector3(0, 0, 30), 0x0000ff);
+            }
+
+            // 添加轴标签的函数
+            addAxisLabel(labelText, position, color) {
+                const loader = new THREE.FontLoader();
+                loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+                    const textGeometry = new THREE.TextGeometry(labelText, {
+                        font: font,
+                        size: 3, // 字体大小
+                        height: 1, // 厚度
+                    });
+                    const textMaterial = new THREE.MeshBasicMaterial({ color: color });
+                    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                    textMesh.position.copy(position);
+                    this.scene.add(textMesh);
+                });
             }
 
             loadGCode(gcode) {
@@ -1053,8 +1178,6 @@
                             lastX = x;
                             lastY = y;
                             lastZ = z;
-                        } else {
-                            console.warn(`Invalid line: ${line}`);
                         }
                     }
                 });
@@ -1063,8 +1186,11 @@
                     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
                     const line = new THREE.Line(geometry, material);
                     this.scene.add(line);
+
+                    // 调用 fitCameraToObject 来调整摄像机
+                    this.fitCameraToObject(line);
                 } else {
-                    console.error("No valid vertices found in G-code.");
+                    console.error("未找到有效的顶点数据。");
                 }
 
                 this.animate();
@@ -1072,9 +1198,36 @@
 
             animate() {
                 requestAnimationFrame(this.animate.bind(this));
+                this.controls.update();
                 this.renderer.render(this.scene, this.camera);
             }
+
+            // 定义 fitCameraToObject 函数
+            fitCameraToObject(object, offset = 1.5) {
+                const boundingBox = new THREE.Box3().setFromObject(object);
+                const center = boundingBox.getCenter(new THREE.Vector3());
+                const size = boundingBox.getSize(new THREE.Vector3());
+
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const fov = this.camera.fov * (Math.PI / 180);
+                let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov / 2)) * offset;
+
+                this.camera.position.z = cameraZ;
+
+                const minZ = boundingBox.min.z;
+                const cameraToFarEdge = minZ < 0 ? -minZ + cameraZ : cameraZ;
+
+                this.camera.far = cameraToFarEdge * 3;
+                this.camera.updateProjectionMatrix();
+
+                this.controls.target.set(center.x, center.y, center.z);
+                this.controls.update();
+            }
         }
+
+
+
+
 
         document.addEventListener('DOMContentLoaded', function () {
             var closeVisualizationBtn = document.getElementById('close-visualization-modal');
@@ -1082,6 +1235,21 @@
                 document.getElementById('visualization-modal').style.display = 'none';
             };
         });
+
+        function adjustVisualizationHeight() {
+            const modalContent = document.querySelector('.visualization-modal-content');
+            const navigationBarHeight = document.querySelector('.fixed-bottom-bar').offsetHeight;
+            const availableHeight = window.innerHeight - navigationBarHeight - 20; // 留出一定间隔
+            modalContent.style.height = availableHeight + 'px';
+        }
+
+        // 页面加载时调整高度
+        document.addEventListener('DOMContentLoaded', function () {
+            adjustVisualizationHeight();
+        });
+
+        // 当窗口大小变化时也调整高度
+        window.addEventListener('resize', adjustVisualizationHeight);
 
 
 
@@ -1219,6 +1387,7 @@
         }
 
     </script>
+
 </body>
 
 </html>
