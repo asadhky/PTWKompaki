@@ -14,6 +14,7 @@ import logging
 import pyads
 import json
 import os
+import boto3
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/db_name'
@@ -22,6 +23,10 @@ app.secret_key = '123456'  # Ensure to replace with your actual secret key
 
 # Assume data.json exists and stores slider values
 DATA_FILE = 'data.json'
+
+s3_client = boto3.client('s3')
+BUCKET_NAME = 'twincatjsonfile'
+S3_FILE_KEY = 'data.json'
 
 def read_json():
     with open(DATA_FILE, 'r') as f:
@@ -35,8 +40,8 @@ app.config['MAIL_USERNAME'] = 'riskerasad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iqmzuxopchoogpdu'
 
 db_config = {
-    'user': 'root',
-    'password': 'buttsahib',
+    'user': 'xixi',
+    'password': 'Chenxi1213!',
     'host': 'localhost',
     'port': 3308,
     'database': 'userdb'
@@ -419,18 +424,21 @@ def update_override():
     is_override_running = data.get('is_override_running')
 
     try:
-        current_data = read_json()  # Read current data from JSON file
+        current_data = read_json()
     except FileNotFoundError:
         current_data = {}
 
-    # Update override running state in data.json
     current_data['is_override_running'] = is_override_running
 
-    # Write updated data to the file
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
 
-    return jsonify({"message": "Override state updated successfully!"})
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Override state updated and uploaded to S3 successfully!"})
 
 
 @app.route('/get-highlight-line', methods=['GET'])
@@ -462,34 +470,36 @@ def update_spindle():
     is_spindle_running = data.get('is_spindle_running')
 
     try:
-        current_data = read_json()  # Read current data from JSON file
+        current_data = read_json()
     except FileNotFoundError:
         current_data = {}
 
-    # Update spindle running state in data.json
     current_data['is_spindle_running'] = is_spindle_running
 
-    # Write updated data to the file
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
 
-    return jsonify({"message": "Spindle state updated successfully!"})
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Spindle state updated and uploaded to S3 successfully!"})
 
 
 @app.route('/update-sliders', methods=['POST'])
 def update_sliders():
     data = request.json
-    
-    # Cast override_value and feed_rate_value to integers if they are valid numbers
+
     try:
-        override_value = int(data.get('override', {}).get('value', 50))  # Default to 50 if not provided
+        override_value = int(data.get('override', {}).get('value', 50))
     except ValueError:
-        override_value = 50  # Handle non-integer input gracefully
-    
+        override_value = 50
+
     try:
-        feed_rate_value = int(data.get('spindle', {}).get('input_value', 50))  # Default to 50 if not provided
+        feed_rate_value = int(data.get('spindle', {}).get('input_value', 50))
     except ValueError:
-        feed_rate_value = 50  # Handle non-integer input gracefully
+        feed_rate_value = 50
 
     try:
         current_data = read_json()
@@ -502,7 +512,12 @@ def update_sliders():
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
 
-    return jsonify({"message": "Sliders updated successfully!"})
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Sliders updated and uploaded to S3 successfully!"})
 
 
 @app.route('/get-slider-values', methods=['GET'])
@@ -541,11 +556,8 @@ def update_axis_speed():
     data = request.json
     axis = data.get('axis')
     active_position = data.get('active_position')
-
-    # Read the current data
     current_data = read_json()
 
-    # Ensure the axis exists in the current data
     if axis not in current_data:
         current_data[axis] = {
             'current_position': 0.0,
@@ -553,26 +565,25 @@ def update_axis_speed():
             'active_position': 0.0
         }
 
-    # Update the active position for the selected axis
     current_data[axis]['active_position'] = active_position
 
-    # Write the updated data back to the JSON file
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
 
-    return jsonify({"message": "Axis speed updated successfully!"})
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
 
-# Route to update axis position
+    return jsonify({"message": "Axis speed updated and uploaded to S3 successfully!"})
+
 @app.route('/update-axis-position', methods=['POST'])
 def update_axis_position():
     data = request.json
     axis = data.get('axis')
     end_position = data.get('end_position')
-
-    # Read the current data
     current_data = read_json()
 
-    # Ensure the axis exists in the current data
     if axis not in current_data:
         current_data[axis] = {
             'current_position': 0.0,
@@ -580,14 +591,17 @@ def update_axis_position():
             'active_position': 0.0
         }
 
-    # Update the end position for the selected axis
     current_data[axis]['end_position'] = end_position
 
-    # Write the updated data back to the JSON file
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
 
-    return jsonify({"message": "Axis position updated successfully!"})
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to the S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Axis position updated and uploaded to S3 successfully!"})
 
 @app.route('/get_axis_status', methods=['GET'])
 def get_axis_status():
@@ -1178,3 +1192,6 @@ def favicon():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+
