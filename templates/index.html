@@ -597,19 +597,19 @@
                         <h2 data-key="title-x-axis" style="color: #b3b3b3;">X Axis</h2>
                         <div data-key="label-current-position" style="color: #d3d3d3;">Current Position: <span id="x-current">0.000</span></div>
                         <div data-key="label-end-position" style="color: #d3d3d3;">End Position: <span id="x-end">0.000</span></div>
-                        <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="x-active">0.000</span></div>
+                        <!-- <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="x-active">0.000</span></div> -->
                     </div>
                     <div class="axis" id="status-y-axis" onclick="selectAxis('y')">
                         <h2 data-key="title-y-axis" style="color: #b3b3b3;">Y Axis</h2>
                         <div data-key="label-current-position" style="color: #d3d3d3;">Current Position: <span id="y-current">0.000</span></div>
                         <div data-key="label-end-position" style="color: #d3d3d3;">End Position: <span id="y-end">0.000</span></div>
-                        <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="y-active">0.000</span></div>
+                        <!-- <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="y-active">0.000</span></div> -->
                     </div>
                     <div class="axis" id="status-z-axis" onclick="selectAxis('z')">
                         <h2 data-key="title-z-axis" style="color: #b3b3b3;">Z Axis</h2>
                         <div data-key="label-current-position" style="color: #d3d3d3;">Current Position: <span id="z-current">0.000</span></div>
                         <div data-key="label-end-position" style="color: #d3d3d3;">End Position: <span id="z-end">0.000</span></div>
-                        <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="z-active">0.000</span></div>
+                        <!-- <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="z-active">0.000</span></div> -->
                     </div>
                 </div>
             </div>
@@ -1624,7 +1624,7 @@ function selectAxis(axis) {
 document.getElementById('set-speed').addEventListener('click', function() {
     const speed = document.getElementById('speed').value;
     if (selectedAxis) {
-        document.getElementById(`${selectedAxis}-active`).textContent = parseFloat(speed).toFixed(3);
+        document.getElementById(`${selectedAxis}-current`).textContent = parseFloat(speed).toFixed(3);
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/update-axis-speed', true);
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -1637,7 +1637,7 @@ document.getElementById('set-speed').addEventListener('click', function() {
                 }
             }
         };
-        xhr.send(JSON.stringify({ axis: selectedAxis, active_position: parseFloat(speed).toFixed(3) }));
+        xhr.send(JSON.stringify({ axis: selectedAxis, current_position: parseFloat(speed).toFixed(3) }));
     }
 });
 
@@ -1671,7 +1671,7 @@ function updateAxisStatus() {
             for (const axis in data) {
                 document.getElementById(`${axis}-current`).textContent = parseFloat(data[axis].current).toFixed(3);
                 document.getElementById(`${axis}-end`).textContent = parseFloat(data[axis].end).toFixed(3);
-                document.getElementById(`${axis}-active`).textContent = parseFloat(data[axis].active).toFixed(3);
+                // document.getElementById(`${axis}-active`).textContent = parseFloat(data[axis].active).toFixed(3);
             }
         })
         .catch(error => console.error('Error fetching axis status:', error));

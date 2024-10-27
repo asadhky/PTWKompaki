@@ -555,17 +555,17 @@ def read_json():
 def update_axis_speed():
     data = request.json
     axis = data.get('axis')
-    active_position = data.get('active_position')
+    current_position = data.get('current_position')
     current_data = read_json()
 
     if axis not in current_data:
         current_data[axis] = {
             'current_position': 0.0,
-            'end_position': 0.0,
-            'active_position': 0.0
+            'end_position': 0.0
+            # 'active_position': 0.0
         }
 
-    current_data[axis]['active_position'] = active_position
+    current_data[axis]['current_position'] = current_position
 
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
@@ -588,7 +588,7 @@ def update_axis_position():
         current_data[axis] = {
             'current_position': 0.0,
             'end_position': 0.0,
-            'active_position': 0.0
+            # 'active_position': 0.0
         }
 
     current_data[axis]['end_position'] = end_position
@@ -612,17 +612,17 @@ def get_axis_status():
         'x': {
             'current': data['x']['current_position'],
             'end': data['x']['end_position'],
-            'active': data['x']['active_position']
+            # 'active': data['x']['active_position']
         },
         'y': {
             'current': data['y']['current_position'],
             'end': data['y']['end_position'],
-            'active': data['y']['active_position']
+            # 'active': data['y']['active_position']
         },
         'z': {
             'current': data['z']['current_position'],
             'end': data['z']['end_position'],
-            'active': data['z']['active_position']
+            # 'active': data['z']['active_position']
         }
     }
 
