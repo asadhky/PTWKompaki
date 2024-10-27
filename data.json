@@ -2,11 +2,11 @@
     "highlight_line": "9",
     "override": {
         "variable": "sample",
-        "value": 53
+        "value": 61
     },
     "feed_rate": {
         "variable": "sample",
-        "input_value": 45
+        "input_value": 38
     },
     "is_override_running": false,
     "is_spindle_running": false,
