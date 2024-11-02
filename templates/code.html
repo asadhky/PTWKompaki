@@ -586,8 +586,35 @@
             // Set interval to fetch highlight line number periodically (e.g., every 5 seconds)
             setInterval(fetchAndHighlightLine, 1000);
 
-            // 其他页面加载逻辑
+            // Retrieve the selected code name from local storage
+            const selectedCodeName = localStorage.getItem('selectedCodeName');
+            if (selectedCodeName) {
+                displayCode(selectedCodeName);
+                // Wait until the code list is populated, then highlight
+                setTimeout(() => {
+                    highlightCodeListItem(selectedCodeName);
+                    console.log('Highlighting code list item:', selectedCodeName);
+                }, 500);  // Adjust the delay if needed
+            }
         });
+
+        // New function to highlight the code item in the list
+        function highlightCodeListItem(codeName) {
+            const codeListItems = document.querySelectorAll('#code-list .code-item');
+            let found = false;
+            codeListItems.forEach(function (item) {
+                const textSpan = item.querySelector('span');
+                if (textSpan && textSpan.textContent.trim() === codeName) {
+                    item.classList.add('selected');
+                    found = true;
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+            if (!found) {
+                console.log('No matching item found for:', codeName);
+            }
+        }
 
         function highlightLine(lineNumber) {
             var doc = codeEditor.getDoc();
@@ -611,10 +638,7 @@
                 })
                 .then(data => {
                     if (data.code_content) {
-                        // 将代码内容加载到 CodeMirror 或 Ace Editor 中
-                        codeEditor.setValue(data.code_content);  // 对于 CodeMirror 和 Ace Editor 都适用
-                        // codeEditor.clearSelection();  // 清除选中的部分，防止用户误编辑
-                        // 显示保存按钮和3D查看按钮
+                        codeEditor.setValue(data.code_content);
                         document.getElementById('save-code').style.display = 'block';
                         document.getElementById('view-3d-button').style.display = 'block';
 
@@ -625,10 +649,8 @@
                                 item.classList.add('selected');  // 为匹配的项添加选中状态
                             }
                         });
-
+                        localStorage.setItem('selectedCodeName', codeName);
                         fetchAndHighlightLine();
-
-
 
                     } else {
                         throw new Error('Code content not found');
@@ -751,14 +773,11 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-            // 处理文件上传
             document.getElementById('upload-button').addEventListener('click', function () {
-                // 触发文件选择
                 document.getElementById('codeFile').click();
             });
 
             document.getElementById('codeFile').addEventListener('change', function () {
-                // 获取选择的文件
                 var file = this.files[0];
                 if (file) {
                     var formData = new FormData();
