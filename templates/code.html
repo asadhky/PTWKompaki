@@ -497,8 +497,6 @@
             Upload Code
             <img src="{{ url_for('static', filename='upload.png') }}" alt="Upload Icon" style="width: 16px; margin-left: 8px; position: relative; bottom: -1px;">
         </button>
-        
-        
 
         </div>
 
@@ -587,15 +585,15 @@
             setInterval(fetchAndHighlightLine, 1000);
 
             // Retrieve the selected code name from local storage
-            const selectedCodeName = localStorage.getItem('selectedCodeName');
-            if (selectedCodeName) {
-                displayCode(selectedCodeName);
-                // Wait until the code list is populated, then highlight
-                setTimeout(() => {
-                    highlightCodeListItem(selectedCodeName);
-                    console.log('Highlighting code list item:', selectedCodeName);
-                }, 500);  // Adjust the delay if needed
-            }
+            // const selectedCodeName = localStorage.getItem('selectedCodeName');
+            // if (selectedCodeName) {
+            //     displayCode(selectedCodeName);
+            //     // Wait until the code list is populated, then highlight
+            //     setTimeout(() => {
+            //         highlightCodeListItem(selectedCodeName);
+            //         console.log('Highlighting code list item:', selectedCodeName);
+            //     }, 500);  // Adjust the delay if needed
+            // }
         });
 
         // New function to highlight the code item in the list
@@ -828,28 +826,36 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-            // 获取并显示所有已上传的代码
-            function loadAndDisplayAllCodes() {
-                fetch('/get-all-codes')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();  // 获取所有代码名称的列表
-                    })
-                    .then(codes => {
-                        var codeList = document.getElementById('code-list');
+        function loadAndDisplayAllCodes() {
+            fetch('/get-all-codes')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Get the list of all code names
+                })
+                .then(codes => {
+                    var codeList = document.getElementById('code-list');
+                    if (codes.length > 0) {
                         codes.forEach(function (codeName) {
-                            addListItem(codeName);  // 使用之前定义的函数添加到列表
+                            addListItem(codeName); // Add each code to the list
                         });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching all codes:', error);
-                    });
-            }
 
-            loadAndDisplayAllCodes();  // 调用函数加载并显示所有代码
-        });
+                        // Load and display the first code item if present
+                        const firstCodeName = codes[0];
+                        displayCode(firstCodeName);
+                        highlightCodeListItem(firstCodeName); // Highlight the first item
+                        localStorage.setItem('selectedCodeName', firstCodeName); // Store in localStorage
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching all codes:', error);
+                });
+        }
+
+        loadAndDisplayAllCodes(); // Call the function to load and display all codes
+    });
+
 
 
         document.getElementById('clear-code-button').addEventListener('click', function () {
