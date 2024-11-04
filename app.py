@@ -22,7 +22,7 @@ db = SQLAlchemy()
 app.secret_key = '123456'  # Ensure to replace with your actual secret key
 
 # Assume data.json exists and stores slider values
-DATA_FILE = 'data.json'
+DATA_FILE = 'var1.json'
 
 s3_client = boto3.client('s3')
 BUCKET_NAME = 'twincatjsonfile'
@@ -506,8 +506,8 @@ def update_sliders():
     except FileNotFoundError:
         current_data = {}
 
-    current_data['override'] = {"variable": "sample", "value": override_value}
-    current_data['feed_rate'] = {"variable": "sample", "input_value": feed_rate_value}
+    current_data['override'] = {"variable": "GVl_Motion_control_single_axis.LrSA_PowerOverride", "value": override_value, "type": "LREAL"}
+    current_data['feed_rate'] = {"variable": "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Velocity", "input_value": feed_rate_value, "type": "LREAL"}
 
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
