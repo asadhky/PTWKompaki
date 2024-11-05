@@ -648,7 +648,9 @@
             
             
                 <div id="axis-controls" style="display:none;" class="form-group-inline">
-                    <button id="enable-axis" data-key="button-enable-axis">Enable Axis</button>
+                    <button id="enable-axis-x">Enable X Axis</button>
+                    <button id="enable-axis-y">Enable Y Axis</button>
+                    <button id="enable-axis-z">Enable Z Axis</button>
                     <label for="speed" data-key="label-speed">Speed</label>
                     <input type="number" id="speed" placeholder="Enter speed">
                     <button id="set-speed" data-key="button-set-speed">Set Speed</button>
@@ -656,6 +658,7 @@
                     <input type="number" id="position" placeholder="Enter position">
                     <button id="set-position" data-key="button-set-position">Set Position</button>
                 </div>
+            
             
                 <div class="section">
                     <div class="axis-container">
@@ -1785,17 +1788,149 @@ setInterval(updateAxisStatus, 5000);
         });
     }
 
-    // Enable-axis button
-    const enableAxisBtn = document.getElementById('enable-axis');
-    if (enableAxisBtn) {
-        enableAxisBtn.addEventListener('click', function () {
-            if (selectedAxis) {
-                logMessage(`${selectedAxis.toUpperCase()} Axis enabled`);
-            } else {
-                logMessage('No axis selected');
-            }
-        });
+    function setupAxisButton(buttonId, axis) {
+        const enableAxisBtn = document.getElementById(buttonId);
+        let axisEnabled = false; // To track whether the axis is currently enabled
+
+        if (enableAxisBtn) {
+            enableAxisBtn.addEventListener('click', function () {
+                if (selectedAxis === axis) {
+                    if (!axisEnabled) {
+                        // Enable the axis
+                        logMessage(`${axis.toUpperCase()} Axis enabled`);
+
+                        // Prepare the data to update the JSON
+                        const dataToUpdate = {
+                            axis: axis,
+                            power_variables: {}
+                        };
+
+                        // Set power variables to true based on selected axis
+                        if (axis === 'x') {
+                            dataToUpdate.power_variables = {
+                                "GVl_Motion_Control_single_axis.bsa_PowerEn": { "value": true },
+                                "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": { "value": true },
+                                "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": { "value": true },
+                                "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": { "value": true },
+                                "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": { "value": true }
+                            };
+                        } else if (axis === 'y') {
+                            dataToUpdate.power_variables = {
+                                "power_variables_2": {
+                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEn": { "value": true },
+                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": { "value": true },
+                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": { "value": true },
+                                    "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": { "value": true },
+                                    "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": { "value": true }
+                                }
+                            };
+                        } else if (axis === 'z') {
+                            dataToUpdate.power_variables = {
+                                "power_variables_1": {
+                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEn": { "value": true },
+                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": { "value": true },
+                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": { "value": true },
+                                    "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": { "value": true },
+                                    "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": { "value": true }
+                                }
+                            };
+                        }
+
+                        // Send AJAX request to update the server
+                        fetch('/update-power-variables', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(dataToUpdate)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                logMessage(data.message);
+                                enableAxisBtn.textContent = 'Stop Axis'; // Change button text
+                                axisEnabled = true; // Set the axis as enabled
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating power variables:', error);
+                        });
+                    } else {
+                        // Disable the axis
+                        logMessage(`${axis.toUpperCase()} Axis disabled`);
+
+                        // Prepare the data to set all power variables to false
+                        const dataToUpdate = {
+                            axis: axis,
+                            power_variables: {}
+                        };
+
+                        if (axis === 'x') {
+                            dataToUpdate.power_variables = {
+                                "GVl_Motion_Control_single_axis.bsa_PowerEn": { "value": false },
+                                "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": { "value": false },
+                                "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": { "value": false },
+                                "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": { "value": false },
+                                "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": { "value": false }
+                            };
+                        } else if (axis === 'y') {
+                            dataToUpdate.power_variables = {
+                                "power_variables_2": {
+                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEn": { "value": false },
+                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": { "value": false },
+                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": { "value": false },
+                                    "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": { "value": false },
+                                    "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": { "value": false }
+                                }
+                            };
+                        } else if (axis === 'z') {
+                            dataToUpdate.power_variables = {
+                                "power_variables_1": {
+                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEn": { "value": false },
+                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": { "value": false },
+                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": { "value": false },
+                                    "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": { "value": false },
+                                    "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": { "value": false }
+                                }
+                            };
+                        }
+
+                        // Send AJAX request to update the server
+                        fetch('/update-power-variables', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(dataToUpdate)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                logMessage(data.message);
+                                enableAxisBtn.textContent = 'Enable Axis'; // Change button text back
+                                axisEnabled = false; // Set the axis as disabled
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating power variables:', error);
+                        });
+                    }
+                } else {
+                    logMessage('No axis selected');
+                }
+            });
+        }
     }
+
+    // Call the setup function for each axis button
+    setupAxisButton('enable-axis-x', 'x');
+    setupAxisButton('enable-axis-y', 'y');
+    setupAxisButton('enable-axis-z', 'z');
+
+
+
+
+
 
     // Set-speed button
     const setSpeedBtn = document.getElementById('set-speed');

@@ -541,6 +541,39 @@ def get_slider_values():
         }
     })
 
+@app.route('/update-power-variables', methods=['POST'])
+def update_power_variables():
+    data = request.json
+    axis = data.get('axis')
+    power_variables = data.get('power_variables')
+
+    try:
+        current_data = read_json()  # Function to read your JSON file
+    except FileNotFoundError:
+        current_data = {}
+
+    # Update the current_data with the new power_variables
+    if power_variables:
+        if axis == 'x':
+            current_data['power_variables'] = power_variables  # Update for X axis
+        elif axis == 'y':
+            current_data['power_variables_2'] = power_variables  # Update for Y axis
+        elif axis == 'z':
+            current_data['power_variables_1'] = power_variables  # Update for Z axis
+
+    # Write the updated data back to the JSON file
+    with open(DATA_FILE, 'w') as f:
+        json.dump(current_data, f, indent=4)
+
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Axis speed updated and uploaded to S3 successfully!"})
+
+
+
 @app.route('/reset-axis', methods=['POST'])
 def reset_axis():
     data = request.json

@@ -6,24 +6,19 @@
     },
     "power_variables": {
         "GVl_Motion_Control_single_axis.bsa_PowerEn": {
-            "value": false,
-            "type": "BOOL"
+            "value": false
         },
         "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": {
-            "value": false,
-            "type": "BOOL"
+            "value": false
         },
         "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": {
-            "value": false,
-            "type": "BOOL"
+            "value": false
         },
         "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": {
-            "value": false,
-            "type": "BOOL"
+            "value": false
         },
         "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": {
-            "value": true,
-            "type": "BOOL"
+            "value": false
         }
     },
     "current_position": {
@@ -78,25 +73,22 @@
         "type": "LREAL"
     },
     "power_variables_1": {
-        "GVl_Motion_Control_single_axis_1.bsa_PowerEn": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": {
-            "value": true,
-            "type": "BOOL"
+        "power_variables_1": {
+            "GVl_Motion_Control_single_axis_1.bsa_PowerEn": {
+                "value": false
+            },
+            "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": {
+                "value": false
+            },
+            "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": {
+                "value": false
+            },
+            "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": {
+                "value": false
+            },
+            "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": {
+                "value": false
+            }
         }
     },
     "current_position_1": {
@@ -145,25 +137,22 @@
         "type": "LREAL"
     },
     "power_variables_2": {
-        "GVl_Motion_Control_single_axis_2.bsa_PowerEn": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": {
-            "value": true,
-            "type": "BOOL"
-        },
-        "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": {
-            "value": true,
-            "type": "BOOL"
+        "power_variables_2": {
+            "GVl_Motion_Control_single_axis_2.bsa_PowerEn": {
+                "value": false
+            },
+            "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": {
+                "value": false
+            },
+            "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": {
+                "value": false
+            },
+            "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": {
+                "value": false
+            },
+            "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": {
+                "value": false
+            }
         }
     },
     "current_position_2": {
@@ -304,12 +293,12 @@
     },
     "jog_mode1": {
         "variable": "GVL_Motion_Control_single_axis_1.fbsa_Jog.Mode",
-        "value": "MC_JOGMODE_FAST",
+        "value": "MC_JOGMODE_STANDARD_SLOW",
         "type": "E_JOGMODE"
     },
     "jog_mode2": {
         "variable": "GVL_Motion_Control_single_axis_2.fbsa_Jog.Mode",
-        "value": "MC_JOGMODE_FAST",
+        "value": "MC_JOGMODE_STANDARD_SLOW",
         "type": "E_JOGMODE"
     },
     "jog_mode3": {
