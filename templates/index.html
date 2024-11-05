@@ -592,26 +592,58 @@
             <!-- 中部：Axis Status -->
             <div class="section" id="axis-status-section">
                 <h2 data-key="title-axis-status" style="color: #b3b3b3;">Axis Status</h2>
+                
                 <div class="axis-container">
+                    <!-- X Axis -->
                     <div class="axis" id="status-x-axis" onclick="selectAxis('x')">
                         <h2 data-key="title-x-axis" style="color: #b3b3b3;">X Axis</h2>
                         <div data-key="label-current-position" style="color: #d3d3d3;">Current Position: <span id="x-current">0.000</span></div>
                         <div data-key="label-end-position" style="color: #d3d3d3;">End Position: <span id="x-end">0.000</span></div>
-                        <!-- <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="x-active">0.000</span></div> -->
+                        <div data-key="label-active-position" style="color: #d3d3d3;">Jog Value<span id="x-active">0.000</span></div>
+                        <div class="axis-controls">
+                            <button class="arrow-button fast-button" onclick="moveAxis('x', 'fast-left')">⏪</button>
+                            <button class="arrow-button" onclick="moveAxis('x', 'left')">&#8592;</button>
+                            <button class="arrow-button" onclick="moveAxis('x', 'right')">&#8594;</button>
+                            <button class="arrow-button fast-button" onclick="moveAxis('x', 'fast-right')">⏩</button>
+                            <button class="arrow-button" onclick="resetAxis('x')">Stop</button> <!-- Reset button -->
+
+                        </div>
                     </div>
+                    <!-- Y Axis -->
                     <div class="axis" id="status-y-axis" onclick="selectAxis('y')">
                         <h2 data-key="title-y-axis" style="color: #b3b3b3;">Y Axis</h2>
                         <div data-key="label-current-position" style="color: #d3d3d3;">Current Position: <span id="y-current">0.000</span></div>
                         <div data-key="label-end-position" style="color: #d3d3d3;">End Position: <span id="y-end">0.000</span></div>
-                        <!-- <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="y-active">0.000</span></div> -->
+                        <div class="axis-controls">
+                            <button class="arrow-button fast-button" onclick="moveAxis('y', 'fast-up-left')">⏪</button>
+
+                            <button class="arrow-button" onclick="moveAxis('y', 'up-left')">&#8598;</button>
+                            <button class="arrow-button" onclick="moveAxis('y', 'down-right')">&#8600;</button>
+                            <button class="arrow-button fast-button" onclick="moveAxis('y', 'fast-down-right')">⏩</button>
+
+                            <button class="arrow-button" onclick="resetAxis('y')">Stop</button> <!-- Reset button -->
+
+                        </div>
                     </div>
+                    <!-- Z Axis -->
                     <div class="axis" id="status-z-axis" onclick="selectAxis('z')">
                         <h2 data-key="title-z-axis" style="color: #b3b3b3;">Z Axis</h2>
                         <div data-key="label-current-position" style="color: #d3d3d3;">Current Position: <span id="z-current">0.000</span></div>
                         <div data-key="label-end-position" style="color: #d3d3d3;">End Position: <span id="z-end">0.000</span></div>
-                        <!-- <div data-key="label-active-position" style="color: #d3d3d3;">Active Position: <span id="z-active">0.000</span></div> -->
+                        <div class="axis-controls">
+                            <button class="arrow-button fast-button" onclick="moveAxis('z', 'fast-up')">⏫</button>
+                            <button class="arrow-button" onclick="moveAxis('z', 'up')">&#8593;</button>
+                            <button class="arrow-button" onclick="moveAxis('z', 'down')">&#8595;</button>
+                            <button class="arrow-button fast-button" onclick="moveAxis('z', 'fast-down')">⏬</button>
+                            <button class="arrow-button" onclick="resetAxis('z')">Stop</button> <!-- Reset button -->
+
+                        </div>
                     </div>
                 </div>
+                
+                
+                       
+                                
             </div>
             
             
@@ -649,6 +681,10 @@
                         </div>
                         <div class="rangetitles" id="terminal-section">
                             <h2 data-key="label-spindle" style="color: #b3b3b3;  display: inline-block;">Select Spindle Speed</h2>
+                            <label for="reverse-checkbox" style="color: #b3b3b3; margin-left: 15px;">
+                                <input type="checkbox" id="reverse-checkbox" onclick="toggleReverse()" style="margin-right: 5px;">
+                                Reverse
+                            </label>
                             <!-- <button id="spindle-button" class="spindlestartbutton"></button> -->
                             <button id="spindle-stop-button" class="spindlestartbutton" style="background-image: url('../static/spindlestop.jpg');"></button>
                             <button id="spindle-start-button" class="spindlestartbutton" style="background-image: url('../static/spindlestart.jpg'); margin-right: 10px;"></button>
@@ -691,6 +727,52 @@
         const overrideStartButton = document.getElementById('override-stop-button');
         const overrideStopButton = document.getElementById('override-start-button');
         let isOverrideRunning = false; // Initial state
+
+        function resetAxis(axis) {
+            fetch('/reset-axis', {
+                method: 'POST',
+                body: JSON.stringify({ axis }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
+        function moveAxis(axis, direction) {
+            // Determine jog mode based on direction
+            let jogMode = direction.includes("fast") ? "MC_JOGMODE_FAST" : "MC_JOGMODE_STANDARD_SLOW";
+
+            fetch('/update-axis-jog', {
+                method: 'POST',
+                body: JSON.stringify({ axis, direction, jogMode }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
+
+
+
+
+
+
 
         // Event listener for "Start Override" button
         overrideStartButton.addEventListener('click', () => {

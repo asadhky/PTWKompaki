@@ -40,8 +40,8 @@ app.config['MAIL_USERNAME'] = 'riskerasad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iqmzuxopchoogpdu'
 
 db_config = {
-    'user': 'root',
-    'password': 'buttsahib',
+    'user': 'xixi',
+    'password': 'Chenxi1213!',
     'host': 'localhost',
     'port': 3308,
     'database': 'userdb'
@@ -540,6 +540,150 @@ def get_slider_values():
             "input_value": feed_rate_value
         }
     })
+
+@app.route('/reset-axis', methods=['POST'])
+def reset_axis():
+    data = request.json
+    axis = data.get('axis')
+
+    try:
+        current_data = read_json()
+    except FileNotFoundError:
+        current_data = {}
+
+    # Reset jog state based on the axis
+    if axis == 'x':
+        current_data['jog_forward'] = {"variable": "GVL_Motion_Control_single_axis.bsa_Jogfwd","value": False,"type": "BOOL"}
+        current_data['jog_backward'] = {"variable": "GVL_Motion_Control_single_axis.bsa_Jogbwd","value": False,"type": "BOOL"}
+    elif axis == 'y':
+        current_data['jog_forward_2'] = {"variable": "GVL_Motion_Control_single_axis_2.bsa_Jogfwd","value": False,"type": "BOOL"}
+        current_data['jog_backward_2'] = {"variable": "GVL_Motion_Control_single_axis_2.bsa_Jogbwd","value": False,"type": "BOOL"}
+    elif axis == 'z':
+        current_data['jog_forward_1'] = {"variable": "GVL_Motion_Control_single_axis_1.bsa_Jogfwd","value": False,"type": "BOOL"}
+        current_data['jog_backward_1'] = {"variable": "GVL_Motion_Control_single_axis_1.bsa_Jogbwd","value": False,"type": "BOOL"}
+
+    # Write the updated data back to the JSON file
+    with open(DATA_FILE, 'w') as f:
+        print("Writing to file")
+        json.dump(current_data, f, indent=4)
+
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": f"Axis {axis} stopped successfully and data uploaded to S3!"})
+
+
+@app.route('/update-axis-jog', methods=['POST'])
+def update_axis_jog():
+    print("Over here")
+    data = request.json
+    axis = data.get('axis')
+    direction = data.get('direction')
+    jog_mode = data.get('jogMode')
+
+    try:
+        current_data = read_json()
+    except FileNotFoundError:
+        current_data = {}
+
+    # Initialize jog_mode in JSON if not present
+    if 'jog_mode' not in current_data:
+        current_data['jog_mode'] = {'value': 'MC_JOGMODE_STANDARD_SLOW'}
+
+    # Update JSON based on the axis and direction
+    if axis == 'x':
+        if direction == 'left':
+            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
+            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
+            current_data['jog_backward']['value'] = True
+            current_data['jog_forward']['value'] = False
+        elif direction == 'right':
+            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
+            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
+            current_data['jog_forward']['value'] = True
+            current_data['jog_backward']['value'] = False
+        elif direction == 'fast-left':
+            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
+            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
+            current_data['jog_backward']['value'] = True
+            current_data['jog_forward']['value'] = False
+        elif direction == 'fast-right':
+            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
+            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
+            current_data['jog_forward']['value'] = True
+            current_data['jog_backward']['value'] = False
+
+        # Update jog mode
+        current_data['jog_mode']['value'] = jog_mode
+
+    # Repeat for 'y' and 'z' axes as needed
+    # Example for Y-axis:
+    elif axis == 'y':
+        if direction == 'up-left':
+            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
+            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
+            current_data['jog_backward_2']['value'] = True
+            current_data['jog_forward_2']['value'] = False
+        elif direction == 'down-right':
+            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
+            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
+            current_data['jog_forward_2']['value'] = True
+            current_data['jog_backward_2']['value'] = False
+        elif direction == 'fast-up-left':
+            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
+            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
+            current_data['jog_backward_2']['value'] = True
+            current_data['jog_forward_2']['value'] = False
+        elif direction == 'fast-down-right':
+            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
+            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
+            current_data['jog_forward_2']['value'] = True
+            current_data['jog_backward_2']['value'] = False
+
+        # Update jog mode
+        current_data['jog_mode2']['value'] = jog_mode
+
+    elif axis == 'z':
+        if direction == 'up':
+            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
+            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
+            current_data['jog_backward_1']['value'] = True
+            current_data['jog_forward_1']['value'] = False
+        elif direction == 'down':
+            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
+            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
+            current_data['jog_forward_1']['value'] = True
+            current_data['jog_backward_1']['value'] = False
+        elif direction == 'fast-up':
+            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
+            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
+            current_data['jog_backward_1']['value'] = True
+            current_data['jog_forward_1']['value'] = False
+        elif direction == 'fast-down':
+            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
+            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
+            current_data['jog_forward_1']['value'] = True
+            current_data['jog_backward_1']['value'] = False
+
+        # Update jog mode
+        current_data['jog_mode1']['value'] = jog_mode
+
+    # Write the updated data back to the JSON file
+    with open(DATA_FILE, 'w') as f:
+        print("Writing to file")
+        json.dump(current_data, f, indent=4)
+
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": f"Axis {axis} moved {direction} successfully and data uploaded to S3!"})
+
+
+
 
 
 

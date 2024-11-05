@@ -1,7 +1,7 @@
 {
     "override": {
         "variable": "GVl_Motion_control_single_axis.LrSA_PowerOverride",
-        "value": 41,
+        "value": 0,
         "type": "LREAL"
     },
     "power_variables": {
@@ -38,7 +38,7 @@
     },
     "feed_rate": {
         "variable": "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Velocity",
-        "input_value": 29,
+        "input_value": 2.0,
         "type": "LREAL"
     },
     "reset": {
@@ -272,5 +272,49 @@
         "variable": "GVL_Motion_Control_single_axis_3.MoveAbs_Done",
         "value": false,
         "type": "BOOL"
+    },
+    "spindle_reverse": {
+        "value": false,
+        "type": "BOOL"
+    },
+    "jog_velocity": {
+        "variable": "GVL_Motion_Control_single_axis.LrSA_JogVelocity",
+        "value": 100,
+        "type": "LREAL"
+    },
+    "jog_velocity1": {
+        "variable": "GVL_Motion_Control_single_axis_1.LrSA_JogVelocity_1",
+        "value": 100,
+        "type": "LREAL"
+    },
+    "jog_velocity2": {
+        "variable": "GVL_Motion_Control_single_axis_2.LrSA_JogVelocity_2",
+        "value": 100,
+        "type": "LREAL"
+    },
+    "jog_velocity3": {
+        "variable": "GVL_Motion_Control_single_axis_3.LrSA_JogVelocity_3",
+        "value": 100,
+        "type": "LREAL"
+    },
+    "jog_mode": {
+        "variable": "GVL_Motion_Control_single_axis.fbsa_Jog.Mode",
+        "value": "MC_JOGMODE_STANDARD_SLOW",
+        "type": "E_JOGMODE"
+    },
+    "jog_mode1": {
+        "variable": "GVL_Motion_Control_single_axis_1.fbsa_Jog.Mode",
+        "value": "MC_JOGMODE_FAST",
+        "type": "E_JOGMODE"
+    },
+    "jog_mode2": {
+        "variable": "GVL_Motion_Control_single_axis_2.fbsa_Jog.Mode",
+        "value": "MC_JOGMODE_FAST",
+        "type": "E_JOGMODE"
+    },
+    "jog_mode3": {
+        "variable": "GVL_Motion_Control_single_axis_3.fbsa_Jog.Mode",
+        "value": "MC_JOGMODE_STANDARD_SLOW",
+        "type": "E_JOGMODE"
     }
 }
