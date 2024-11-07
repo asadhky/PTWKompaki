@@ -40,8 +40,8 @@ app.config['MAIL_USERNAME'] = 'riskerasad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iqmzuxopchoogpdu'
 
 db_config = {
-    'user': 'xixi',
-    'password': 'Chenxi1213!',
+    'user': 'root',
+    'password': 'buttsahib',
     'host': 'localhost',
     'port': 3308,
     'database': 'userdb'
@@ -464,50 +464,107 @@ def get_spindle_state():
     return jsonify({"is_spindle_running": is_spindle_running})
 
 
-@app.route('/update-spindle', methods=['POST'])
-def update_spindle():
+@app.route('/start-spindle', methods=['POST'])
+def start_spindle():
+    print("Request received")
     data = request.json
-    is_spindle_running = data.get('is_spindle_running')
-
+    reverse = data.get('reverse', False)  # Default to False if not provided
+    
     try:
         current_data = read_json()
     except FileNotFoundError:
         current_data = {}
 
-    current_data['is_spindle_running'] = is_spindle_running
+    # Set values based on the reverse status
+    if reverse:
+        # Reverse is checked, set bsa_Jogbwd to True and bsa_Jogfwd to False
+        current_data["GVL_Motion_Control_single_axis_3.bsa_Jogfwd"] = {
+            "value": False,
+            "type": "BOOL"
+        }
+        current_data["GVL_Motion_Control_single_axis_3.bsa_Jogbwd"] = {
+            "value": True,
+            "type": "BOOL"
+        }
+    else:
+        # Reverse is not checked, set bsa_Jogfwd to True and bsa_Jogbwd to False
+        current_data["GVL_Motion_Control_single_axis_3.bsa_Jogfwd"] = {
+            "value": True,
+            "type": "BOOL"
+        }
+        current_data["GVL_Motion_Control_single_axis_3.bsa_Jogbwd"] = {
+            "value": False,
+            "type": "BOOL"
+        }
 
+    # Save the updated data
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
 
+    try:
+        # Upload the updated data to S3
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Spindle started and data uploaded to S3 successfully!"})
+
+
+@app.route('/stop-spindle', methods=['POST'])
+def stop_spindle():
+    try:
+        current_data = read_json()
+    except FileNotFoundError:
+        current_data = {}
+
+    # Hard-coded values for stopping the spindle
+    current_data["GVL_Motion_Control_single_axis_3.bsa_Jogfwd"] = {
+        "value": False,
+        "type": "BOOL"
+    }
+    current_data["GVL_Motion_Control_single_axis_3.bsa_Jogbwd"] = {
+        "value": False,
+        "type": "BOOL"
+    }
+
+    # Write updated data back to the local file
+    with open(DATA_FILE, 'w') as f:
+        json.dump(current_data, f, indent=4)
+
+    # Attempt to upload the file to S3
     try:
         s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
     except Exception as e:
         return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
 
-    return jsonify({"message": "Spindle state updated and uploaded to S3 successfully!"})
+    return jsonify({"message": "Spindle stopped and data uploaded to S3 successfully!"})
+
+
 
 
 @app.route('/update-sliders', methods=['POST'])
 def update_sliders():
     data = request.json
 
+    # Use 'value' for override and feed_rate
     try:
-        override_value = int(data.get('override', {}).get('value', 50))
+        override_value = int(data.get('GVl_Motion_Control_single_axis_3.LrSA_PowerOverride', {}).get('value', 1))
     except ValueError:
-        override_value = 50
+        override_value = 1
 
     try:
-        feed_rate_value = int(data.get('spindle', {}).get('input_value', 50))
+        feed_rate_value = int(data.get('JOG_MODE.JogMode_3', {}).get('value', 1))  # Change 'input_value' to 'value'
     except ValueError:
-        feed_rate_value = 50
+        feed_rate_value = 1
 
     try:
         current_data = read_json()
     except FileNotFoundError:
         current_data = {}
 
-    current_data['override'] = {"variable": "GVl_Motion_control_single_axis.LrSA_PowerOverride", "value": override_value, "type": "LREAL"}
-    current_data['feed_rate'] = {"variable": "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Velocity", "input_value": feed_rate_value, "type": "LREAL"}
+    # Update current_data with correct values
+    current_data['GVl_Motion_Control_single_axis_3.LrSA_PowerOverride'] = {"value": override_value, "type": "LREAL"}
+    current_data['JOG_MODE.JogMode_3'] = {"value": str(feed_rate_value), "type": "STRING"}
 
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
@@ -520,6 +577,7 @@ def update_sliders():
     return jsonify({"message": "Sliders updated and uploaded to S3 successfully!"})
 
 
+
 @app.route('/get-slider-values', methods=['GET'])
 def get_slider_values():
     try:
@@ -527,50 +585,40 @@ def get_slider_values():
     except FileNotFoundError:
         current_data = {}
 
-    override_value = current_data.get('override', {}).get('value', 50)  # Default to 50 if not found
-    feed_rate_value = current_data.get('feed_rate', {}).get('input_value', 50)  # Default to 50 if not found
+    override_value = current_data.get('GVl_Motion_Control_single_axis_3.LrSA_PowerOverride', {}).get('value', 2)  # Default to 50 if not found
+    feed_rate_value = current_data.get('JOG_MODE.JogMode_3', {}).get('value', 2)  # Default to 50 if not found
 
     return jsonify({
-        "override": {
-            "variable": "sample",
-            "value": override_value
+        "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
+        "value": override_value,
+        "type": "LREAL"
         },
-        "feed_rate": {
-            "variable": "sample",
-            "input_value": feed_rate_value
+        "JOG_MODE.JogMode_3": {
+            "value": str(feed_rate_value),
+            "type": "STRING"
         }
     })
 
-@app.route('/update-power-variables', methods=['POST'])
-def update_power_variables():
+@app.route('/update-axis-state', methods=['POST'])
+def update_axis_state():
+    print("BRUHHHHH")
     data = request.json
-    axis = data.get('axis')
-    power_variables = data.get('power_variables')
-
-    try:
-        current_data = read_json()  # Function to read your JSON file
-    except FileNotFoundError:
-        current_data = {}
-
-    # Update the current_data with the new power_variables
-    if power_variables:
-        if axis == 'x':
-            current_data['power_variables'] = power_variables  # Update for X axis
-        elif axis == 'y':
-            current_data['power_variables_2'] = power_variables  # Update for Y axis
-        elif axis == 'z':
-            current_data['power_variables_1'] = power_variables  # Update for Z axis
-
-    # Write the updated data back to the JSON file
-    with open(DATA_FILE, 'w') as f:
-        json.dump(current_data, f, indent=4)
+    with open(DATA_FILE, 'r+') as file:
+        current_data = json.load(file)
+        # Update the specific keys in the JSON data
+        for key, value in data.items():
+            if key in current_data:
+                current_data[key]['value'] = value['value']
+        file.seek(0)
+        json.dump(current_data, file, indent=4)
+        file.truncate()
 
     try:
         s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
     except Exception as e:
         return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
 
-    return jsonify({"message": "Axis speed updated and uploaded to S3 successfully!"})
+    return jsonify({"status": "success", "data": data})
 
 
 
@@ -586,14 +634,14 @@ def reset_axis():
 
     # Reset jog state based on the axis
     if axis == 'x':
-        current_data['jog_forward'] = {"variable": "GVL_Motion_Control_single_axis.bsa_Jogfwd","value": False,"type": "BOOL"}
-        current_data['jog_backward'] = {"variable": "GVL_Motion_Control_single_axis.bsa_Jogbwd","value": False,"type": "BOOL"}
+        current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = {"value": False,"type": "BOOL"}
+        current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = {"value": False,"type": "BOOL"}
     elif axis == 'y':
-        current_data['jog_forward_2'] = {"variable": "GVL_Motion_Control_single_axis_2.bsa_Jogfwd","value": False,"type": "BOOL"}
-        current_data['jog_backward_2'] = {"variable": "GVL_Motion_Control_single_axis_2.bsa_Jogbwd","value": False,"type": "BOOL"}
+        current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd'] = {"value": False,"type": "BOOL"}
+        current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd'] = {"value": False,"type": "BOOL"}
     elif axis == 'z':
-        current_data['jog_forward_1'] = {"variable": "GVL_Motion_Control_single_axis_1.bsa_Jogfwd","value": False,"type": "BOOL"}
-        current_data['jog_backward_1'] = {"variable": "GVL_Motion_Control_single_axis_1.bsa_Jogbwd","value": False,"type": "BOOL"}
+        current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = {"value": False,"type": "BOOL"}
+        current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = {"value": False,"type": "BOOL"}
 
     # Write the updated data back to the JSON file
     with open(DATA_FILE, 'w') as f:
@@ -628,80 +676,82 @@ def update_axis_jog():
     # Update JSON based on the axis and direction
     if axis == 'x':
         if direction == 'left':
-            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
-            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
-            current_data['jog_backward']['value'] = True
-            current_data['jog_forward']['value'] = False
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = False
         elif direction == 'right':
-            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
-            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
-            current_data['jog_forward']['value'] = True
-            current_data['jog_backward']['value'] = False
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = False
         elif direction == 'fast-left':
-            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
-            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
-            current_data['jog_backward']['value'] = True
-            current_data['jog_forward']['value'] = False
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = False
         elif direction == 'fast-right':
-            current_data['jog_forward'] = current_data.get('jog_forward', {'value': False})
-            current_data['jog_backward'] = current_data.get('jog_backward', {'value': False})
-            current_data['jog_forward']['value'] = True
-            current_data['jog_backward']['value'] = False
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = False
 
         # Update jog mode
-        current_data['jog_mode']['value'] = jog_mode
+        current_data['JOG_MODE.JogMode']['value'] = jog_mode
 
     # Repeat for 'y' and 'z' axes as needed
     # Example for Y-axis:
     elif axis == 'y':
         if direction == 'up-left':
-            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
-            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
-            current_data['jog_backward_2']['value'] = True
-            current_data['jog_forward_2']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd']['value'] = False
         elif direction == 'down-right':
-            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
-            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
-            current_data['jog_forward_2']['value'] = True
-            current_data['jog_backward_2']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd']['value'] = False
         elif direction == 'fast-up-left':
-            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
-            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
-            current_data['jog_backward_2']['value'] = True
-            current_data['jog_forward_2']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd']['value'] = False
         elif direction == 'fast-down-right':
-            current_data['jog_forward_2'] = current_data.get('jog_forward_2', {'value': False})
-            current_data['jog_backward_2'] = current_data.get('jog_backward_2', {'value': False})
-            current_data['jog_forward_2']['value'] = True
-            current_data['jog_backward_2']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_2.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_2.bsa_Jogbwd']['value'] = False
+
 
         # Update jog mode
-        current_data['jog_mode2']['value'] = jog_mode
+        current_data['JOG_MODE.JogMode_2']['value'] = jog_mode
 
     elif axis == 'z':
         if direction == 'up':
-            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
-            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
-            current_data['jog_backward_1']['value'] = True
-            current_data['jog_forward_1']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = False
         elif direction == 'down':
-            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
-            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
-            current_data['jog_forward_1']['value'] = True
-            current_data['jog_backward_1']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = False
         elif direction == 'fast-up':
-            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
-            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
-            current_data['jog_backward_1']['value'] = True
-            current_data['jog_forward_1']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = False
         elif direction == 'fast-down':
-            current_data['jog_forward_1'] = current_data.get('jog_forward_1', {'value': False})
-            current_data['jog_backward_1'] = current_data.get('jog_backward_1', {'value': False})
-            current_data['jog_forward_1']['value'] = True
-            current_data['jog_backward_1']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = False
+
 
         # Update jog mode
-        current_data['jog_mode1']['value'] = jog_mode
+        current_data['JOG_MODE.JogMode_1']['value'] = jog_mode
 
     # Write the updated data back to the JSON file
     with open(DATA_FILE, 'w') as f:
@@ -817,8 +867,8 @@ def index():
             forward_speed = current_data.get('forward_speed', 0)  # Default to 50 if not found
             spindle_speed = current_data.get('spindle_speed', 0)  # Default to 50 if not found
         except FileNotFoundError:
-            forward_speed = 50
-            spindle_speed = 50
+            forward_speed = 3
+            spindle_speed = 3
 
         # Pass slider values to the template
         return render_template('index.html', 

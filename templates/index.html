@@ -648,9 +648,11 @@
             
             
                 <div id="axis-controls" style="display:none;" class="form-group-inline">
-                    <button id="enable-axis-x">Enable X Axis</button>
-                    <button id="enable-axis-y">Enable Y Axis</button>
-                    <button id="enable-axis-z">Enable Z Axis</button>
+
+                    <button id="enable-axis-x" onclick="toggleAxis('x')">Enable X Axis</button>
+                    <button id="enable-axis-y" onclick="toggleAxis('y')">Enable Y Axis</button>
+                    <button id="enable-axis-z" onclick="toggleAxis('z')">Enable Z Axis</button>
+                    
                     <label for="speed" data-key="label-speed">Speed</label>
                     <input type="number" id="speed" placeholder="Enter speed">
                     <button id="set-speed" data-key="button-set-speed">Set Speed</button>
@@ -683,12 +685,11 @@
                             
                         </div>
                         <div class="rangetitles" id="terminal-section">
-                            <h2 data-key="label-spindle" style="color: #b3b3b3;  display: inline-block;">Select Spindle Speed</h2>
+                            <h2 data-key="label-spindle" style="color: #b3b3b3; display: inline-block;">Select Spindle Speed</h2>
                             <label for="reverse-checkbox" style="color: #b3b3b3; margin-left: 15px;">
                                 <input type="checkbox" id="reverse-checkbox" onclick="toggleReverse()" style="margin-right: 5px;">
                                 Reverse
                             </label>
-                            <!-- <button id="spindle-button" class="spindlestartbutton"></button> -->
                             <button id="spindle-stop-button" class="spindlestartbutton" style="background-image: url('../static/spindlestop.jpg');"></button>
                             <button id="spindle-start-button" class="spindlestartbutton" style="background-image: url('../static/spindlestart.jpg'); margin-right: 10px;"></button>
                             <div class="slider-ui color1">
@@ -705,6 +706,7 @@
                                 <img src="{{ url_for('static', filename='override.png') }}" alt="image" style="width: 80px;">
                             </div>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -731,6 +733,8 @@
         const overrideStopButton = document.getElementById('override-start-button');
         let isOverrideRunning = false; // Initial state
 
+        
+
         function resetAxis(axis) {
             fetch('/reset-axis', {
                 method: 'POST',
@@ -751,7 +755,7 @@
 
         function moveAxis(axis, direction) {
             // Determine jog mode based on direction
-            let jogMode = direction.includes("fast") ? "MC_JOGMODE_FAST" : "MC_JOGMODE_STANDARD_SLOW";
+            let jogMode = direction.includes("fast") ? "2" : "1";
 
             fetch('/update-axis-jog', {
                 method: 'POST',
@@ -859,31 +863,90 @@
         setInterval(checkOverrideState, 5000);
 
         
-        const spindleStartButton = document.getElementById('spindle-stop-button');
-        const spindleStopButton = document.getElementById('spindle-start-button');
+        const spindleStartButton = document.getElementById('spindle-start-button');
+        const spindleStopButton = document.getElementById('spindle-stop-button');
         let isSpindleRunning = false; // Initial state
 
-        // Event listener for "Start Spindle" button
-        spindleStartButton.addEventListener('click', () => {
-            if (!isSpindleRunning) {
-                isSpindleRunning = true;  // Set to true
-                updateSpindleState(isSpindleRunning);
-            }
+        // Function to update spindle state via AJAX request
+        function updateSpindleState(isRunning) {
+            const dataToUpdate = {
+                jog_forward_3: {
+                    variable: "GVL_Motion_Control_single_axis_3.bsa_Jogfwd",
+                    value: isRunning,
+                    type: "BOOL"
+                },
+                jog_backward_3: {
+                    variable: "GVL_Motion_Control_single_axis_3.bsa_Jogbwd",
+                    value: false, // Always false for both start and stop actions
+                    type: "BOOL"
+                }
+            };
 
-            spindleStartButton.classList.add('active');
-            spindleStopButton.classList.remove('active');
+            fetch('/update-spindle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToUpdate)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message); // Log the response message from the server
+            })
+            .catch(error => {
+                console.error('Error updating spindle state:', error);
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const spindleStartButton = document.getElementById('spindle-start-button');
+    const spindleStopButton = document.getElementById('spindle-stop-button');
+    const reverseCheckbox = document.getElementById('reverse-checkbox');
+
+    // IMP THIS IS REVERSED WITH STOP
+    spindleStartButton.addEventListener('click', () => {
+        fetch('/stop-spindle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})  // Sending an empty JSON object
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        spindleStartButton.classList.add('active');
+        spindleStopButton.classList.remove('active');
+    });
+
+    // IMP REVERSED
+    spindleStopButton.addEventListener('click', () => {
+        fetch('/start-spindle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reverse: reverseCheckbox.checked })  // Send reverse status in the body
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
 
-        // Event listener for "Stop Spindle" button
-        spindleStopButton.addEventListener('click', () => {
-            if (isSpindleRunning) {
-                isSpindleRunning = false;
-                updateSpindleState(isSpindleRunning);
-            }
+        spindleStopButton.classList.add('active');
+        spindleStartButton.classList.remove('active');
+    });
+});
 
-            spindleStopButton.classList.add('active');
-            spindleStartButton.classList.remove('active');
-        });
+
 
         // Function to update spindle state
         function updateSpindleState(isSpindleRunning) {
@@ -918,13 +981,13 @@
                         isSpindleRunning = response.is_spindle_running; // Update the global variable
 
                         // Set button classes based on spindle state
-                        if (isSpindleRunning) {
-                            spindleStartButton.classList.add('active');
-                            spindleStopButton.classList.remove('active');
-                        } else {
-                            spindleStartButton.classList.remove('active');
-                            spindleStopButton.classList.add('active');
-                        }
+                        // if (isSpindleRunning) {
+                        //     spindleStartButton.classList.add('active');
+                        //     spindleStopButton.classList.remove('active');
+                        // } else {
+                        //     spindleStartButton.classList.remove('active');
+                        //     spindleStopButton.classList.add('active');
+                        // }
                     } else {
                         console.error('Error fetching spindle state');
                     }
@@ -943,49 +1006,48 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-    const overrideSlider = document.getElementById('override-slider');
-    const spindleSlider = document.getElementById('spindle-slider');
-    const overrideValue = document.getElementById('override-value');
-    const spindleValue = document.getElementById('spindle-value');
+            const overrideSlider = document.getElementById('override-slider');
+            const spindleSlider = document.getElementById('spindle-slider');
+            const overrideValue = document.getElementById('override-value');
+            const spindleValue = document.getElementById('spindle-value');
 
-    overrideSlider.addEventListener('input', function () {
-        overrideValue.textContent = overrideSlider.value;
-    });
+            overrideSlider.addEventListener('input', function () {
+                overrideValue.textContent = overrideSlider.value;
+            });
 
-    spindleSlider.addEventListener('input', function () {
-        spindleValue.textContent = spindleSlider.value;
-    });
+            spindleSlider.addEventListener('input', function () {
+                spindleValue.textContent = spindleSlider.value;
+            });
 
-    function updateSliders() {
-        const data = {
-            override: {
-                variable: "sample",
-                value: overrideSlider.value
-            },
-            spindle: {
-                variable: "sample",
-                input_value: spindleSlider.value
+            function updateSliders() {
+                const data = {
+                    "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
+                        "value": overrideSlider.value  // Send the correct override value
+                    },
+                    "JOG_MODE.JogMode_3": {
+                        "value": spindleSlider.value  // Send the correct spindle value
+                    }
+                };
+                fetch('/update-sliders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             }
-        };
-        fetch('/update-sliders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log(result.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
 
-    overrideSlider.addEventListener('change', updateSliders);
-    spindleSlider.addEventListener('change', updateSliders);
-});
+            overrideSlider.addEventListener('change', updateSliders);
+            spindleSlider.addEventListener('change', updateSliders);
+        });
+
 
 
 
@@ -1023,8 +1085,8 @@ function updateSliders() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                const overrideValue = response.override.value;
-                const spindleValue = response.feed_rate.input_value;
+                const overrideValue = response["GVl_Motion_Control_single_axis_3.LrSA_PowerOverride"].value;
+                const spindleValue = response["JOG_MODE.JogMode_3"].value;
 
                 const overrideSlider = document.getElementById('override-slider');
                 const overrideValueElem = document.getElementById('override-value');
@@ -1049,6 +1111,7 @@ function updateSliders() {
 
     xhr.send();
 }
+
 
 function updateSliderPosition(slider, valueElement) {
     const sliderMin = slider.min;
@@ -1747,23 +1810,103 @@ document.getElementById('set-position').addEventListener('click', function() {
     }
 });
 
-function updateAxisStatus() {
-    // Perform an AJAX request to get the current axis status
-    fetch('/get_axis_status')
-        .then(response => response.json())
-        .then(data => {
-            // Update the DOM elements with the fetched data
-            for (const axis in data) {
-                document.getElementById(`${axis}-current`).textContent = parseFloat(data[axis].current).toFixed(3);
-                document.getElementById(`${axis}-end`).textContent = parseFloat(data[axis].end).toFixed(3);
-                // document.getElementById(`${axis}-active`).textContent = parseFloat(data[axis].active).toFixed(3);
-            }
-        })
-        .catch(error => console.error('Error fetching axis status:', error));
-}
+// function updateAxisStatus() {
+//     // Perform an AJAX request to get the current axis status
+//     fetch('/get_axis_status')
+//         .then(response => response.json())
+//         .then(data => {
+//             // Update the DOM elements with the fetched data
+//             for (const axis in data) {
+//                 document.getElementById(`${axis}-current`).textContent = parseFloat(data[axis].current).toFixed(3);
+//                 document.getElementById(`${axis}-end`).textContent = parseFloat(data[axis].end).toFixed(3);
+//                 // document.getElementById(`${axis}-active`).textContent = parseFloat(data[axis].active).toFixed(3);
+//             }
+//         })
+//         .catch(error => console.error('Error fetching axis status:', error));
+// }
 
-// Poll every 5 seconds (5000 milliseconds)
-setInterval(updateAxisStatus, 5000);
+// // Poll every 5 seconds (5000 milliseconds)
+// setInterval(updateAxisStatus, 5000);
+
+        // Toggle the axis power
+        function toggleAxis(axis) {
+            // Only toggle for X-axis; similar logic can be applied for other axes if needed
+            if (axis === 'x') {
+                const button = document.getElementById('enable-axis-x');
+                const isEnabling = button.textContent.includes("Enable");
+
+                // Set the desired JSON values based on whether we are enabling or stopping the axis
+                const jsonValues = {
+                    "GVl_Motion_Control_single_axis.bsa_PowerEn": { "value": isEnabling, "type": "BOOL" },
+                    "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": { "value": isEnabling, "type": "BOOL" },
+                    "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": { "value": isEnabling, "type": "BOOL" },
+                    "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": { "value": isEnabling, "type": "BOOL" },
+                    "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": { "value": isEnabling, "type": "BOOL" }
+                };
+
+                // Update the button text
+                button.textContent = isEnabling ? "Stop X Axis" : "Enable X Axis";
+
+                // Send JSON values to the server
+                updateAxisState(jsonValues);
+            }
+            else if (axis === 'y') {
+                const button = document.getElementById('enable-axis-y');
+                const isEnabling = button.textContent.includes("Enable");
+
+                // Set the desired JSON values based on whether we are enabling or stopping the axis
+                const jsonValues = {
+                    "GVl_Motion_Control_single_axis_2.bsa_PowerEn": { "value": isEnabling, "type": "BOOL" },
+                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": { "value": isEnabling, "type": "BOOL" },
+                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": { "value": isEnabling, "type": "BOOL" },
+                    "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": { "value": isEnabling, "type": "BOOL" },
+                    "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": { "value": isEnabling, "type": "BOOL" }
+                };
+
+                // Update the button text
+                button.textContent = isEnabling ? "Stop Y Axis" : "Enable Y Axis";
+
+                // Send JSON values to the server
+                updateAxisState(jsonValues);
+            }
+            else if (axis === 'z') {
+                const button = document.getElementById('enable-axis-z');
+                const isEnabling = button.textContent.includes("Enable");
+
+                // Set the desired JSON values based on whether we are enabling or stopping the axis
+                const jsonValues = {
+                    "GVl_Motion_Control_single_axis_1.bsa_PowerEn": { "value": isEnabling, "type": "BOOL" },
+                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": { "value": isEnabling, "type": "BOOL" },
+                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": { "value": isEnabling, "type": "BOOL" },
+                    "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": { "value": isEnabling, "type": "BOOL" },
+                    "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": { "value": isEnabling, "type": "BOOL" }
+                };
+
+                // Update the button text
+                button.textContent = isEnabling ? "Stop Z Axis" : "Enable Z Axis";
+ 
+                // Send JSON values to the server
+                updateAxisState(jsonValues);
+            }
+        }
+
+        // Function to send updated JSON values to the backend
+        function updateAxisState(values) {
+            fetch('/update-axis-state', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Axis state updated:', data);
+            })
+            .catch((error) => {
+                console.error('Error updating axis state:', error);
+            });
+        }
 
 
 
@@ -1778,154 +1921,22 @@ setInterval(updateAxisStatus, 5000);
 
         // JavaScript for connection and axis functions
         document.addEventListener('DOMContentLoaded', function () {
-    // Check if the open-port button exists
-    const openPortBtn = document.getElementById('open-port-btn');
-    if (openPortBtn) {
-        openPortBtn.addEventListener('click', function () {
-            const amsNetID = document.getElementById('amsnetid').value;
-            const port = document.getElementById('port').value;
-            logMessage(`Opening port with AmsNetID: ${amsNetID} and Port: ${port}`);
-        });
-    }
-
-    function setupAxisButton(buttonId, axis) {
-        const enableAxisBtn = document.getElementById(buttonId);
-        let axisEnabled = false; // To track whether the axis is currently enabled
-
-        if (enableAxisBtn) {
-            enableAxisBtn.addEventListener('click', function () {
-                if (selectedAxis === axis) {
-                    if (!axisEnabled) {
-                        // Enable the axis
-                        logMessage(`${axis.toUpperCase()} Axis enabled`);
-
-                        // Prepare the data to update the JSON
-                        const dataToUpdate = {
-                            axis: axis,
-                            power_variables: {}
-                        };
-
-                        // Set power variables to true based on selected axis
-                        if (axis === 'x') {
-                            dataToUpdate.power_variables = {
-                                "GVl_Motion_Control_single_axis.bsa_PowerEn": { "value": true },
-                                "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": { "value": true },
-                                "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": { "value": true },
-                                "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": { "value": true },
-                                "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": { "value": true }
-                            };
-                        } else if (axis === 'y') {
-                            dataToUpdate.power_variables = {
-                                "power_variables_2": {
-                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEn": { "value": true },
-                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": { "value": true },
-                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": { "value": true },
-                                    "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": { "value": true },
-                                    "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": { "value": true }
-                                }
-                            };
-                        } else if (axis === 'z') {
-                            dataToUpdate.power_variables = {
-                                "power_variables_1": {
-                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEn": { "value": true },
-                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": { "value": true },
-                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": { "value": true },
-                                    "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": { "value": true },
-                                    "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": { "value": true }
-                                }
-                            };
-                        }
-
-                        // Send AJAX request to update the server
-                        fetch('/update-power-variables', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(dataToUpdate)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message) {
-                                logMessage(data.message);
-                                enableAxisBtn.textContent = 'Stop Axis'; // Change button text
-                                axisEnabled = true; // Set the axis as enabled
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error updating power variables:', error);
-                        });
-                    } else {
-                        // Disable the axis
-                        logMessage(`${axis.toUpperCase()} Axis disabled`);
-
-                        // Prepare the data to set all power variables to false
-                        const dataToUpdate = {
-                            axis: axis,
-                            power_variables: {}
-                        };
-
-                        if (axis === 'x') {
-                            dataToUpdate.power_variables = {
-                                "GVl_Motion_Control_single_axis.bsa_PowerEn": { "value": false },
-                                "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": { "value": false },
-                                "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": { "value": false },
-                                "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": { "value": false },
-                                "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": { "value": false }
-                            };
-                        } else if (axis === 'y') {
-                            dataToUpdate.power_variables = {
-                                "power_variables_2": {
-                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEn": { "value": false },
-                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": { "value": false },
-                                    "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": { "value": false },
-                                    "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": { "value": false },
-                                    "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": { "value": false }
-                                }
-                            };
-                        } else if (axis === 'z') {
-                            dataToUpdate.power_variables = {
-                                "power_variables_1": {
-                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEn": { "value": false },
-                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnPostive": { "value": false },
-                                    "GVl_Motion_Control_single_axis_1.bsa_PowerEnNegative": { "value": false },
-                                    "GVL_Motion_Control_single_axis_1.fbsa_ReadActualPosition.Enable": { "value": false },
-                                    "GVL_Motion_Control_single_axis_1.fbsa_MoveAbs.Execute": { "value": false }
-                                }
-                            };
-                        }
-
-                        // Send AJAX request to update the server
-                        fetch('/update-power-variables', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(dataToUpdate)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message) {
-                                logMessage(data.message);
-                                enableAxisBtn.textContent = 'Enable Axis'; // Change button text back
-                                axisEnabled = false; // Set the axis as disabled
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error updating power variables:', error);
-                        });
-                    }
-                } else {
-                    logMessage('No axis selected');
-                }
+        // Check if the open-port button exists
+        const openPortBtn = document.getElementById('open-port-btn');
+        if (openPortBtn) {
+            openPortBtn.addEventListener('click', function () {
+                const amsNetID = document.getElementById('amsnetid').value;
+                const port = document.getElementById('port').value;
+                logMessage(`Opening port with AmsNetID: ${amsNetID} and Port: ${port}`);
             });
         }
-    }
 
-    // Call the setup function for each axis button
-    setupAxisButton('enable-axis-x', 'x');
-    setupAxisButton('enable-axis-y', 'y');
-    setupAxisButton('enable-axis-z', 'z');
+        
+
+
+
+
+
 
 
 
