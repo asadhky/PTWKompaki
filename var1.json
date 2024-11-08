@@ -1,6 +1,6 @@
 {
-    "GVl_Motion_control_single_axis.LrSA_PowerOverride": {
-        "value": 90,
+    "GVl_Motion_Control_single_axis.LrSA_PowerOverride": {
+        "value": 79,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis.bsa_PowerEn": {
@@ -56,7 +56,7 @@
         "type": "BOOL"
     },
     "GVl_Motion_Control_single_axis_1.LrSA_PowerOverride": {
-        "value": 80.0,
+        "value": 79,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis_1.bsa_PowerEn": {
@@ -108,7 +108,7 @@
         "type": "BOOL"
     },
     "GVl_Motion_Control_single_axis_2.LrSA_PowerOverride": {
-        "value": 88,
+        "value": 79,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis_2.bsa_PowerEn": {
@@ -160,7 +160,7 @@
         "type": "BOOL"
     },
     "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
-        "value": 68,
+        "value": 55,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis_3.bsa_PowerEn": {
@@ -240,7 +240,7 @@
         "type": "STRING"
     },
     "JOG_MODE.JogMode_3": {
-        "value": "54",
+        "value": "85",
         "type": "STRING"
     },
     "jog_mode": {

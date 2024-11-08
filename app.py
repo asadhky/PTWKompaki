@@ -40,8 +40,8 @@ app.config['MAIL_USERNAME'] = 'riskerasad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iqmzuxopchoogpdu'
 
 db_config = {
-    'user': 'root',
-    'password': 'buttsahib',
+    'user': 'xixi',
+    'password': 'Chenxi1213!',
     'host': 'localhost',
     'port': 3308,
     'database': 'userdb'
@@ -548,12 +548,12 @@ def update_sliders():
 
     # Use 'value' for override and feed_rate
     try:
-        override_value = int(data.get('GVl_Motion_Control_single_axis_3.LrSA_PowerOverride', {}).get('value', 1))
+        override_value = int(data.get('GVl_Motion_Control_single_axis.LrSA_PowerOverride', {}).get('value', 1))
     except ValueError:
         override_value = 1
 
     try:
-        feed_rate_value = int(data.get('JOG_MODE.JogMode_3', {}).get('value', 1))  # Change 'input_value' to 'value'
+        feed_rate_value = int(data.get('GVl_Motion_Control_single_axis_3.LrSA_PowerOverride', {}).get('value', 1))  # Change 'input_value' to 'value'
     except ValueError:
         feed_rate_value = 1
 
@@ -563,8 +563,10 @@ def update_sliders():
         current_data = {}
 
     # Update current_data with correct values
-    current_data['GVl_Motion_Control_single_axis_3.LrSA_PowerOverride'] = {"value": override_value, "type": "LREAL"}
-    current_data['JOG_MODE.JogMode_3'] = {"value": str(feed_rate_value), "type": "STRING"}
+    current_data['GVl_Motion_Control_single_axis.LrSA_PowerOverride'] = {"value": override_value, "type": "LREAL"}
+    current_data['GVl_Motion_Control_single_axis_1.LrSA_PowerOverride'] = {"value": override_value, "type": "LREAL"}
+    current_data['GVl_Motion_Control_single_axis_2.LrSA_PowerOverride'] = {"value": override_value, "type": "LREAL"}
+    current_data['GVl_Motion_Control_single_axis_3.LrSA_PowerOverride'] = {"value": feed_rate_value, "type": "LREAL"}
 
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
@@ -585,17 +587,17 @@ def get_slider_values():
     except FileNotFoundError:
         current_data = {}
 
-    override_value = current_data.get('GVl_Motion_Control_single_axis_3.LrSA_PowerOverride', {}).get('value', 2)  # Default to 50 if not found
-    feed_rate_value = current_data.get('JOG_MODE.JogMode_3', {}).get('value', 2)  # Default to 50 if not found
+    override_value = current_data.get('GVl_Motion_Control_single_axis.LrSA_PowerOverride', {}).get('value', 2)  # Default to 50 if not found
+    feed_rate_value = current_data.get('GVl_Motion_Control_single_axis_3.LrSA_PowerOverride', {}).get('value', 2)  # Default to 50 if not found
 
     return jsonify({
-        "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
-        "value": override_value,
-        "type": "LREAL"
+        "GVl_Motion_Control_single_axis.LrSA_PowerOverride": {
+            "value": override_value,
+            "type": "LREAL"
         },
-        "JOG_MODE.JogMode_3": {
-            "value": str(feed_rate_value),
-            "type": "STRING"
+        "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
+            "value": feed_rate_value,
+            "type": "LREAL"
         }
     })
 
@@ -1419,6 +1421,5 @@ def favicon():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     app.run(host='0.0.0.0', port=5000, debug=True)
-
 
 

@@ -1021,10 +1021,10 @@
 
             function updateSliders() {
                 const data = {
-                    "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
+                    "GVl_Motion_Control_single_axis.LrSA_PowerOverride": {
                         "value": overrideSlider.value  // Send the correct override value
                     },
-                    "JOG_MODE.JogMode_3": {
+                    "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
                         "value": spindleSlider.value  // Send the correct spindle value
                     }
                 };
@@ -1085,8 +1085,8 @@ function updateSliders() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                const overrideValue = response["GVl_Motion_Control_single_axis_3.LrSA_PowerOverride"].value;
-                const spindleValue = response["JOG_MODE.JogMode_3"].value;
+                const overrideValue = response["GVl_Motion_Control_single_axis.LrSA_PowerOverride"].value;
+                const spindleValue = response["GVl_Motion_Control_single_axis_3.LrSA_PowerOverride"].value;
 
                 const overrideSlider = document.getElementById('override-slider');
                 const overrideValueElem = document.getElementById('override-value');
