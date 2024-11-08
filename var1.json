@@ -1,6 +1,6 @@
 {
     "GVl_Motion_Control_single_axis.LrSA_PowerOverride": {
-        "value": 79,
+        "value": 31,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis.bsa_PowerEn": {
@@ -39,10 +39,6 @@
         "value": false,
         "type": "BOOL"
     },
-    "GVL_Motion_Control_single_axis.bsa_Stop": {
-        "value": false,
-        "type": "BOOL"
-    },
     "GVL_Motion_Control_single_axis.bsa_Jogfwd": {
         "value": false,
         "type": "BOOL"
@@ -56,7 +52,7 @@
         "type": "BOOL"
     },
     "GVl_Motion_Control_single_axis_1.LrSA_PowerOverride": {
-        "value": 79,
+        "value": 31,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis_1.bsa_PowerEn": {
@@ -108,7 +104,7 @@
         "type": "BOOL"
     },
     "GVl_Motion_Control_single_axis_2.LrSA_PowerOverride": {
-        "value": 79,
+        "value": 31,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis_2.bsa_PowerEn": {
@@ -160,7 +156,7 @@
         "type": "BOOL"
     },
     "GVl_Motion_Control_single_axis_3.LrSA_PowerOverride": {
-        "value": 55,
+        "value": 57,
         "type": "LREAL"
     },
     "GVl_Motion_Control_single_axis_3.bsa_PowerEn": {
@@ -232,91 +228,15 @@
         "type": "STRING"
     },
     "JOG_MODE.JogMode_1": {
-        "value": "2",
+        "value": "1",
         "type": "STRING"
     },
     "JOG_MODE.JogMode_2": {
-        "value": "2",
+        "value": "1",
         "type": "STRING"
     },
     "JOG_MODE.JogMode_3": {
-        "value": "85",
+        "value": "2",
         "type": "STRING"
-    },
-    "jog_mode": {
-        "value": "MC_JOGMODE_STANDARD_SLOW"
-    },
-    "power_variables": {
-        "GVl_Motion_Control_single_axis.bsa_PowerEn": {
-            "value": true
-        },
-        "GVl_Motion_Control_single_axis.bsa_PowerEnPostive": {
-            "value": true
-        },
-        "GVl_Motion_Control_single_axis.bsa_PowerEnNegative": {
-            "value": true
-        },
-        "GVL_Motion_Control_single_axis.fbsa_ReadActualPosition.Enable": {
-            "value": true
-        },
-        "GVL_Motion_Control_single_axis.fbsa_MoveAbs.Execute": {
-            "value": true
-        }
-    },
-    "power_variables_2": {
-        "power_variables_2": {
-            "GVl_Motion_Control_single_axis_2.bsa_PowerEn": {
-                "value": false
-            },
-            "GVl_Motion_Control_single_axis_2.bsa_PowerEnPostive": {
-                "value": false
-            },
-            "GVl_Motion_Control_single_axis_2.bsa_PowerEnNegative": {
-                "value": false
-            },
-            "GVL_Motion_Control_single_axis_2.fbsa_ReadActualPosition.Enable": {
-                "value": false
-            },
-            "GVL_Motion_Control_single_axis_2.fbsa_MoveAbs.Execute": {
-                "value": false
-            }
-        }
-    },
-    "GVL_Motion_Control_single_axis.bsa_PowerEn": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis.bsa_PowerEnPostive": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis.bsa_PowerEnNegative": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis_2.bsa_PowerEn": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis_2.bsa_PowerEnPostive": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis_2.bsa_PowerEnNegative": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis_1.bsa_PowerEn": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis_1.bsa_PowerEnPostive": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "GVL_Motion_Control_single_axis_1.bsa_PowerEnNegative": {
-        "value": true,
-        "type": "BOOL"
-    },
-    "is_override_running": true
+    }
 }

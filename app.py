@@ -428,7 +428,9 @@ def update_override():
     except FileNotFoundError:
         current_data = {}
 
-    current_data['is_override_running'] = is_override_running
+    #Currently prevented writing to the file as we dont have the variable for this yet
+
+    # current_data['is_override_running'] = is_override_running
 
     with open(DATA_FILE, 'w') as f:
         json.dump(current_data, f, indent=4)
@@ -670,10 +672,6 @@ def update_axis_jog():
         current_data = read_json()
     except FileNotFoundError:
         current_data = {}
-
-    # Initialize jog_mode in JSON if not present
-    if 'jog_mode' not in current_data:
-        current_data['jog_mode'] = {'value': 'MC_JOGMODE_STANDARD_SLOW'}
 
     # Update JSON based on the axis and direction
     if axis == 'x':
