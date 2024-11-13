@@ -92,7 +92,7 @@
         "type": "BOOL"
     },
     "GVL_Motion_Control_single_axis_1.bsa_Jogfwd": {
-        "value": false,
+        "value": true,
         "type": "BOOL"
     },
     "GVL_Motion_Control_single_axis_1.bsa_Jogbwd": {
@@ -196,7 +196,7 @@
         "type": "BOOL"
     },
     "GVL_Motion_Control_single_axis_3.bsa_Jogfwd": {
-        "value": true,
+        "value": false,
         "type": "BOOL"
     },
     "GVL_Motion_Control_single_axis_3.bsa_Jogbwd": {
@@ -224,11 +224,11 @@
         "type": "LREAL"
     },
     "JOG_MODE.JogMode": {
-        "value": "2",
+        "value": "1",
         "type": "STRING"
     },
     "JOG_MODE.JogMode_1": {
-        "value": "1",
+        "value": "2",
         "type": "STRING"
     },
     "JOG_MODE.JogMode_2": {

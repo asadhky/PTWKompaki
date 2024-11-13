@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 import hashlib
 import time
+import json
 import secrets
 from mysql.connector import Error
 import openai
@@ -15,6 +16,7 @@ import pyads
 import json
 import os
 import boto3
+import threading
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/db_name'
@@ -40,8 +42,8 @@ app.config['MAIL_USERNAME'] = 'riskerasad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iqmzuxopchoogpdu'
 
 db_config = {
-    'user': 'xixi',
-    'password': 'Chenxi1213!',
+    'user': 'root',
+    'password': 'buttsahib',
     'host': 'localhost',
     'port': 3308,
     'database': 'userdb'
@@ -676,25 +678,25 @@ def update_axis_jog():
     # Update JSON based on the axis and direction
     if axis == 'x':
         if direction == 'left':
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = True
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = False
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = False
         elif direction == 'right':
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = True
-            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = False
-        elif direction == 'fast-left':
             current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = True
             current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = False
-        elif direction == 'fast-right':
+        elif direction == 'fast-left':
             current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = True
             current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = False
+        elif direction == 'fast-right':
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis.bsa_Jogfwd']['value'] = False
 
         # Update jog mode
         current_data['JOG_MODE.JogMode']['value'] = jog_mode
@@ -729,25 +731,25 @@ def update_axis_jog():
 
     elif axis == 'z':
         if direction == 'up':
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = True
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = False
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = False
         elif direction == 'down':
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = True
-            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = False
-        elif direction == 'fast-up':
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = True
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = False
-        elif direction == 'fast-down':
+        elif direction == 'fast-up':
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = True
             current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = False
+        elif direction == 'fast-down':
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogbwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd'] = current_data.get('GVL_Motion_Control_single_axis_1.bsa_Jogfwd', {'value': False})
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogbwd']['value'] = True
+            current_data['GVL_Motion_Control_single_axis_1.bsa_Jogfwd']['value'] = False
 
 
         # Update jog mode
@@ -765,10 +767,47 @@ def update_axis_jog():
 
     return jsonify({"message": f"Axis {axis} moved {direction} successfully and data uploaded to S3!"})
 
+def write_json(data):
+    with open('var1.json', 'w') as f:
+        json.dump(data, f, indent=4)
 
+def reset_axis_values():
+    # Load the current JSON data
+    data = read_json()
+    
+    # Set all reset values to true
+    keys_to_update = [
+        "GVL_Motion_Control_single_axis.bsA_ResetExe",
+        "GVL_Motion_Control_single_axis_1.bsA_ResetExe",
+        "GVL_Motion_Control_single_axis_2.bsA_ResetExe",
+        "GVL_Motion_Control_single_axis_3.bsA_ResetExe"
+    ]
+    
+    for key in keys_to_update:
+        data[key]["value"] = True
 
+    # Save the changes
+    write_json(data)
 
+    # Wait for 1 second before setting them back to false
+    time.sleep(1)
 
+    for key in keys_to_update:
+        data[key]["value"] = False
+
+    # Save the changes again
+    write_json(data)
+    try:
+        s3_client.upload_file(DATA_FILE, BUCKET_NAME, S3_FILE_KEY)
+    except Exception as e:
+        return jsonify({"message": "Failed to upload to S3", "error": str(e)}), 500
+
+    return jsonify({"message": "Axis speed updated and uploaded to S3 successfully!"})
+
+@app.route('/reset-individual_axis', methods=['POST'])
+def reset_individual_axis():
+    threading.Thread(target=reset_axis_values).start()
+    return jsonify({"message": "Individual axis reset initiated"}), 200
 
 
 # Function to read JSON data from file

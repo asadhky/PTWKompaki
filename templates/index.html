@@ -592,6 +592,7 @@
             <!-- 中部：Axis Status -->
             <div class="section" id="axis-status-section">
                 <h2 data-key="title-axis-status" style="color: #b3b3b3;">Axis Status</h2>
+                <button id="reset-axis-btn" style="float: right; margin-top: -5px;">Reset Axis</button>
                 
                 <div class="axis-container">
                     <!-- X Axis -->
@@ -732,6 +733,22 @@
         const overrideStartButton = document.getElementById('override-stop-button');
         const overrideStopButton = document.getElementById('override-start-button');
         let isOverrideRunning = false; // Initial state
+
+        document.getElementById('reset-axis-btn').addEventListener('click', function() {
+            fetch('reset-individual_axis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 
         
 
