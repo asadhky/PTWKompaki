@@ -1204,7 +1204,7 @@ def ask_perplexity(question):
         "frequency_penalty": 1
     }
     headers = {
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer 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",
         "Content-Type": "application/json"
     }
     response = requests.request("POST", url, json=payload, headers=headers)
