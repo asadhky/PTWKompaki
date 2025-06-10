@@ -219,14 +219,16 @@
     <h1 class="page-title" style="font-family: 'Roboto', sans-serif; text-align: center; color: #0b0c10; padding-left: 7%;"></h1>
 
     <!-- Replace the existing centered icon div with this -->
-    <div class="centered-icon-container">
-        <div class="icon-text-wrapper">
-            <img src="{{ url_for('static', filename='newsiemensicon.png') }}" 
-                alt="Center Icon" 
-                style="width: 50px; height: auto;">
-            <span class="icon-label">Siemens Profitrainer</span>
-        </div>
+<a href="/connection" class="centered-icon-container" style="text-decoration: none;">
+    <div class="icon-text-wrapper">
+        <img src="{{ url_for('static', filename='newsiemensicon.png') }}" 
+             alt="Center Icon" 
+             style="width: 50px; height: auto;">
+        <span class="icon-label" style="color: #d3d3d3;">Siemens Profitrainer</span>
     </div>
+</a>
+
+
 
     <a>
         <button class="nav-button" id="search-button">
