@@ -1124,6 +1124,7 @@ def index():
             forward_speed = 3
             spindle_speed = 3
 
+    
         # Pass slider values to the template
         return render_template('index.html', 
                                username=session['username'], 
@@ -1134,6 +1135,9 @@ def index():
 
 @app.route('/visitor')
 def visitor():
+    session['loggedin'] = True
+    session['id'] = 'asad'
+    session['username'] = 'Visitor'
     return render_template('index.html')
 
 class Folder(db.Model):
