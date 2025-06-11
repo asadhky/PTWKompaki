@@ -3,182 +3,50 @@
 
 <head>
     <title>Machine Connection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #5f6368;
+        * {
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: #333;
             font-family: 'Roboto', sans-serif;
-            font-weight: 800;
-        }
-        .category {
-            cursor: pointer;
-            background-color: #f0f0f0;
         }
 
-        .category:hover {
-            background-color: #f0f0f0;
-        }
-
-        .editable {
-            border: 1px solid #ddd;
-            padding: 5px;
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
         }
 
         .container {
-            background-color: #5f6368;
             display: flex;
-            flex-direction: column;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        .section {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-            width: 90%;    
-            margin: 0 auto; 
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        .form-group-inline {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .form-group-inline label {
-            margin: 0;
-            white-space: nowrap;
-        }
-
-        .form-group-inline input {
-            flex: 2;
-            padding: 10px;
-            border-radius: 4px;
-            min-width: 0;
-        }
-
-        .form-group-inline button {
-            flex: 1;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #4CAF50;
-            color: #fff;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .axis-container {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 8px;
-            max-width: 100%; /* Prevent overflow on zoom */
-        }
-
-        .axis {
-            background-color: #424242;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
-            width: 30%;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            border: 0.1px solid #ff3333; 
-        }
-
-        .rangetitles {
-            background-color: #424242;
-            padding: 20px;
-            padding-bottom: 0;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 48%;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
-            border: 0.1px solid #ff3333; 
-        }
-
-        .axis {
-            transition: background-color 0.8s ease, color 0.8s ease; 
-        }
-
-        .axis h2 {
-            margin-top: 0;
-
-        }
-
-        .axis.selected {
-            background-color: #50727b !important; /* Keeps the background color when selected */
-            color: #fff !important; /* Changes text color to white */
-        }
-
-        .axis.selected h2, 
-        .axis.selected div {
-            color: #fff !important; /* Ensures all text inside the selected axis is white */
-        }
-
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            /* margin-bottom: 10px; */
-        }
-
-        .slider-container label {
-            margin-right: 10px;
-            white-space: nowrap;
-        }
-
-        .slider-container input {
-            flex-grow: 1;
-        }
-
-        .terminal-output {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #333;
-            color: #d3d3d3;
-            height: 200px;
-            overflow-y: auto;
-            border-radius: 5px;
-        }
-
-        .langBtn {
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .langBtn img {
-            width: 20px;
-            height: 20px;
-        }
-
-
-
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            width: 100%;
+            height: 100vh; /* Use viewport height instead */
         }
     </style>
 </head>
 
 <body>
+    <!-- Top navigation bar -->
     {% include 'navBar.html' %}
     {% include 'sidebar.html' %}
 
+    <!-- 固定在底部的导航栏 -->
+    {% include 'footer.html' %}
+
     <script>
-        
+
     </script>
+
 </body>
 
 </html>
