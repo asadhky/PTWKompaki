@@ -263,10 +263,11 @@
     <!-- Replace the existing centered icon div with this -->
     <a href="/connection" class="centered-icon-container" style="text-decoration: none;">
         <div class="icon-text-wrapper">
-            <img src="{{ url_for('static', filename='newsiemensicon.png') }}" 
+            <img src="" 
+                id="center-machine-icon" 
                 alt="Center Icon" 
                 style="width: 50px; height: auto;">
-            <span class="icon-label" style="color: #d3d3d3;">Siemens Profitrainer</span>
+            <span id="center-machine-name" class="icon-label" style="color: #d3d3d3;">Beckoff Profitrainer</span>
         </div>
     </a>
 
@@ -641,6 +642,22 @@ setSelectedLocale("english"); // Set the initial language to English (or based o
 
     // Language switcher
         document.addEventListener('DOMContentLoaded', () => {
+            const savedIcon = localStorage.getItem('centerIconSrc');
+            const savedName = localStorage.getItem('centerMachineName');
+
+            const iconElement = document.getElementById('center-machine-icon');
+            const nameElement = document.getElementById('center-machine-name');
+
+            if (savedIcon && iconElement) {
+                iconElement.src = `/static/${savedIcon}`;
+            } else if (iconElement) {
+                iconElement.src = `/static/beckoffprofitrainer.png`;
+            }
+
+            if (nameElement) {
+                nameElement.textContent = savedName || "Beckoff Profitrainer";
+            }
+
             const langEl = document.querySelector('.langWrap');
             const link = document.querySelectorAll('a.langBtn');
             const textElements = document.querySelectorAll('.category');
@@ -692,8 +709,8 @@ setSelectedLocale("english"); // Set the initial language to English (or based o
                 "button-open-port": "Open Port",
                 "title-axis-status": "Axis Status",
                 "title-x-axis": "X Axis",
-                "title-y-axis": "Y Axis",
-                "title-z-axis": "Z Axis",
+                "title-y-axis": "Z Axis",
+                "title-z-axis": "Y Axis",
                 "label-current-position": "Current Position: ",
                 "label-end-position": "End Position: ",
                 "label-active-position": "Active Position: ",
@@ -746,8 +763,8 @@ setSelectedLocale("english"); // Set the initial language to English (or based o
                 "button-open-port": "Port öffnen",
                 "title-axis-status": "Achsenstatus",
                 "title-x-axis": "X-Achse",
-                "title-y-axis": "Y-Achse",
-                "title-z-axis": "Z-Achse",
+                "title-y-axis": "Z-Achse",
+                "title-z-axis": "Y-Achse",
                 "label-current-position": "Aktuelle Position: ",
                 "label-end-position": "End Position: ",
                 "label-active-position": "Aktive Position: ",

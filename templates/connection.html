@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
+            margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
@@ -15,23 +16,135 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        .fixed-bottom-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        .horizontal-row {
             display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
+            width: 100%;
+            height: 50vh; /* Each row gets 25% of the screen height */
+            gap: 10px;
+            padding: 20px;
         }
 
-        .container {
+        .row-item {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #444;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.4s ease-in-out;
+        }
+
+        .row-item img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
+            border-radius: 8px;
+        }
+
+        .row-item img:hover {
+            transform: scale(1.02); /* Enlarge by 10% on hover */
+            z-index: 1;
+        }
+
+        .text-block {
+            height: 20%;
+            color: white;
+            background-color: #222;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .camera-block {
+            flex: 1;
+            background-color: #111;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .camera-row {
             display: flex;
             width: 100%;
-            height: 100vh; /* Use viewport height instead */
+            height: 23vh; /* Each row gets 25% of the screen height */
+            gap: 10px;
+            padding: 10px;
         }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px;
+        }
+
+        .action-button {
+            width: 100px; /* Fixed width for buttons */
+            margin-top: -10px;
+            padding: 0.5rem 1rem; /* Increased padding for fatter button */
+            background-color: #526D82; /* bg-gray-700 */
+            color: #d3d3d3; /* text-gray-200 */
+            border: 1px solid #3C3D37; /* border-gray-600 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: background-color 0.2s, transform 0.2s; /* transition-colors duration-200 */
+            outline: none; /* focus:outline-none */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 600; /* Make the text bold */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.5rem; /* space-x-2 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+        }
+
+        .action-button.disconnect {
+            background-color: #cc3300;
+        }
+
+        .action-button:hover {
+            background-color: #4B5563; /* hover:bg-gray-600 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* hover:shadow-md */
+            cursor: pointer;
+        }
+
+        .action-button.disconnect:hover {
+            background-color: #cc0e00;
+        }
+
+        .modalbutton {
+            padding: 8px 16px;
+            background-color: #222; /* bg-gray-700 */
+            color: #d3d3d3; /* text-gray-200 */
+            border: 1px solid #3C3D37; /* border-gray-600 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: background-color 0.2s, transform 0.2s; /* transition-colors duration-200 */
+            outline: none; /* focus:outline-none */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 600; /* Make the text bold */
+        }
+
+        .modalbutton:hover {
+            background-color: #4B5563; /* hover:bg-gray-600 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* hover:shadow-md */
+            cursor: pointer;
+        }
+
+        .row-item.glow-intermediate {
+            box-shadow: 0 0 15px 4px rgba(255, 165, 0, 0.7); /* orange glow */
+        }
+
+        .row-item.glow-connected {
+            box-shadow: 0 0 15px 4px rgba(0, 255, 0, 0.7); /* green glow */
+        }
+
     </style>
 </head>
 
@@ -40,12 +153,181 @@
     {% include 'navBar.html' %}
     {% include 'sidebar.html' %}
 
-    <!-- 固定在底部的导航栏 -->
+    <!-- First row: images with text -->
+    <div class="horizontal-row">
+        <div class="row-item">
+            <img src="../static/Beckhoff Profitrainer.jpeg" alt="Image 1">
+            <div class="text-block">Beckoff Profitrainer</div>
+        </div>
+        <div class="row-item">
+            <img src="../static/Siemens Profitrainer.jpeg" alt="Image 1">
+            <div class="text-block">Siemens Profitrainer</div>
+        </div>
+        <div class="row-item">
+            <img src="../static/DMG DMC 850V.jpeg" alt="Image 2">
+            <div class="text-block">DMG DMC 850V</div>
+        </div>
+        <div class="row-item">
+            <img src="../static/Grob G350.jpeg" alt="Image 3">
+            <div class="text-block">Grob G350</div>
+        </div>
+        <div class="row-item">
+            <img src="../static/Hermle C32U.jpeg" alt="Image 4">
+            <div class="text-block">Hermle C32U</div>
+        </div>
+        <div class="row-item">
+            <img src="../static/Heller H5000.jpeg" alt="Image 5">
+            <div class="text-block">Heller H5000</div>
+        </div>
+    </div>
+
+    <!-- Second row: camera placeholders -->
+    <div class="camera-row">
+        <div class="camera-block">Live Camera</div>
+        <div class="camera-block">Live Camera</div>
+        <div class="camera-block">Live Camera</div>
+        <div class="camera-block">Live Camera</div>
+        <div class="camera-block">Live Camera</div>
+        <div class="camera-block">Live Camera</div>
+    </div>
+
+    <!-- Button row: connect/disconnect -->
+    <div class="button-row">
+        <button class="action-button connect">Connect</button>
+        <button class="action-button disconnect">Disconnect</button>
+    </div>
+
     {% include 'footer.html' %}
 
-    <script>
+    <!-- AMS Net ID Modal -->
+    <div id="amsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+        background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;">
+        <div style="background:#333; padding:20px; border-radius:8px; width:300px; color: #d3d3d3; text-align:center;">
+            <h3>Enter AMS Net ID</h3>
+            <input type="text" id="amsInput" placeholder="e.g. 5.32.191.1.1.1" style="width:100%; padding:10px; margin:10px 0; border-radius: 4px;">
+            <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                <button class="modalbutton" id="amsConfirmBtn" style="padding:8px 16px;">Confirm</button>
+                <button class="modalbutton" onclick="document.getElementById('amsModal').style.display='none'" style="padding:8px 16px;">Cancel</button>
+            </div>
+        </div>
+    </div>
 
+
+
+    <script>
+        let selectedItem = null;
+
+        // Define icon mappings
+        const iconMap = {
+            "machine-0": "beckoffprofitrainer.png",
+            "machine-1": "newsiemensicon.png",
+            "machine-2": "DMGDMC.png",
+            "machine-3": "GrobG350.png",
+            "machine-4": "HermleC32U.png",
+            "machine-5": "beckoffprofitrainer.png"
+        };
+
+        const nameMap = {
+            "machine-0": "Beckoff Profitrainer",
+            "machine-1": "Siemens Profitrainer",
+            "machine-2": "DMG DMC 850V",
+            "machine-3": "Grob G350",
+            "machine-4": "Hermle C32U",
+            "machine-5": "Heller H5000",
+        };
+
+        // On page load: restore connected item
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedId = localStorage.getItem('connectedMachineId');
+            const savedIcon = localStorage.getItem('centerIconSrc');
+            if (savedId) {
+                const savedElement = document.querySelector(`.row-item[data-id='${savedId}']`);
+                if (savedElement) {
+                    savedElement.classList.add('glow-connected');
+                    selectedItem = savedElement;
+                }
+            }
+            if (savedIcon) {
+                const iconElement = document.getElementById('center-machine-icon');
+                if (iconElement) {
+                    iconElement.src = `/static/${savedIcon}`;
+                }
+            }
+
+            if (savedName && nameElement) {
+                nameElement.textContent = savedName;
+            } else if (nameElement) {
+                nameElement.textContent = "Beckoff Profitrainer";
+            }
+        });
+
+
+        // Click on machine block
+        document.querySelectorAll('.row-item').forEach((item, index) => {
+            item.setAttribute('data-id', `machine-${index}`);
+            item.addEventListener('click', () => {
+                // Remove previous intermediate glow if not connected
+                document.querySelectorAll('.row-item').forEach(el => {
+                    if (!el.classList.contains('glow-connected')) {
+                        el.classList.remove('glow-intermediate');
+                    }
+                });
+                if (!item.classList.contains('glow-connected')) {
+                    item.classList.add('glow-intermediate');
+                    selectedItem = item;
+                }
+            });
+        });
+
+        // Connect button
+        document.querySelector('.action-button.connect').addEventListener('click', () => {
+            if (selectedItem) {
+                document.querySelectorAll('.row-item').forEach(el => {
+                    el.classList.remove('glow-connected');
+                });
+
+                selectedItem.classList.remove('glow-intermediate');
+                selectedItem.classList.add('glow-connected');
+                const id = selectedItem.getAttribute('data-id');
+                localStorage.setItem('connectedMachineId', id);
+
+                // === Set icon ===
+                const newIcon = iconMap[id];
+                if (newIcon) {
+                    const iconElement = document.getElementById('center-machine-icon');
+                    iconElement.src = `/static/${newIcon}`;
+                    localStorage.setItem('centerIconSrc', newIcon);
+                }
+
+                // Change machine name
+                const newName = nameMap[id];
+                if (newName) {
+                    const nameElement = document.getElementById('center-machine-name');
+                    nameElement.textContent = newName;
+                    localStorage.setItem('centerMachineName', newName);
+                }
+
+                document.getElementById('amsModal').style.display = 'flex';
+            }
+        });
+
+        // Disconnect button
+        document.querySelector('.action-button.disconnect').addEventListener('click', () => {
+            document.querySelectorAll('.row-item').forEach(el => {
+                el.classList.remove('glow-intermediate', 'glow-connected');
+            });
+            localStorage.removeItem('connectedMachineId');
+            selectedItem = null;
+
+            // Reset icon to default
+            const iconElement = document.getElementById('center-machine-icon');
+            const nameElement = document.getElementById('center-machine-name');
+
+            iconElement.src = `/static/beckoffprofitrainer.png`;
+            if (nameElement) nameElement.textContent = "Beckoff Profitrainer";
+        });
     </script>
+
 
 </body>
 
