@@ -15,14 +15,45 @@
         </nav> -->
 
         <div class="main-div">
-            <h1>Accounts</h1>
-            <div class="visitorDiv"></div>
-            <div class="memberDiv">
-                <button class="addIcon"><img src="../static/addusericon.svg"><i class="fas fa-plus-circle"></i> <span>Add Profile</span></button>
+            <!-- <h1>Accounts</h1> -->
+
+            <div class="section">
+                <h2 class="section-title">Visitor</h2>
+                <div class="visitorDiv userRow"></div>
             </div>
+
+            <div class="section">
+                <h2 class="section-title">Predefined</h2>
+                <div class="predefinedDiv userRow">
+                    <button class="btn">
+                        <span>Operator</span>
+                    </button>
+                    <button class="btn">
+                        <span>Developer</span>
+                    </button>
+                    <button class="btn">
+                        <span>Maintenance</span>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="section">
+                <h2 class="section-title">Individual</h2>
+                <div class="memberDiv userRow">
+                <button class="addIcon">
+                    <img src="../static/addusericon.svg">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Profile</span>
+                </button>
+                </div>
+            </div>
+
             <button class="manageProfile">manage Accounts</button>
             <div class="spacer">&nbsp;</div>
-        </div>
+            </div>
+
+
     </div>
 
     <!-- Hidden form -->
@@ -67,6 +98,9 @@
         const visitorDiv = document.querySelector('.visitorDiv');
 
         const memberDiv = document.querySelector('.memberDiv');
+        const predefinedDiv = document.querySelector('.predefinedDiv');
+        const predefinedUsers = ['Operator', 'Developer', 'Maintenance']; // Predefined users
+
         const addIcon = document.querySelector('.addIcon');
         const manageProfile = document.querySelector('.manageProfile');
         const mainDiv = document.querySelector('.main-div');
@@ -76,11 +110,20 @@
     
         const userIcons = () => {
             users.reverse();
-            users.map((curElem) => {
+            users.forEach((curElem) => {
                 if (curElem === 'Visitor') {
                     visitorDiv.insertAdjacentHTML('afterbegin', `
                         <button class="btn">
                             <span>${curElem}</span>
+                        </button>
+                    `);
+                } else if (predefinedUsers.includes(curElem)) {
+                    predefinedDiv.insertAdjacentHTML('afterbegin', `
+                        <button class="btn">
+                            <span>${curElem}</span>
+                            <div class="remove-icon">
+                                <img src="../static/trash.png" style="width: 25px; padding-top: 7px;">
+                            </div>
                         </button>
                     `);
                 } else {

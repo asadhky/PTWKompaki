@@ -27,12 +27,11 @@ import re
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/db_name'
 db = SQLAlchemy()
-app.secret_key = '123456'  # Ensure to replace with your actual secret key
+app.secret_key = '123456'
 
-# Assume data.json exists and stores slider values
 DATA_FILE = 'var1.json'
 OP_DATA_FILE = 'op.json'
-GCODE_FILE = "gcode.json"  # Path to gcode.json
+GCODE_FILE = "gcode.json"
 
 s3_client = boto3.client('s3')
 BUCKET_NAME = 'newtwincatjsonfile'
@@ -51,8 +50,8 @@ app.config['MAIL_USERNAME'] = 'riskerasad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iqmzuxopchoogpdu'
 
 db_config = {
-    'user': 'root',
-    'password': 'buttsahib',
+    'user': 'xixi',
+    'password': 'Chenxi1213!',
     'host': 'localhost',
     'port': 3308,
     'database': 'userdb'
@@ -1470,6 +1469,10 @@ def search():
 @app.route('/connection')
 def connection():
     return render_template('connection.html')
+
+@app.route('/workflow')
+def workflow():
+    return render_template('workflow.html')
 
 @app.route('/code')
 def code():

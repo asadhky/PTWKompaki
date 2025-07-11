@@ -87,7 +87,8 @@
         }
 
         .action-button {
-            width: 100px; /* Fixed width for buttons */
+            width: 150px; /* Fixed width for buttons */
+            height: 50px;
             margin-top: -10px;
             padding: 0.5rem 1rem; /* Increased padding for fatter button */
             background-color: #526D82; /* bg-gray-700 */
@@ -157,7 +158,7 @@
     <div class="horizontal-row">
         <div class="row-item">
             <img src="../static/Beckhoff Profitrainer.jpeg" alt="Image 1">
-            <div class="text-block">Beckoff Profitrainer</div>
+            <div class="text-block">Beckhoff Profitrainer</div>
         </div>
         <div class="row-item">
             <img src="../static/Siemens Profitrainer.jpeg" alt="Image 1">
@@ -228,7 +229,7 @@
         };
 
         const nameMap = {
-            "machine-0": "Beckoff Profitrainer",
+            "machine-0": "Beckhoff Profitrainer",
             "machine-1": "Siemens Profitrainer",
             "machine-2": "DMG DMC 850V",
             "machine-3": "Grob G350",
@@ -257,7 +258,7 @@
             if (savedName && nameElement) {
                 nameElement.textContent = savedName;
             } else if (nameElement) {
-                nameElement.textContent = "Beckoff Profitrainer";
+                nameElement.textContent = "Beckhoff Profitrainer";
             }
         });
 
@@ -279,8 +280,8 @@
             });
         });
 
-        // Connect button
-        document.querySelector('.action-button.connect').addEventListener('click', () => {
+        // Confirm AMS Net ID
+        document.getElementById('amsConfirmBtn').addEventListener('click', () => {
             if (selectedItem) {
                 document.querySelectorAll('.row-item').forEach(el => {
                     el.classList.remove('glow-connected');
@@ -288,24 +289,58 @@
 
                 selectedItem.classList.remove('glow-intermediate');
                 selectedItem.classList.add('glow-connected');
+
                 const id = selectedItem.getAttribute('data-id');
                 localStorage.setItem('connectedMachineId', id);
 
-                // === Set icon ===
                 const newIcon = iconMap[id];
                 if (newIcon) {
                     const iconElement = document.getElementById('center-machine-icon');
-                    iconElement.src = `/static/${newIcon}`;
-                    localStorage.setItem('centerIconSrc', newIcon);
+                    if (iconElement) {
+                        iconElement.src = `/static/${newIcon}`;
+                        localStorage.setItem('centerIconSrc', newIcon);
+                    }
                 }
 
-                // Change machine name
                 const newName = nameMap[id];
-                if (newName) {
-                    const nameElement = document.getElementById('center-machine-name');
+                const nameElement = document.getElementById('center-machine-name');
+                if (newName && nameElement) {
                     nameElement.textContent = newName;
                     localStorage.setItem('centerMachineName', newName);
                 }
+
+                document.getElementById('amsModal').style.display = 'none';
+            }
+        });
+
+
+        // Connect button
+        document.querySelector('.action-button.connect').addEventListener('click', () => {
+            if (selectedItem) {
+                // document.querySelectorAll('.row-item').forEach(el => {
+                //     el.classList.remove('glow-connected');
+                // });
+
+                // selectedItem.classList.remove('glow-intermediate');
+                // selectedItem.classList.add('glow-connected');
+                // const id = selectedItem.getAttribute('data-id');
+                // localStorage.setItem('connectedMachineId', id);
+
+                // // === Set icon ===
+                // const newIcon = iconMap[id];
+                // if (newIcon) {
+                //     const iconElement = document.getElementById('center-machine-icon');
+                //     iconElement.src = `/static/${newIcon}`;
+                //     localStorage.setItem('centerIconSrc', newIcon);
+                // }
+
+                // // Change machine name
+                // const newName = nameMap[id];
+                // if (newName) {
+                //     const nameElement = document.getElementById('center-machine-name');
+                //     nameElement.textContent = newName;
+                //     localStorage.setItem('centerMachineName', newName);
+                // }
 
                 document.getElementById('amsModal').style.display = 'flex';
             }
