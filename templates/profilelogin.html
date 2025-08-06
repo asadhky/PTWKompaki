@@ -118,14 +118,15 @@
                         </button>
                     `);
                 } else if (predefinedUsers.includes(curElem)) {
-                    predefinedDiv.insertAdjacentHTML('afterbegin', `
-                        <button class="btn">
-                            <span>${curElem}</span>
-                            <div class="remove-icon">
-                                <img src="../static/trash.png" style="width: 25px; padding-top: 7px;">
-                            </div>
-                        </button>
-                    `);
+                        
+                        predefinedDiv.insertAdjacentHTML('afterbegin', `
+                            <button class="btn">
+                                <span>${curElem}</span>
+                                <div class="remove-icon">
+                                    <img src="../static/trash.png" style="width: 25px; padding-top: 7px;">
+                                </div>
+                            </button>
+                        `);
                 } else {
                     memberDiv.insertAdjacentHTML('afterbegin', `
                         <button class="btn">
@@ -136,6 +137,7 @@
                         </button>
                     `);
                 }
+                
             });
 
 
@@ -143,7 +145,7 @@
             document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', (event) => {
                 const username = event.target.closest('.btn').querySelector('span').innerText;
-                if (username === 'Visitor') {
+                if (username === 'Visitor' || username === 'Operator' || username === 'Developer' || username === 'Maintenance') {
                     window.location.href = '/visitor';
                 } else {
                     if (mainDiv.classList.contains('manage-mode')) {

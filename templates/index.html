@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <!-- Add these in index.html head -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
         /* Existing CSS from index.html */
@@ -150,7 +154,7 @@
         }
 
         .terminal-output {
-            margin-top: 20px;
+            margin-top: 220px;
             padding: 10px;
             background-color: #333;
             color: #d3d3d3;
@@ -516,7 +520,7 @@
                     <div id="middle-section">
                         <!-- New header section (15% height) -->
                         <div class="terminal-header">
-                            <h2>NC Code Name</h2>
+                            <h2>NC Code Name - Example</h2>
                             <div class="terminal-buttons">
                                 <button id="auto-cycle-button" class="cycle-btn">
                                     <img src="../static/cyclestart.jpg" alt="Auto" />
@@ -2281,6 +2285,7 @@ function setPositionZ() {
 
 
     </script>
+    
 </body>
 
 </html>

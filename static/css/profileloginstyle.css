@@ -413,3 +413,16 @@ nav a img {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.9);
   transition: box-shadow 0.3s ease;
 }
+
+/* override the default for the 1st predefined button (Operator) */
+.predefinedDiv .btn:nth-child(1) {
+  background-image: url("../Operator.jpg") !important;
+}
+
+.predefinedDiv .btn:nth-child(2) {
+  background-image: url("../Developer.jpg") !important;
+}
+
+.predefinedDiv .btn:nth-child(3) {
+  background-image: url("../Maintenance.jpg") !important;
+}

@@ -1,4 +1,6 @@
-<head><style>
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
     html, body {
         margin: 0;
         padding: 0;
@@ -241,6 +243,180 @@
             font-family: 'Roboto', sans-serif;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow added */
         }
+
+        #navdrop {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            z-index: 10000000000; /* Ensure it appears above other elements */
+        }
+
+        .drop-btn {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+            .drop-btn p {
+            color: #DDDDDD;
+            font-weight: 500;
+            padding: 0 10px;
+            font-size: 16px;
+            margin: 0;
+            }
+
+            .profilePicture {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            }
+
+            .tooltip {
+            position: absolute;
+            right: 20px;
+            bottom: -12px;
+            height: 12px;
+            width: 12px;
+            background: #242526;
+            transform: rotate(45deg);
+            display: none;
+            z-index: 100;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px rgba(0,0,0,0.2);
+            }
+
+            .tooltip.show {
+            display: block;
+            }
+
+            .wrapper {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            width: 300px;
+            background: #242526;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            z-index: 99;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+            .wrapper.show {
+            display: block;
+            }
+
+            .menu-bar {
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            }
+
+            .menu-bar li {
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            }
+
+            .menu-bar li:hover {
+            background: #3a3b3c;
+            }
+
+            .menu-bar li a {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            color: #e4e6eb;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            }
+
+            .menu-bar .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            }
+
+            .menu-bar .icon span {
+            color: #e4e6eb;
+            font-size: 20px;
+            }
+
+            .menu-bar hr {
+            border: none;
+            height: 1px;
+            background: #3a3b3c;
+            margin: 8px 0;
+            }
+
+            .profile-dsf3SD_02-1SAd9 {
+            padding: 12px 15px;
+            }
+
+            .profile-dsf3SD_02-1SAd9 img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            }
+
+            .profile-dsf3SD_02-1SAd9 div {
+            display: flex;
+            flex-direction: column;
+            }
+
+            #ch_head_name {
+            color: #e4e6eb;
+            font-weight: 600;
+            font-size: 16px;
+            }
+
+            #head_manage_acc {
+            color: #b0b3b8;
+            font-size: 13px;
+            margin-top: 4px;
+            }
+
+            .feed-dsf3SD_02-1SAd9 {
+            padding: 12px 15px;
+            }
+
+            .feed-dsf3SD_02-1SAd9 div {
+            display: flex;
+            flex-direction: column;
+            }
+
+            #feed-title {
+            color: #e4e6eb;
+            font-weight: 500;
+            font-size: 14px;
+            }
+
+            #feed-subject {
+            color: #b0b3b8;
+            font-size: 12px;
+            margin-top: 4px;
+            }
+            
+            /* Adjust position for dropdown */
+            .top-nav-bar {
+            position: relative;
+            }
+            
+            /* Hide the original user button */
+            #user-info-button {
+            display: none;
+            }
          
 </style></head>
 
@@ -582,11 +758,82 @@
 
 
 
-    <a href="/userinfo">
-        <button class="nav-button" id="user-info-button">
-            <img src="{{ url_for('static', filename='user.png') }}" alt="用户" style="width: 50px; height: auto;">
-        </button>
-    </a>
+    <!-- Facebook Style Dropdown -->
+    <div id="navdrop" class="btn-dark">
+      <div class="drop-btn">
+        <a id="menu" tooltipped="" href="#!">
+          <img src="{{ url_for('static', filename='user.png') }}" class="profilePicture">
+        </a>
+      </div>
+      <div class="tooltip"></div>
+      <div class="wrapper">
+        <ul class="menu-bar" style="margin-left: 0px;">
+          <li class="profile-dsf3SD_02-1SAd9">
+            <a href="#">
+              <img src="{{ url_for('static', filename='user.png') }}" class="responsive-img">
+              <div> 
+                <span id="ch_head_name">User Name</span>
+                <span id="head_manage_acc">Manage Settings</span>
+              </div>
+            </a>
+          </li>
+          <hr>
+          <li class="feed-dsf3SD_02-1SAd9">
+            <a href="#">
+              <div class="icon"> 
+                <span class="material-icons">feedback</span>
+              </div>
+              <div> 
+                <span id="feed-title">Give Feedback</span>
+                <span id="feed-subject">Help us improve this application</span>
+              </div>
+            </a>
+          </li>
+          <hr>
+          <li class="setting-item">
+            <a href="/userinfo">
+              <div class="icon"> 
+                <span class="material-icons">settings</span>
+              </div> 
+              <span>Settings &amp; privacy</span>
+            </a>
+          </li>
+          <li class="help-item">
+            <a href="#">
+              <div class="icon">
+                <span class="material-icons">help</span>
+              </div>
+              Help &amp; support
+            </a>
+          </li>
+          <li class="theme-item">
+            <a href="#">
+              <div class="icon">
+                <span class="material-icons">brightness_medium</span>
+              </div>
+              Display &amp; Theme
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <div class="icon">
+                <span class="material-icons">group</span>
+              </div>
+              About us
+            </a>
+          </li>
+          <hr>
+          <li class="logout">
+            <a href="/profilelogin">
+              <div class="icon">
+                <span class="material-icons">exit_to_app</span>
+              </div>
+              Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
 </div>
 
 
@@ -824,5 +1071,29 @@ setSelectedLocale("english"); // Set the initial language to English (or based o
         });
     });
 });
+
+    // Facebook Style Dropdown Functionality
+    const dropBtn = document.querySelector(".btn-dark .drop-btn");
+    const tooltip = document.querySelector(".btn-dark .tooltip");
+    const wrapper = document.querySelector(".btn-dark .wrapper");
+
+    dropBtn.onclick = () => {
+      wrapper.classList.toggle("show");
+      tooltip.classList.toggle("show");
+    };
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const isClickInside = dropBtn.contains(e.target) || wrapper.contains(e.target);
+      if (!isClickInside && wrapper.classList.contains('show')) {
+        wrapper.classList.remove("show");
+        tooltip.classList.remove("show");
+      }
+    });
+
+    // Prevent dropdown from closing when clicking inside
+    wrapper.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
 
 </script>
